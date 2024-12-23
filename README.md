@@ -1,7 +1,7 @@
 # Bank With Python(GUI) 
 
-Main Objectives Are As Follows:
-1.Login Screen
+Main Objectives Are As Follows:\
+1.Login Screen\
 2.
 
 
@@ -12,14 +12,14 @@ Main Objectives Are As Follows:
 
 
 # External Modules
-1.tkinter 
-
+1.tkinter\
+2.
 
 
 # Owner Info
-The Whole Script is Written In Python
-Python Version Used: 3.13.0 (64-Bit)
+The Whole Script is Written In Python\
+Python Version Used: 3.13.0 (64-Bit)\
 Code Editer Used: Microsoft's Visual Studio Code
 
-Owner: Virati Akira Nandhan Reddy
+Owner: Virati Akira Nandhan Reddy\
 Contact Me: viratiaki29@gmail.com
