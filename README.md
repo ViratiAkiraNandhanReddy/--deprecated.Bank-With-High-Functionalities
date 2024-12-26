@@ -13,7 +13,9 @@ Main Objectives Are As Follows:\
 
 # External Modules
 1.tkinter\
-2.
+2.importlib\
+3.os\
+4.
 
 
 # Owner Info
