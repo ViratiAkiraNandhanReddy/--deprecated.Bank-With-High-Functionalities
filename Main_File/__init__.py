@@ -74,6 +74,8 @@ def Documentation()->str:
 def Corrupted():
     War = tk.Tk()
     War.title('Locked')
+    War.resizable(False,False)
+    War.geometry('350x400')
     tk.Label(text='File Locked By The Owner :(',font=('40'),fg='red').pack()
 
     War.mainloop() 
@@ -94,4 +96,5 @@ else:
 
 print('Hello')
 print(PinCodes)
-License()
+#License()
+Corrupted()
