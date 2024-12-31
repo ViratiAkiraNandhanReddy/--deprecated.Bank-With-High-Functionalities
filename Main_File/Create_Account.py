@@ -4,13 +4,19 @@ def New_Account():
     from __init__ import Accounts,PinCodes,Security
     import Login_Screen as LS
     from importlib import reload
-    def Stop():
-        Window_NA.destroy()
-        reload(LS)
-        LS.Login()
-                
 
-        
+    Command_New_Acc = True
+
+    while Command_New_Acc:
+        def Stop():
+            Window_NA.destroy()
+            reload(LS)
+            LS.Login()
+            nonlocal Command_New_Acc
+            Command_New_Acc = False
+                        
+
+            
         def Values():
             global Acc
             Acc=New.get()
@@ -19,6 +25,7 @@ def New_Account():
         Window_NA = tk.Tk()
         Window_NA.title('New Account')
         Window_NA.geometry('350x120')
+        Window_NA.resizable(False,False)
         tk.Label(Window_NA,text='Creating An New Account',fg='Red').grid(column=2)
         tk.Label(Window_NA,text='New Username').grid(row=2,pady=20)
         New = tk.Entry(Window_NA)
@@ -34,7 +41,7 @@ def New_Account():
             elif Acc in Accounts:
                 Invalid_Error.Exist_Error()
             elif Acc.isdigit()==True:
-                Invalid_Error.Digit_Error()
+                Invalid_Error.User_Digit_Error()
             else:
                 
                 def Values_Pin():
@@ -44,25 +51,30 @@ def New_Account():
                         Invalid_Error.Pin_Char_Error()
                     else:
                         Window.destroy()
-                        def Values():
+                        def Values_Login():
                             Window_sec.destroy()
                             Accounts.append(Acc)
                             PinCodes.append(Pin_New) 
                             reload(LS)   
                             LS.Login()
-                            
+                            nonlocal Command_New_Acc
+                            Command_New_Acc = False
+                            global Security_Code
                             Security_Code = None
                         Window_sec = tk.Tk()
                         tk.Label(Window_sec,text='In Case You Forget PinCode Use This Security Code',fg='Red',pady=10).pack()
                         Security_Code=Acc[0:4] + Pin_New[1:5]
                         if Security_Code not in Security:
                             Security.append(Security_Code)
+                        else:
+                            Security.append(Acc[0:4] + Pin_New[1:4] + '#')
                         tk.Label(Window_sec,text=Security_Code,fg='Dark Blue',pady=10,font=(40)).pack()
-                        tk.Button(Window_sec,text='Continue',fg='Green',command=Values).pack()
+                        tk.Button(Window_sec,text='Continue',fg='Green',command=Values_Login).pack()
                         Window_sec.mainloop()
 
                 Window = tk.Tk()
                 Window.title('PinCode')
+                Window.resizable(False,False)
                 tk.Label(Window,text='** Must Contain 4 or More Characters **').grid(row=0,column=1)
                 tk.Label(Window,text='New PinCode').grid(row=1,column=0)
                 New_P = tk.Entry(Window)
@@ -71,3 +83,4 @@ def New_Account():
                 Window.mainloop()
         except:
             pass
+

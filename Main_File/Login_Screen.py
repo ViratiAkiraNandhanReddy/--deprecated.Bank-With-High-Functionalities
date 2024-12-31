@@ -4,7 +4,7 @@ def Login()->str:
     from importlib import reload
     import Create_Account as CA
     import Invalid_Error
-    from __init__ import Accounts,User_func,PinCodes
+    from __init__ import Accounts,User_func,PinCodes,Disable_Exit
     from User_Functions import User_func_opts
 
     command_Login = True
@@ -31,6 +31,7 @@ def Login()->str:
         Window = tk.Tk()
         Window.geometry('250x150')
         Window.title('Login')
+        Window.resizable(False,False)
         tk.Label(Window,text='Username').grid(row=2,column=2)
         tk.Label(Window,text='PinCode').grid(row=4,column=2)
         User = tk.Entry(Window)
@@ -39,7 +40,7 @@ def Login()->str:
         User.grid(row=2,column=3,padx=20)
         New_Acc = tk.Button(Window,text='Sign Up',command=Create,fg='Dark Red').place(x=15,y=110)
         Continue = tk.Button(Window,text='Continue',command=Values,fg='Green').grid(row=6,column=3)
-
+        Window.protocol("WM_DELETE_WINDOW",Disable_Exit)
         Window.mainloop()
 
 
@@ -60,37 +61,33 @@ def Login()->str:
                 Invalid_Error.Pin_blank_Error()
 
             else:
-                try:
-                    
-                    command_New = True
+                try:                    
 
-                    while command_New:
-                        #If Yes Goes to The Module
-                        def Yes():
-                            if Yes_Bt.configure():
-                                Verify.destroy()
-                                CA.New_Account()
-                                nonlocal command_Login
-                                command_Login = False
-
-                        #If No Loop Runs Again
-                        def No():
+                    #If Yes Goes to The Module
+                    def Yes():
+                        if Yes_Bt.configure():
                             Verify.destroy()
-                            nonlocal command_New
-                            command_New = False
+                            CA.New_Account()
+                            nonlocal command_Login
+                            command_Login = False
 
-                            
-                        Verify = tk.Tk()
-                        Verify.title('Account Not Available')
-                        Verify.geometry('300x180')
-                        tk.Label(Verify,text='Oops! Account Not Available In The DataBase',fg='Red').pack()
-                        tk.Label(Verify,text='Do You Want To Create An Account',fg='Blue').pack(pady=20)
-                        Yes_Bt = tk.Button(Verify,text='Create An Account',fg='Green',command=Yes)
-                        Yes_Bt.pack()
-                        No_Bt = tk.Button(Verify,text='No Thanks!',fg='Red',command=No)
-                        No_Bt.pack(pady=20)
-                
-                        Verify.mainloop()
+                    #If No Loop Runs Again
+                    def No():
+                        Verify.destroy()
+                        
+                    Verify = tk.Tk()
+                    Verify.title('Account Not Available')
+                    Verify.geometry('300x180')
+                    Verify.resizable(False,False)
+                    Verify.protocol("WM_DELETE_WINDOW",Disable_Exit)
+                    tk.Label(Verify,text='Oops! Account Not Available In The DataBase',fg='Red').pack()
+                    tk.Label(Verify,text='Do You Want To Create An Account',fg='Blue').pack(pady=20)
+                    Yes_Bt = tk.Button(Verify,text='Create An Account',fg='Green',command=Yes)
+                    Yes_Bt.pack()
+                    No_Bt = tk.Button(Verify,text='No Thanks!',fg='Red',command=No)
+                    No_Bt.pack(pady=20)
+                    Verify.mainloop()
+
                 except:
                     pass
         except:
