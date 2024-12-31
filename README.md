@@ -1,4 +1,4 @@
-# Bank With Python(GUI) - README
+# Bank With Python(GUI)
 
 # Project Info
 Name: Bank With Python(GUI)\
