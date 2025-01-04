@@ -80,21 +80,25 @@ def Corrupted():
 
     War.mainloop() 
 
-if Activated == True:
-    if License_Check == True:
-        reload(Main_Starter)
-        Main_Starter.Start_Main()
-    else:
-        Corrupted()
+def Start_Program():
+    if Activated == True:
+        if License_Check == True:
+            reload(Main_Starter)
+            Main_Starter.Start_Main()
+        else:
+            Corrupted()
 
-else:
-    if License_Check == True:
-        reload(Software_Activation)
-        Software_Activation.Activate()
     else:
-        Corrupted()
+        if License_Check == True:
+            reload(Software_Activation)
+            Software_Activation.Activate()
+        else:
+            Corrupted()
 
-print('Hello')
+print('Hello From __init__')
 print(PinCodes)
 #License()
-Corrupted()
+# Corrupted()
+
+if __name__ == '__main__':
+    Start_Program()

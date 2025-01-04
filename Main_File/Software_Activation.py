@@ -1,4 +1,5 @@
 import tkinter as tk
+from Logout_Screen import Activation_Save
 
 Product_keys = [
 
@@ -30,7 +31,8 @@ def Activate ():
         def Key():
             if Entery_Key.get() in Product_keys:
                 Window_Activate.destroy()
-                pass
+                Activation_Save()
+
             else:
                 Invalid = tk.Label(Window_Activate,text='Invalid Product Key',fg='Yellow',bg='#4F55A8').place(x=200,y=200)
         
@@ -110,7 +112,8 @@ def Activate ():
     
 
 
-    
+if __name__ == '__main__':
+    Activate()
         
     
     
