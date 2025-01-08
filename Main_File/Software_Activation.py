@@ -1,6 +1,7 @@
 import tkinter as tk
 from Logout_Screen import Activation_Save
 
+#Special Keys For Activation of Software
 Product_keys = [
 
     '2030-GITH-UBGC-AKKI-DIST-FIRS-TPRJ-INDI-AUSA-2026',
@@ -16,13 +17,34 @@ Product_keys = [
 
 ]
 
+#Terms And Conditions For The User
 Terms_Conditions = '''
+Copyright (c) 2026 Virati Akira Nandhan Reddy
 
-jlsyfjydysFDyFDkySTduyas
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software with restriction, including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the Software but One Thing Should Be Remembered The Original
+License File Should Not Be Modified
 
+Owner's Note And Guidelines
+
+SHOULD NOT MODIFY THE LICENSE FILE, MODIFYING THE OWNERSHIP DETAILS ARE STRICTLY FORBIDDEN!
+DON'T TRY TO DELETE THE FILE [Data_Of_User.txt], ALL THE REQUIRED DETAILS ARE SAVED IN IT
+
+Modifying Restricted Zone in License File is STRICTLY FORBIDDEN!
+
+Contact Me:
+Gmail: viratiaki29@gmail.com
+GitHub: ViratiAkiraNandhanReddy
+Instagram: Viratiaki53
+
+*Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
 
 '''
-def Activate ():
+
+#Main Function
+def Activate ()->None:
+    '''Used To Activate The Software'''
 
     #New Window For Product Key
     def Product_Key()->None:
@@ -69,15 +91,14 @@ def Activate ():
         tk.Label(Window_Activate,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',fg='White',bg='#4F55A8',font=('Calibri 8')).place(x=418,y=300)
         Window_Activate.mainloop()
     
+    #Making Forcefull Acceptance
     def Accepted():
         if OK.get() == True:
             Next.config(state='normal')
         elif OK.get() == False:
             Next.config(state='disabled')
 
-
-
-    print("hello I'M software Activation")
+    #Initial Setup Of Window
     Window = tk.Tk()
     Window.title('Activation Window')
     Window.geometry('750x500')
@@ -85,16 +106,13 @@ def Activate ():
     Window.resizable(False,False)
     OK = tk.BooleanVar()
 
-
-
-    
+    #Terms And Conditions
     Terms = tk.Frame(Window,background='White',height=380,width=700)
     Terms.place(x=25,y=25)
-    tk.Label(Terms,text=Terms_Conditions,bg='White').place(x=10,y=20)
+    tk.Label(Terms,text='Software Licence Agreement And Guidelines',fg='Black',bg='White',font=('Roboto 18 bold')).place(x=90,y=8)
+    tk.Label(Terms,text=Terms_Conditions,bg='White').place(x=22,y=40)
     
-
-
-
+    #Acceptance Check
     Check = tk.Checkbutton(Window,text='Accept All Terms And Conditions',underline=0,variable=OK,onvalue=True,\
                            offvalue=False,command=Accepted,bg='Light Blue',activebackground='Light Blue').place(x=25,y=410)
     Next = tk.Button(Window,text='Next',state='disabled',command=Product_Key,font=(10),activebackground='#316E7A',bg='#68ABC9',relief='ridge')
@@ -106,14 +124,7 @@ def Activate ():
              fg='Black',bg='Light Blue',font=('Calibri 8')).place(x=528,y=480)
     
 
-
-
     Window.mainloop()
     
-
-
-if __name__ == '__main__':
-    Activate()
-        
-    
-    
+#Satisfied Code Completion:95%     
+'''                                                            End Of Program                                                                 '''

@@ -2,13 +2,14 @@ def User_func_opts():
 
     import tkinter as tk
     from importlib import reload
-    import Login_Screen as LS
+    
     
     Command_Loop = True
 
     while Command_Loop:
         def log():
             Window.destroy()
+            import Login_Screen as LS
             reload(LS)
             LS.Login()
             nonlocal Command_Loop
