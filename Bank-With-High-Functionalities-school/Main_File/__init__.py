@@ -1,6 +1,8 @@
 import os
-import Main_File.Repair as Repair
+import Repair
+import Main_Starter
 import tkinter as tk
+import Software_Activation
 from importlib import reload
 
 #Knowing The Path Of The Package
@@ -12,7 +14,7 @@ else:
     Path = Check_Location
 
 try:
-    File = Path.removesuffix(r'\Main_File') + r'\LICENSE' 
+    File = Path.replace(r'\Main_File',r'\LICENSE')
     with open(File) as File_check:
         Licence_Data_Check = File_check.read()
 
@@ -30,15 +32,16 @@ except FileNotFoundError:
 
 try:
     with open(fr'{Path}\Data_Of_User.txt') as Data:
-        Activated:bool = eval(Data.readline())
-        Accounts:list[str] = eval(Data.readline())
-        PinCodes:list[str] = eval(Data.readline())
-        Security:list[str] = eval(Data.readline())
+        Activated = eval(Data.readline())
+        Accounts = eval(Data.readline())
+        PinCodes = eval(Data.readline())
+        Security = eval(Data.readline())
 except:
     Repair.User_Data_Not_Found()
 
+
 #Key Finder
-def User_func(User=None)->int:
+def User_func(User=None):
     User_index = Accounts.index(User)
     return User_index
 
@@ -48,7 +51,7 @@ def Disable_Exit():
     That is How I Disabled The Exit Button'''
     pass
 
-def License()->str:
+def License():
     license = '''Copyright (c) 2026 Virati Akira Nandhan Reddy
     
 Owner: Virati Akira Nandhan Reddy
@@ -57,18 +60,13 @@ Python Built Version: 3.13.0 (64-Bit)
 Code Editer Used: Microsoft's Visual Studio Code
  '''
     Choice = input('Detailed Or Shortend-(D/S):')
-    match Choice:
-        case 'D'|'d':
-            print(Detailed_Licence)
-            pass
-        case 'S'|'s':
-            pass
-            
-        case _:
-            print('\nInvalid Input! Opening Shortend Licence')
+    if Choice == "D":
+        print(Detailed_Licence)
+    else:
+        print('\nInvalid Input! Opening Shortend Licence')
     return license
 
-def Documentation()->str:
+def Documentation():
     pass
 
 #File is Locked
@@ -119,6 +117,8 @@ def Start_Program():
             Corrupted()
 
 print('Hello From __init__')
+print(Accounts)
+
 print(PinCodes)
 #License()
 # Corrupted()

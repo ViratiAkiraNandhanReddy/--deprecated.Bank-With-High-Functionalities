@@ -1,6 +1,8 @@
 import os
-import Main_File.Repair as Repair
+import Repair
+import Main_Starter
 import tkinter as tk
+import Software_Activation
 from importlib import reload
 
 #Knowing The Path Of The Package
