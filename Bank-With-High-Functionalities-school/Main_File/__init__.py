@@ -112,7 +112,7 @@ def Start_Program():
     else:
         if License_Check == True:
             reload(Software_Activation)
-            Software_Activation.Activate()
+            Software_Activation.Activation.Activate()
         else:
             Corrupted()
 

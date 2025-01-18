@@ -38,7 +38,7 @@ Instagram: Viratiaki53
 *Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
 
 '''
-class Activation:
+class Software_Activation:
     #Main Function
     def Activate ():
         '''Used To Activate The Software'''
@@ -123,6 +123,6 @@ class Activation:
         
 
         Window.mainloop()
-Activation.Activate()
+
 #Satisfied Code Completion:95%     
 '''                                                            End Of Program                                                                 '''
