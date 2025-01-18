@@ -1,4 +1,4 @@
 import tkinter as tk
-def Start_Main():
+def Bank_Started():
     from Login_Screen import Login
     Login()

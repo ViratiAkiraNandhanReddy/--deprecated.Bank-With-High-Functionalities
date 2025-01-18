@@ -1,5 +1,6 @@
 import tkinter as tk
-from Save_Info import Activation_Save
+
+Activated = False
 
 #Special Keys For Activation of Software
 Product_keys = [
@@ -40,7 +41,7 @@ Instagram: Viratiaki53
 '''
 class Software_Activation:
     #Main Function
-    def Activate ():
+    def Activate():
         '''Used To Activate The Software'''
 
         #New Window For Product Key
@@ -50,7 +51,8 @@ class Software_Activation:
             def Key():
                 if Entery_Key.get() in Product_keys:
                     Window_Activate.destroy()
-                    Activation_Save()
+                    global Activated
+                    Activated = True
 
                 else:
                     Invalid = tk.Label(Window_Activate,text='Invalid Product Key',fg='Yellow',bg='#4F55A8').place(x=200,y=200)
@@ -123,6 +125,8 @@ class Software_Activation:
         
 
         Window.mainloop()
+
+        return Activated
 
 #Satisfied Code Completion:95%     
 '''                                                            End Of Program                                                                 '''

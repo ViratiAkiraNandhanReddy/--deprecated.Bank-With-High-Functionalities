@@ -1,11 +1,10 @@
-def Login()->str:
+def Login(New_Account,Invalid_Error,Accounts,User_func,PinCodes,Disable_Exit,User_func_opts,Security)->str:
 
     import tkinter as tk
-    from importlib import reload
-    import Create_Account as CA
-    import Invalid_Error
-    from __init__ import Accounts,User_func,PinCodes,Disable_Exit
-    from User_Functions import User_func_opts
+    # import Create_Account as CA
+    # import Invalid_Error
+    # from __init__ import Accounts,User_func,PinCodes,Disable_Exit
+    # from User_Functions import User_func_opts
 
     command_Login = True
 
@@ -14,8 +13,7 @@ def Login()->str:
         #Redirecting to Create_Account Module
         def Create():
             Window.destroy()
-            reload(CA)
-            CA.New_Account()
+            New_Account(Login,Invalid_Error,Accounts,PinCodes,Security)
             nonlocal command_Login 
             command_Login = False
 
@@ -67,7 +65,7 @@ def Login()->str:
                     def Yes():
                         if Yes_Bt.configure():
                             Verify.destroy()
-                            CA.New_Account()
+                            New_Account(Login,Invalid_Error,Accounts,PinCodes,Security)
                             nonlocal command_Login
                             command_Login = False
 

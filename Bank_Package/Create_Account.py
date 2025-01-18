@@ -1,7 +1,7 @@
-def New_Account():
+def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
     import tkinter as tk
-    import Invalid_Error
-    from __init__ import Accounts,PinCodes,Security
+    # import Invalid_Error
+    # from __init__ import Accounts,PinCodes,Security
     from importlib import reload
 
     Command_New_Acc = True
@@ -9,9 +9,9 @@ def New_Account():
     while Command_New_Acc:
         def Stop():
             Window_NA.destroy()
-            import Login_Screen as LS
-            reload(LS)
-            LS.Login()
+            # import Login_Screen as LS
+            
+            Login()
             nonlocal Command_New_Acc
             Command_New_Acc = False
                         
@@ -55,9 +55,9 @@ def New_Account():
                             Window_sec.destroy()
                             Accounts.append(Acc)
                             PinCodes.append(Pin_New) 
-                            import Login_Screen as LS
-                            reload(LS)   
-                            LS.Login()
+                            # import Login_Screen as LS
+                               
+                            Login()
                             nonlocal Command_New_Acc
                             Command_New_Acc = False
                             global Security_Code
