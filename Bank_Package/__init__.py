@@ -1,20 +1,20 @@
 import os
-import Repair
-import Main_Starter
+# import Repair
+# import Main_Starter
 import tkinter as tk
-import Software_Activation
+# from Product_Activation import Software_Activation
 from importlib import reload
 
 #Knowing The Path Of The Package
 Check_Location=os.getcwd()
 
 if 'Main_File' not in Check_Location:
-    Path = Check_Location + "\\Main_File"
+    Path = Check_Location + "\\Bank_Package"
 else:
     Path = Check_Location
 
 try:
-    File = Path.removesuffix(r'\Main_File') + r'\LICENSE' 
+    File = Path.removesuffix(r'\Bank_Package') + r'\LICENSE' 
     with open(File) as File_check:
         Licence_Data_Check = File_check.read()
 
@@ -36,8 +36,12 @@ try:
         Accounts:list[str] = eval(Data.readline())
         PinCodes:list[str] = eval(Data.readline())
         Security:list[str] = eval(Data.readline())
+
+    Repair = 'Not Required'
+
 except:
-    Repair.User_Data_Not_Found()
+    Repair = 'Required'
+    print('Error While Reading Data')
 
 #Key Finder
 def User_func(User=None)->int:
@@ -53,10 +57,11 @@ def Disable_Exit():
 def License()->str:
     license = '''Copyright (c) 2026 Virati Akira Nandhan Reddy
     
-Owner: Virati Akira Nandhan Reddy
-Programer: Virati Akira Nandhan Reddy
+Programmer/Owner: Virati Akira Nandhan Reddy
 Python Built Version: 3.13.0 (64-Bit)
 Code Editer Used: Microsoft's Visual Studio Code
+License: MIT License
+
  '''
     Choice = input('Detailed Or Shortend-(D/S):')
     match Choice:
@@ -104,26 +109,12 @@ You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Ro
 
     War.mainloop() 
 
-#Heart Of The Program
-def Start_Program():
-    if Activated == True:
-        if License_Check == True:
-            reload(Main_Starter)
-            Main_Starter.Start_Main()
-        else:
-            Corrupted()
 
-    else:
-        if License_Check == True:
-            reload(Software_Activation)
-            Software_Activation.Activate()
-        else:
-            Corrupted()
 
 print('Hello From __init__')
 print(PinCodes)
 #License()
 # Corrupted()
 
-if __name__ == '__main__':
-    Start_Program()
+# if __name__ != '__main__':
+    # Start_Program()

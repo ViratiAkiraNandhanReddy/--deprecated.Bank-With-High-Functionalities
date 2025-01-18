@@ -1,5 +1,5 @@
 import tkinter as tk
-from Logout_Screen import Activation_Save
+from Save_Info import Activation_Save
 
 #Special Keys For Activation of Software
 Product_keys = [
