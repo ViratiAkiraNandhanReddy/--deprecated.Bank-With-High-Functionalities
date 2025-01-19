@@ -1,7 +1,7 @@
-def User_func_opts():
+def User_func_opts(Accounts,User_func,PinCodes,Security):
 
     import tkinter as tk
-    from importlib import reload
+    from . import Login_Screen
     
     
     Command_Loop = True
@@ -9,9 +9,7 @@ def User_func_opts():
     while Command_Loop:
         def log():
             Window.destroy()
-            import Login_Screen as LS
-            reload(LS)
-            LS.Login()
+            Login_Screen.Login(Accounts,User_func,PinCodes,Security)
             nonlocal Command_Loop
             Command_Loop = False
 

@@ -1,5 +1,13 @@
+'''This Module Is Used To Activate The SoftWare/Product By Using The Product Keys
+Which Provides The Additional Security For This Software
+
+The Product Keys Will Be Provided By The Owner
+GitHub: ViratiAkiraNandhanReddy'''
+
+#Importing Required Packages/Modules
 import tkinter as tk
 
+#If The Product Is Not Activated
 Activated = False
 
 #Special Keys For Activation of Software
@@ -39,10 +47,21 @@ Instagram: Viratiaki53
 *Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
 
 '''
+
+#Activation Of SoftWare If The Product Key Match 
 class Software_Activation:
+
+    '''This Class Is Used For The Activation Of the SoftWare/Product\n
+How Does This Class Works?\n
+It will Ask The User To Accept The Terms And Guidelines If Accepted. Then Asks For The Product Key If That Product Key Matches The Exact Same As The 
+Given Product Keys Then It Will Return As True. This Will Be Readed By The Main_Bank.py. Then It Will Call The Save_Info.py. After That The Main
+Program Will Be Automatically Started On It Self\n
+Then The Program Is Ready To Use\n
+**Once The Program Is Activated It Never Asks To Activate Again
+ '''
+    
     #Main Function
     def Activate():
-        '''Used To Activate The Software'''
 
         #New Window For Product Key
         def Product_Key():
@@ -123,10 +142,9 @@ class Software_Activation:
         tk.Label(Window,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',\
                 fg='Black',bg='Light Blue',font=('Calibri 8')).place(x=528,y=480)
         
-
         Window.mainloop()
 
         return Activated
 
-#Satisfied Code Completion:95%     
+#Satisfied Code Completion:98%     
 '''                                                            End Of Program                                                                 '''

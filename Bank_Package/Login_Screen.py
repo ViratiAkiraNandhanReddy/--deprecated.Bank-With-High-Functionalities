@@ -1,10 +1,13 @@
-def Login(New_Account,Invalid_Error,Accounts,User_func,PinCodes,Disable_Exit,User_func_opts,Security)->str:
+def Login(Accounts,User_func,PinCodes,Security)->str:
+
+    def Disable_Exit():
+        pass
 
     import tkinter as tk
-    # import Create_Account as CA
-    # import Invalid_Error
+    from . import Create_Account as CA
+    from . import Invalid_Error
     # from __init__ import Accounts,User_func,PinCodes,Disable_Exit
-    # from User_Functions import User_func_opts
+    from .User_Functions import User_func_opts
 
     command_Login = True
 
@@ -13,7 +16,7 @@ def Login(New_Account,Invalid_Error,Accounts,User_func,PinCodes,Disable_Exit,Use
         #Redirecting to Create_Account Module
         def Create():
             Window.destroy()
-            New_Account(Login,Invalid_Error,Accounts,PinCodes,Security)
+            CA.New_Account(Accounts,PinCodes,Security,User_func)
             nonlocal command_Login 
             command_Login = False
 
@@ -48,7 +51,7 @@ def Login(New_Account,Invalid_Error,Accounts,User_func,PinCodes,Disable_Exit,Use
             print(PinCode)
             if UserName in Accounts:
                 if PinCodes[User_func(UserName)] == PinCode:
-                    User_func_opts()
+                    User_func_opts(Accounts,PinCodes,Security,User_func)
                 elif PinCodes[User_func(UserName)] != PinCode:
                     Invalid_Error.Pass_Error()
 
@@ -65,7 +68,7 @@ def Login(New_Account,Invalid_Error,Accounts,User_func,PinCodes,Disable_Exit,Use
                     def Yes():
                         if Yes_Bt.configure():
                             Verify.destroy()
-                            New_Account(Login,Invalid_Error,Accounts,PinCodes,Security)
+                            CA.New_Account(Accounts,User_func,PinCodes,Security)
                             nonlocal command_Login
                             command_Login = False
 

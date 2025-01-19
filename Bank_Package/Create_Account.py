@@ -1,17 +1,19 @@
-def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
+def New_Account(Accounts,PinCodes,Security,User_func):
     import tkinter as tk
-    # import Invalid_Error
+    from . import Invalid_Error
+    from . import Login_Screen
     # from __init__ import Accounts,PinCodes,Security
-    from importlib import reload
+
+    def Disable_Exit():
+        pass
 
     Command_New_Acc = True
 
     while Command_New_Acc:
         def Stop():
             Window_NA.destroy()
-            # import Login_Screen as LS
             
-            Login()
+            Login_Screen.Login(Accounts,User_func,PinCodes,Security)
             nonlocal Command_New_Acc
             Command_New_Acc = False
                         
@@ -26,6 +28,7 @@ def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
         Window_NA.title('New Account')
         Window_NA.geometry('350x120')
         Window_NA.resizable(False,False)
+        Window_NA.protocol("WM_DELETE_WINDOW",Disable_Exit)
         tk.Label(Window_NA,text='Creating An New Account',fg='Red').grid(column=2)
         tk.Label(Window_NA,text='New Username').grid(row=2,pady=20)
         New = tk.Entry(Window_NA)
@@ -55,14 +58,14 @@ def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
                             Window_sec.destroy()
                             Accounts.append(Acc)
                             PinCodes.append(Pin_New) 
-                            # import Login_Screen as LS
-                               
-                            Login()
+
+                            Login_Screen.Login(Accounts,User_func,PinCodes,Security)
                             nonlocal Command_New_Acc
                             Command_New_Acc = False
                             global Security_Code
                             Security_Code = None
                         Window_sec = tk.Tk()
+                        Window_sec.protocol("WM_DELETE_WINDOW",Disable_Exit)
                         tk.Label(Window_sec,text='In Case You Forget PinCode Use This Security Code',fg='Red',pady=10).pack()
                         Security_Code=Acc[0:4] + Pin_New[1:5]
                         if Security_Code not in Security:
@@ -76,6 +79,7 @@ def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
                 Window = tk.Tk()
                 Window.title('PinCode')
                 Window.resizable(False,False)
+                Window.protocol("WM_DELETE_WINDOW",Disable_Exit)
                 tk.Label(Window,text='** Must Contain 4 or More Characters **').grid(row=0,column=1)
                 tk.Label(Window,text='New PinCode').grid(row=1,column=0)
                 New_P = tk.Entry(Window)
@@ -83,5 +87,7 @@ def New_Account(Login,Invalid_Error,Accounts,PinCodes,Security):
                 Continue_Pin = tk.Button(Window,text='Continue',fg='Green',command=Values_Pin).grid(row=2,column=1)
                 Window.mainloop()
         except:
-            pass
+            print('Error While Runing Create_Account')
 
+#Satisfied Code Completion:88%     
+'''                                                            End Of Program                                                                 '''
