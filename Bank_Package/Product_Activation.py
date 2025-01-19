@@ -122,6 +122,10 @@ Then The Program Is Ready To Use\n
         Window.geometry('750x500')
         Window.config(background='Light Blue')
         Window.resizable(False,False)
+    
+        
+
+        
         OK = tk.BooleanVar()
 
         #Terms And Conditions
