@@ -57,7 +57,7 @@ def Login(Accounts,User_func,PinCodes,Security)->str:
             print(PinCode)
             if UserName in Accounts:
                 if PinCodes[User_func(UserName)] == PinCode:
-                    User_Requirements.Menu(Accounts,PinCodes,Security,User_func)
+                    User_Requirements.User_Menu(Accounts,PinCodes,Security,User_func)
                 elif PinCodes[User_func(UserName)] != PinCode:
                     Invalid_Error.Pass_Error()
 

@@ -1,23 +1,12 @@
-import customtkinter as CTk
-from . import Accounts,PinCodes,Security,User_func
-print(Accounts,PinCodes,Security)
+import tkinter as tk
+from . import Login_Screen
+from . import Accounts,PinCodes,Security
+
+
 
 class User_Requirements:
-
-
-
-
-    def Balance()->str:
-        Balance_Window = CTk.CTk()
-        Balance_Window._set_appearance_mode('dark')
-        Balance_Window.geometry()
-        Balance_Window.title('Balance Available')
-        Balance_Window.resizable(False,False)
-        CTk.CTkLabel(Balance_Window,text=f'Balance Available:${''}',fg_color='Lime').pack()
-        
-
-
-        Balance_Window.mainloop()
+    def Balance():
+        pass
 
     def Deposit():
         pass
@@ -25,10 +14,8 @@ class User_Requirements:
     def Withdraw():
         pass
 
-    def Menu(Accounts,User_func,PinCodes,Security,User_index):
 
-        from . import Login_Screen
-        
+    def User_Menu(Accounts,User_func,PinCodes,Security):
         
         Command_Loop = True
 
@@ -39,18 +26,17 @@ class User_Requirements:
                 nonlocal Command_Loop
                 Command_Loop = False
 
-
-            Window = CTk.CTk()
+            print(Accounts,PinCodes,Security)
+            Window = tk.Tk()
             Window.geometry('300x500')
             Window.title('User Functions')
-            B = CTk.CTkButton(Window,text='Balance',fg_color='Green')
+            B = tk.Button(Window,text='Balance',fg='Green')
             B.place(x=130,y=10)
-            D = CTk.CTkButton(Window,text='Deposit',fg_color='Blue')
+            D = tk.Button(Window,text='Deposit',fg='Blue')
             D.place(x=90,y=50)
-            W = CTk.CTkButton(Window,text='Withdrawal',fg_color='Red')
+            W = tk.Button(Window,text='Withdrawal',fg='Red')
             W.place(x=150,y=50)
-            C = CTk.CTkButton(Window,text='Log Out',command=log,fg_color='Purple')
+            C = tk.Button(Window,text='Log Out',command=log,fg='Purple')
             C.place(x=130,y=400)
             Window.mainloop()
-
-# User_Requirements.Balance()#.Menu([],1,[],[])
+        
