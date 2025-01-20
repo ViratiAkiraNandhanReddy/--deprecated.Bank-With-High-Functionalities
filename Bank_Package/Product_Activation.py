@@ -122,6 +122,9 @@ Then The Program Is Ready To Use\n
         Window.geometry('750x500')
         Window.config(background='Light Blue')
         Window.resizable(False,False)
+        icon = tk.PhotoImage(file=r'Bank_Package\Visual Data\10108414.png')
+        Window.iconphoto(True,icon)
+
     
         
 

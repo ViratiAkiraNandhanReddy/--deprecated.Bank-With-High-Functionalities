@@ -1,10 +1,13 @@
-import tkinter as tk
+import customtkinter as CTk
 
-def Developer():
+class Developer_Requirements:
 
-    Window = tk.Tk()
-    Window.geometry('250x150')
-    Window.title('Developer')
-    Window.resizable(False,False)
-    Window.mainloop()
-    pass
+
+    def Developer():
+
+        Window = CTk.CTk()
+        Window.geometry('250x150')
+        Window.title('Developer')
+        Window.resizable(False,False)
+        Window.mainloop()
+        pass
