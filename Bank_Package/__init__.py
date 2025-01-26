@@ -5,6 +5,7 @@ Owner/Author: Virati Akira Nandhan Reddy
 GitHub: ViratiAkiraNandhanReddy
 Instagram: Viratiaki53
 Gmail: Viratiaki29@gmail.com
+LinkedIn: virati-akira-nandhan-reddy
 Nationality: Indian/American 
 
 At Sarting Of This Project My Age Was 16 (Class 11)
@@ -35,6 +36,9 @@ My First Package Based Biggest Project
 import os
 import tkinter as tk
 from time import sleep
+from . import Repair_Product
+import customtkinter as CTk
+import PIL
 
 #Knowing The Path Of The Package
 Check_Location=os.getcwd()
@@ -66,19 +70,31 @@ except FileNotFoundError:
 #Grabing Data From Data_Of_User.txt File
 try:
     with open(fr'{Path}\Data_Of_User.txt') as Data:
-        Activated:bool = eval(Data.readline())
-        Accounts:list[str] = eval(Data.readline())
-        PinCodes:list[str] = eval(Data.readline())
-        Security:list[str] = eval(Data.readline())
+        Is_Product_Activated:bool = eval(Data.readline())
 
-    Repair = 'Not Required'
+        #User Details
+        Available_Accounts:list[str] = eval(Data.readline())
+        User_PinCodes:list[str] = eval(Data.readline())
+        User_Security_Codes:list[str] = eval(Data.readline())
+        User_Balance:list[str] = eval(Data.readline())
+
+        #Details Of Loan Lenders
+        Loan_Available_For_User:list[float|int] = eval(Data.readline())
+        Loan_Taken_Per_User:list[float|int] = eval(Data.readline())
+        Loan_Interest_Amount_Per_User:list[float|int] = eval(Data.readline())
+        Rate_Of_Interest_Per_User:list[float] = eval(Data.readline())
+
+
+
+
+
 except:
-    Repair = 'Required'
-    print('Error While Reading Data')
+    Repair_Product.User_Data_Lost()
+    print('Error While Reading User Data')
 
 #Key Finder
 def User_func(User=None)->int:
-    User_index = Accounts.index(User)
+    User_index = Available_Accounts.index(User)
     return User_index
 
 #To View The Licence(Summarised/Detailed)
@@ -109,6 +125,12 @@ License: MIT License
     
 #Documentation Of The SoftWare
 def Documentation()->str:
+    Window = CTk.CTk()
+    Window.title('Documentation')
+    Window.resizable(False,False)
+    
+
+    Window.mainloop()
     pass
 
 #File is Locked
@@ -145,7 +167,7 @@ You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Ro
 
 
 print('Hello From __init__')
-print(PinCodes)
+print(User_PinCodes)
 # License()
 # Corrupted()
 

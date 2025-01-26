@@ -14,7 +14,7 @@ from Bank_Package.User_Actions import User_Requirements
 def Start_Program():
     if Activated == True:
         if License_Check == True:
-            Login(Accounts,User_func,PinCodes,Security)
+            Login(Available_Accounts,User_PinCodes,User_Security_Codes)
             print('prg started')
         else:
             Corrupted()
@@ -28,6 +28,6 @@ def Start_Program():
 Start_Program()
 
 if Product_Activated == True:
-    Exit(Path,Product_Activated,Accounts,PinCodes,Security)
+    Exit(Path,Product_Activated,Available_Accounts,User_PinCodes,User_Security_Codes)
     Activated = True
     Start_Program()

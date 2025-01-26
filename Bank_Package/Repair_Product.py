@@ -77,7 +77,8 @@ class Loading_Data_Finding:
     
     Loading.mainloop()
 
-
+class User_Data_Lost:
+    pass
 def User_Data_Not_Found():
     try:
         with open(r'Bank_Package\Data_Of_User.txt','r') as Data:
