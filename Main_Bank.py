@@ -1,33 +1,35 @@
+#Importing Required Modules/Packages
 from Bank_Package import *
-# from Bank_Package.Start_Bank import Bank_Started
 from Bank_Package.Product_Activation import Software_Activation
 from Bank_Package.Save_Info import Exit
 from Bank_Package.Login_Screen import Login
-from Bank_Package.Create_Account import New_Account
-from Bank_Package import Invalid_Error
-from Bank_Package.User_Actions import User_Requirements
 
-# from 
+if Is_Product_Activated:
+    Activated = True 
+else:
+    Activated = False
+    
 
+Product_Activated = False
 
 #Heart Of The Program
 def Start_Program():
-    if Activated == True:
-        if License_Check == True:
-            Login(Available_Accounts,User_PinCodes,User_Security_Codes)
+    if Activated:
+        if License_Check:
+            Login(Available_Accounts,User_PinCodes,User_Security_Codes,User_Balance).Display_Login()
             print('prg started')
         else:
             Corrupted()
 
     else:
-        if License_Check == True:
+        if License_Check:
             global Product_Activated
             Product_Activated = Software_Activation.Activate()
         else:
             Corrupted()
 Start_Program()
 
-if Product_Activated == True:
+if Product_Activated:
     Exit(Path,Product_Activated,Available_Accounts,User_PinCodes,User_Security_Codes)
     Activated = True
     Start_Program()

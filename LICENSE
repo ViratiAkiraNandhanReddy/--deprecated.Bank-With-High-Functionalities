@@ -1,44 +1,93 @@
-                              MIT License
+MIT License
 
 Copyright (c) 2026 Virati Akira Nandhan Reddy
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software with restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a 
+copyof this software and associated documentation files (the "Software"),
+to deal in the Software with restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included 
+in allcopies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
-                        Owner's Note And Guidelines
-
-SHOULD NOT MODIFY THE LICENSE FILE, MODIFYING THE OWNERSHIP DETAILS ARE STRICTLY FORBIDDEN
-
-REMOVING OF ANY FILE MAY LEADS TO CRASH WHOLE PROGRAM, BE CAREFUL WHILE MODIFYING
-MODIFYING THE FILE [Data_Of_User.txt] IS A KIND OF DATA LEAK
-
-BE AWAY FROM THE FILE [__init__.py] IT CONTAINS ALL THE REQUIRED INITIALIZATION
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+OTHER DEALINGS IN THE SOFTWARE.
 
 
-                      IMPORTANT NOTES FOR USER BY OWNER
+**Prohibition Against License File Modification**
 
-DON'T TRY TO DELETE THE FILE [Data_Of_User.txt], ALL THE REQUIRED DETAILS ARE SAVED IN IT
+The integrity of the license file is paramount and its contents must 
+remain unaltered.This file serves as the sole and definitive record 
+of the licensing agreement between the licensor and the licensee, 
+outlining the permitted scope of use, restrictions, and obligations 
+associated with the software or product it accompanies.  Any modification, 
+however slight, to the license file risks invalidating the agreement and 
+potentially infringing upon the licensor's intellectual property rights.  
+The terms and conditions stipulated within the license file are legally 
+binding and represent a mutual understanding between the parties involved.
+Tampering with the file's contents could misrepresent the agreed-upon 
+terms, leading to disputes, legal action, and the revocation of the license.
+
+The license file is meticulously crafted to protect both the licensor's 
+ownership and the licensee's right to utilize the software or product 
+under specific conditions.It addresses crucial aspects such as the number 
+of permitted installations, the duration of the license, any geographical 
+limitations, and restrictions on reverse engineering, redistribution, or 
+modification of the licensed material.These provisions are carefully 
+considered and balanced to ensure fair usage and protect the licensor's 
+investment in the development of the software or product.  Altering the 
+license file could inadvertently grant the licensee rights they were never 
+intended to have, or conversely, remove protections afforded to the licensor.
+
+Therefore, it is unequivocally prohibited to modify the license file in 
+any way.The licensee must adhere strictly to the terms and conditions as 
+they are presented within the original, unmodified file.  Should the licensee 
+have any questions or concernsregarding the license terms, or if they require 
+modifications to the agreement, they must contact the licensor directly to 
+discuss and negotiate any changes.Unauthorized alterations to the license file
+will be considered a breach of contract and may result in serious consequences, 
+including the termination of the license and legal repercussions.The license 
+file is a critical document that should be treated with the utmost respect and 
+preserved in its original, unaltered form. Maintaining the integrity of the 
+license file ensures the continued validity of the licensing agreement and 
+protects the rights of both the licensor and the licensee.
 
 
-Contact Me: viratiaki29@gmail.com
+**Owner's Note And Guidelines**
 
-                                        
+MODIFYING THE OWNERSHIP DETAILS AND LICENSE FILE ARE STRICTLY FORBIDDEN
+
+Removing Of Any File May Leads To Crash Whole Program, Be Careful While Modifying
+*MODIFYING THE FILE [Data_Of_User.txt] IS A KIND OF DATA LEAK
+
+Be AWAY From The File [__init__.py] It Contains All The REQUIRED INITIALIZATION
+Modification of [__init__.py] May Leads To Malfunction Of The Software
+
+*Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
+
+
+**IMPORTANT NOTES FOR USER BY OWNER**
+
+DON'T DELETE THE FILE [Data_Of_User.txt], All The Required Details Are Saved In It
+If So Owner is Not Responsible For Lose Of User Data
+
+
+**Contact Me**
+                        
+Gmail: viratiaki29@gmail.com
+Instagram: Viratiaki53
+FaceBook: Viratiaki53
+GitHub: ViratiAkiraNandhanReddy
+LinkedIn: virati-akira-nandhan-reddy
+
+
                                       ***Restricted Zone***
 
 Modifying Restricted Zone is STRICTLY FORBIDDEN!

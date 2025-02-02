@@ -1,6 +1,6 @@
-import tkinter as tk
+import customtkinter as CTk
 def Chat_Bot_Bank():
-    Chat = tk.Tk()
+    Chat = CTk.CTk()
     Chat.title('Chat Bot')
     Chat.resizable(False,False)
     Chat.geometry('900x600')

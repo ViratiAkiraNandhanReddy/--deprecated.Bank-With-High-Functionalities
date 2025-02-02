@@ -10,7 +10,6 @@ Security is a 12 Letter Unique Code Which is Made Up Of Data From Username And P
 
 #Importing The Required Modules/Packages
 import PIL.Image
-from Login_Screen import Login
 import customtkinter as CTk
 
 #Icon For Better Visualization
@@ -157,8 +156,8 @@ class Create_Account:
                 
         #Canceling The Create Account And Redirecting To Login
         def Cancel():
+            '''This Function is Used To Cancel The Account Creation And Redirects To The Login Screen'''
             Window.destroy()
-            Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes)
 
         #Main Window For Signing Up
         Window = CTk.CTk()
@@ -205,6 +204,6 @@ class Create_Account:
         Example: User_Name , User_Password , User_Security_Code'''
         self.New_Account_Details.clear()
 
-Create_Account([],[]).Creating_New_Account()
+# Create_Account([],[]).Creating_New_Account()
 #Satisfied Code Completion:96%     
 '''                                                            End Of Program                                                                 '''

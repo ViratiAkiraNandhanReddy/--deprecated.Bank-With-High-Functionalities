@@ -83,11 +83,6 @@ try:
         Loan_Taken_Per_User:list[float|int] = eval(Data.readline())
         Loan_Interest_Amount_Per_User:list[float|int] = eval(Data.readline())
         Rate_Of_Interest_Per_User:list[float] = eval(Data.readline())
-
-
-
-
-
 except:
     Repair_Product.User_Data_Lost()
     print('Error While Reading User Data')
@@ -122,16 +117,6 @@ License: MIT License
             print('\nLoading...\n')
             sleep(8)
             print(license)
-    
-#Documentation Of The SoftWare
-def Documentation()->str:
-    Window = CTk.CTk()
-    Window.title('Documentation')
-    Window.resizable(False,False)
-    
-
-    Window.mainloop()
-    pass
 
 #File is Locked
 def Corrupted()->None:
@@ -163,7 +148,6 @@ You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Ro
     tk.Label(War,text='The User Data Will be Saved Safely!',fg='Green',bg='#FFBDBD',font=('Roboto 17')).pack(pady=10)
 
     War.mainloop() 
-
 
 
 print('Hello From __init__')
