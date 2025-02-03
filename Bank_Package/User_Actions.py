@@ -25,6 +25,37 @@ else:
     Greetings = 'Good Night'
 
 
+class Loan:
+    def __init__(self):
+        pass
+
+    def Show_interest_Calculator():
+        pass
+    #Calculates the loan interest
+    def Interest(Amount:int|float)->float:
+        if Amount <= 10E6 and Amount > 9E6:
+            return 1.29
+        elif Amount <= 9E6 and Amount > 8E6:
+            return 1.99
+        elif Amount <= 8E6 and Amount > 7E6:
+            return 2.29
+        elif Amount <= 7E6 and Amount > 6E6:
+            return 2.84
+        elif Amount <= 6E6 and Amount > 5E6:
+            return 3.14
+        elif Amount <= 5E6 and Amount > 4E6:
+            return 3.99
+        elif Amount <= 4E6 and Amount > 3E6:
+            return 4.25
+        elif Amount <= 3E6 and Amount > 2E6:
+            return 4.85
+        elif Amount <= 2E6 and Amount > 1E6:
+            return 5.19
+        elif Amount <= 1E6 and Amount > 5E5:
+            return 5.88
+        else:
+            return 7.49
+        
 
 class User_Requirements:
     def __init__(self,User_Name:str,User_Password:str,Security_Code:str,User_Balance:float):
@@ -63,15 +94,13 @@ class User_Requirements:
 
         #Balance Frame That Shows The User Bank Balance Which is Contained in The Main Frame
         Balance_Frame = CTk.CTkFrame(Frame,fg_color='#9E1076')
-        Balance_Frame.configure(width=230,height=50)
+        Balance_Frame.configure(width=200,height=50)
         Balance_Frame.place(x=10,y=60)
         CTk.CTkLabel(Balance_Frame,text='Your Bank Balance:',font=('Roboto',16),height=14).place(x=5,y=3)
-        CTk.CTkLabel(Balance_Frame,text=f'${self.User_Balance:.2f}',text_color='Lime').place(x=5,y=20)
+        Balance = CTk.CTkLabel(Balance_Frame,text=f'${self.User_Balance:.2f}',text_color='Lime').place(x=5,y=20)
 
-
-
-
-
+        CTk.CTkButton(Frame,text='Deposit').place(x=1010,y=484)
+        CTk.CTkButton(Frame,text='Withdraw').place(x=1010,y=522)
 
 
 
@@ -83,11 +112,14 @@ class User_Requirements:
         
 
 
+        
+
+
         #Copyright Note 
         CTk.CTkLabel(Window,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8)).place(x=1046,y=580)
 
         Window.mainloop()
 
-# User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548).User_Interface()
+User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548).User_Interface()
 
 

@@ -18,6 +18,7 @@ Login_Background = PIL.Image.open(fr'Bank_Package\Visual Data\Login Wallpapers\{
 #Required Icon For The Details
 User_Icon = PIL.Image.open(r'Bank_Package\Visual Data\User Icon-Multi.png')
 Password_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Locked.png')
+Security_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Secured.png')
 
 #Deny The User To Close The Window
 def Disable_Exit():
@@ -27,17 +28,34 @@ def Disable_Exit():
 
 #Class For The Developer
 class Developer:
-    def __init__(self):
-        pass
+    def __init__(self,User_Balance):
+        self.User_Balance = User_Balance
 
-    def Developer():
+    def Display_Developer(self):
         
         Developer_Window = CTk.CTk()
-        Developer_Window.geometry('250x150')
+        Developer_Window.geometry('1000x500')
         Developer_Window.title('Developer')
         Developer_Window.resizable(False,False)
+        Developer_Frame = CTk.CTkFrame(Developer_Window,width=980,height=480)
+        Developer_Frame.place(x=10,y=10)
+
+        Total_Balance = CTk.CTkFrame(Developer_Frame,width=700,height=50,fg_color='Yellow',border_color='Orange',border_width=1)
+        Total_Balance.place(x=5,y=5)
+        CTk.CTkLabel(Total_Balance,text='Total Balance Present In The Bank',font=('Freestyle Script',26,'bold'),text_color='Purple',height=0,width=690).place(x=5,y=2)
+        CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=35)
+        # CTk.CTkButton()
+
+
+
+
+
+
+
+
+
         Developer_Window.mainloop()
-        pass
+        
 
 #Class For The License
 class License:
@@ -174,6 +192,7 @@ class Login:
             Password.place(x=30,y=324)
             Login_Button_Delay.place(x=142,y=400)
             Sign_Up_Delay.place(x=2,y=538)
+            Copyright_Note.place(x=243,y=547)
 
         #To Hide The Items Before The Login Screen Disappears
         def Destroy_Login_Items():
@@ -188,6 +207,7 @@ class Login:
             Password.place_forget()
             Login_Button_Delay.place_forget()
             Sign_Up_Delay.place_forget()
+            Copyright_Note.place_forget()
             Window.after(1200,Reset_Password_Display_Items)
 
         #To Show The Items After The Reset Password Screen Appears
@@ -195,6 +215,12 @@ class Login:
             Heading_Reset.place(x=105,y=2)
             Greet_Reset.place(x=30,y=65)
             Cancel_Reset.place(x=2,y=538)
+
+            User_icon_Reset.place(x=140,y=140)
+            Username_At_Reset_Password.place(x=30,y=204)
+            Security_icon_Reset.place(x=120,y=260)
+            Security_Code_At_Reset.place(x=30,y=324)
+            Copyright_Note_Reset.place(x=247,y=541)
 
         #To Hide The Items Before The Reset Password Screen Disappears
         def Destroy_Reset_Password_Items():
@@ -230,17 +256,17 @@ class Login:
                 License(Detailed_Licence).Show_License()
 
             Dev_Doc = CTk.CTk()
-            Dev_Doc.geometry('300x252')
+            Dev_Doc.geometry('220x182')
             Dev_Doc.resizable(False,False)
-            Dev_Doc.title('Great To See You Here')
+            Dev_Doc.title('Bank!')
 
             Dev_Doc_Frame = CTk.CTkFrame(Dev_Doc)
-            Dev_Doc_Frame.configure(width=280,height=232)
+            Dev_Doc_Frame.configure(width=200,height=162)
             Dev_Doc_Frame.place(x=10,y=10)
 
-            CTk.CTkButton(Dev_Doc_Frame,text='Developer',font=('Roboto',20,'bold'),fg_color='Orange',hover_color='Yellow',text_color='Black',width=240,height=48).place(x=20,y=22)
-            CTk.CTkButton(Dev_Doc_Frame,text='Documentation',font=('Roboto',20,'bold'),width=240,height=48,fg_color='#E63B60',hover_color='#067FD0').place(x=20,y=92)
-            CTk.CTkButton(Dev_Doc_Frame,text='License',font=('Roboto',20,'bold'),width=240,height=48,fg_color='#797EF6',hover_color='#4ADEDE',command=Show_License_Window).place(x=20,y=162)
+            CTk.CTkButton(Dev_Doc_Frame,text='Developer',font=('Roboto',16,'bold'),fg_color='Orange',hover_color='Yellow',text_color='Black',width=180,height=38,command=Developer(self.User_Balance).Display_Developer).place(x=10,y=12)
+            CTk.CTkButton(Dev_Doc_Frame,text='Documentation',font=('Roboto',16,'bold'),width=180,height=38,fg_color='#E63B60',hover_color='#067FD0').place(x=10,y=62)
+            CTk.CTkButton(Dev_Doc_Frame,text='License',font=('Roboto',16,'bold'),width=180,height=38,fg_color='#797EF6',hover_color='#4ADEDE',command=Show_License_Window).place(x=10,y=112)
             Dev_Doc.mainloop()
 
 
@@ -287,11 +313,21 @@ class Login:
         Frame_Reset_Password = CTk.CTkFrame(Window,corner_radius=0)
         Frame_Reset_Password.configure(width=400,height=560)
         Frame_Reset_Password.place(x=x_reset,y=20)
-        Heading_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Forgot Password',font=('Freestyle Script',42,'bold'),width=5,text_color='Lime')#.place(x=105,y=2)
-        Greet_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Sad To See You Here!',font=('Freestyle Script',28),width=5,text_color='Red')#.place(x=30,y=65)
-        Cancel_Reset = CTk.CTkButton(Frame_Reset_Password,text='Cancel',fg_color='transparent',height=15,border_width=1,hover_color='#A1FB8E',width=45,command=Hide_Forgot_Password_Show_Login)#.place(x=2,y=538)
 
+        Heading_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Forgot Password',font=('Freestyle Script',42,'bold'),width=5,text_color='Lime')#.place(x=105,y=2)
+        Greet_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Sad To See You Here!',font=('Freestyle Script',32),width=5,text_color='Red')#.place(x=30,y=65)
+        User_icon_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Username',font=('Roboto',24,'bold'),image=CTk.CTkImage(light_image=User_Icon,dark_image=User_Icon,size=(40,40)),compound='top')#.place(x=140,y=140)
+        Username_At_Reset_Password = CTk.CTkEntry(Frame_Reset_Password,placeholder_text='Example: Virati Akira Nandhan Reddy',height=40,width=340,corner_radius=5,
+                                font=('Roboto',16))#.place(x=30,y=204)
         
+        Security_icon_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Security Code',font=('Roboto',24,'bold'),image=CTk.CTkImage(light_image=Security_Icon,dark_image=Security_Icon,size=(40,40)),compound='top')#.place(x=120,y=260)
+        Security_Code_At_Reset = CTk.CTkEntry(Frame_Reset_Password,placeholder_text='Example: Viratiaki@Akki',height=40,width=340,corner_radius=5,
+                                font=('Roboto',16))#.place(x=30,y=324)
+        
+        Request_Reset_Password = CTk.CTkButton(Frame_Reset_Password,text='Request',width=120,border_width=1,text_color='Purple',
+                                               fg_color='transparent',font=('Roboto',16,'bold'),hover_color='Light Blue',command='').place(x=142,y=400)
+
+        Cancel_Reset = CTk.CTkButton(Frame_Reset_Password,text='Cancel',fg_color='transparent',height=15,border_width=1,hover_color='#A1FB8E',width=45,command=Hide_Forgot_Password_Show_Login)#.place(x=2,y=538)
         Window.after(1200,Login_Display_Items)
         
         
@@ -306,9 +342,9 @@ class Login:
 
 
         #Copyright Note And The Way To Enter The Developer Options/License Information
-        CTk.CTkButton(Frame,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8),command=License_Developer_Documentation,hover=False,width=0,
-                      height=0,fg_color='transparent',text_color='#218CFF').place(x=243,y=547)
-        CTk.CTkLabel(Frame_Reset_Password,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8)).place(x=247,y=540)
+        Copyright_Note = CTk.CTkButton(Frame,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8),command=License_Developer_Documentation,hover=False,width=0,
+                      height=0,fg_color='transparent',text_color='#218CFF')#.place(x=243,y=547)
+        Copyright_Note_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8))#.place(x=247,y=540)
         
         Window.mainloop()
 
