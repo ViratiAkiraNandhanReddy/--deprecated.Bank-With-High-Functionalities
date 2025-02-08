@@ -120,6 +120,6 @@ class User_Requirements:
 
         Window.mainloop()
 
-User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548).User_Interface()
+# User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548).User_Interface()
 
 

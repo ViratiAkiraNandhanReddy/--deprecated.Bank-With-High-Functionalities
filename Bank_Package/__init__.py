@@ -89,6 +89,7 @@ except:
 
 #Key Finder
 def User_func(User=None)->int:
+    '''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error'''
     User_index = Available_Accounts.index(User)
     return User_index
 

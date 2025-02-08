@@ -19,7 +19,7 @@ Password_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Key.png')
 #Deny The User To Close The Window
 def Disable_Exit():
     ''' This Function Will Be Called When The User Clicked The Exit Button In The Window ; Then This Function Does Nothing Because This 
-    Function Has No Statements Other Than Pass ; So That Window Can't Be Closed'''
+    Function Has No Statements Other Than Pass ; So That Window Can't Be Closed By The User'''
     pass
 
 #Object That Creates An New Account
@@ -27,7 +27,10 @@ class Create_Account:
     '''Class Create_Account is Used To Create An Account By Just Taking The User Inputs Then Makes A Security Code Based On The Username And 
     Password ; Security Code Will Be Of 12 Letters Unique ID Which Is Used To Recover The Account If The Password Was Forgotten Then 
     The Username And Password Will Be Stored In A Tuple Where This Tuple Will Be Appended In A List Called: self.New_Account_Details 
-    Then This List Will Be Readed By Other Module'''
+    
+    Then This List Will Be Readed By Other Module To Store The Data In A File Or Database ; This Class Can Be Used As Stand Alone
+    i.e: No Dependencies Are Required To Run This Class ; This Class Has A Method Called Creating_New_Account Which is Used To Create An Account
+    And Also This Class Has A Method Called Data_Clear Which is Used To Clear All The Data Present In This Class'''
 
     #Initialize The Values To Start The Class
     def __init__(self,Available_Accounts:list[str],User_Security_Codes:list[str]):

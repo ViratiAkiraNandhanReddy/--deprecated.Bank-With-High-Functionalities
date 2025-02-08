@@ -1,38 +1,51 @@
 #Importing Required Modules/Packages
-import customtkinter as CTk
-import PIL.Image
-from random import randint
-from datetime import datetime
-from .Create_Account import Create_Account
-from .User_Actions import User_Requirements
+import customtkinter as CTk  #Customized Tkinter Module
+import PIL.Image  #Pillow Module To Open The Image
+from random import randint  #Random Module To Generate Random Wallpaper
+from datetime import datetime  #DateTime Module To Show The Date
+from .Create_Account import Create_Account  #Create Account Module
+from .User_Actions import User_Requirements  #User Requirements Module
 from . import Detailed_Licence
 
 #Used To Show Date
-Raw_Time = datetime.now()
+Raw_Time = datetime.now() #Shows The Current Date And Time
 Date_Day = Raw_Time.strftime('%d/%b/%Y - %A') #Shows As 02/Feb/2025 - Sunday
 
 #Background Image At Login Screen
 Random_Background = randint(0,30)
-Login_Background = PIL.Image.open(fr'Bank_Package\Visual Data\Login Wallpapers\{Random_Background}.jpg')
+Login_Background = PIL.Image.open(fr'Bank_Package\Visual Data\Login Wallpapers\{Random_Background}.jpg') #Random Wallpaper
 
 #Required Icon For The Details
 User_Icon = PIL.Image.open(r'Bank_Package\Visual Data\User Icon-Multi.png')
 Password_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Locked.png')
 Security_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Secured.png')
+Developer_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Chat-Bot.png')
 
 #Deny The User To Close The Window
 def Disable_Exit():
     ''' This Function Will Be Called When The User Clicked The Exit Button In The Window ; Then This Function Does Nothing Because This 
-    Function Has No Statements Other Than Pass ; So That Window Can't Be Closed'''
+    Function Has No Statements Other Than Pass ; So That Window Can't Be Closed By The User'''
     pass
 
 #Class For The Developer
 class Developer:
+
+    '''This Class Is Used To Show The Developer Information To The User ; Also This Class Is Used To Show The Developer's Image To The
+    User ; This Class Is Used To Show The Total Balance Present In The Bank ; So The User Can Able To Know The Total Balance Present
+    In The Bank ; This Class Is Used To Show The Developer's Information To The User'''
+
     def __init__(self,User_Balance):
         self.User_Balance = User_Balance
 
+    def Developer_Autentication(self):
+        '''This Function Is Used To Authenticate The Developer ; So The Developer Can Able To Access The Developer Information ; This
+        Function Is Used To Show The Developer's Login Screen To The Developer ; So The Developer Can Able To Login To The Developer'''
+        pass
+
     def Display_Developer(self):
-        
+        '''This Function Is Used To Display The Developer Information To The User ; So The User Can Able To View The Developer Information'''
+       
+        #Main Window For The Developer
         Developer_Window = CTk.CTk()
         Developer_Window.geometry('1000x500')
         Developer_Window.title('Developer')
@@ -40,12 +53,13 @@ class Developer:
         Developer_Frame = CTk.CTkFrame(Developer_Window,width=980,height=480)
         Developer_Frame.place(x=10,y=10)
 
-        Total_Balance = CTk.CTkFrame(Developer_Frame,width=700,height=50,fg_color='Yellow',border_color='Orange',border_width=1)
+        #Developer's Information
+        Total_Balance = CTk.CTkFrame(Developer_Frame,width=900,height=40,fg_color='Yellow',border_color='Orange',border_width=1)
         Total_Balance.place(x=5,y=5)
         CTk.CTkLabel(Total_Balance,text='Total Balance Present In The Bank',font=('Freestyle Script',26,'bold'),text_color='Purple',height=0,width=690).place(x=5,y=2)
-        CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=35)
-        # CTk.CTkButton()
-
+        CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=25)
+        # CTk.CTkButton(Developer_Frame,text='',image=CTk.CTkImage(light_image=Developer_Icon,dark_image=Developer_Icon)).place(x=89,y=100)
+        CTk.CTkButton(Developer_Frame,text='Exit',command='').place(x=200,y=300)
 
 
 
@@ -56,7 +70,6 @@ class Developer:
 
         Developer_Window.mainloop()
         
-
 #Class For The License
 class License:
 
@@ -73,10 +86,13 @@ class License:
     '''
 
     def __init__(self,Detailed_Licence):
+        '''This Function Is Used To Initialize The Required Variables For The License Screen ; So That We Can Able To Use The Variables'''
         self.Detailed_Licence = Detailed_Licence
 
     #Main Window For The License
     def Show_License(self):
+        '''This Function Is Used To Show The License Information To The User In A Scrollable Format ; So The User Can Able To View The
+        License Information In A Scrollable Format'''
 
         #License's Main Window
         License_Window = CTk.CTk()
@@ -92,6 +108,8 @@ class License:
 
 #Class For The Documentation
 class Documentation:
+    '''This Class Is Used To Show The Documentation Of The Software To The User ; Also This Class Is Used To Show The Documentation
+    In A Scrollable Format ; So The User Can Able To View The Documentation In A Scrollable Format'''
     def __init__(self):
         pass
 
@@ -101,13 +119,33 @@ class Documentation:
 
 #Class For The Login
 class Login:
-    def __init__(self,Available_Accounts,User_PinCodes,User_Security_Codes,User_Balance):
-        self.Available_Accounts:list = Available_Accounts
-        self.User_PinCodes:list = User_PinCodes
-        self.User_Security_Codes:list = User_Security_Codes
-        self.User_Balance:list = User_Balance
 
+    '''This Class Is Used To Show The Login Screen To The User ; Also This Class Is Used To Redirect The User To The User Actions
+    If The User Name And Password Matches ; This Class Is Used To Redirect The User To The Signup Screen If The User Is Not Available
+    In The DataBase ; This Class Is Used To Show The License, Developer, Documentation Options To The User ; So The User Can Able To
+    View The License, Developer, Documentation ; This Class Is Used To Show The Reset Password Screen To The User ; So The User Can
+    Able To Reset The Password If They Forgot The Password'''
+
+    #Initialize The Values To Start The Class
+    def __init__(self,Available_Accounts,User_PinCodes,User_Security_Codes,User_Balance):
+        self.Available_Accounts:list[str] = Available_Accounts
+        self.User_PinCodes:list[str] = User_PinCodes
+        self.User_Security_Codes:list[str] = User_Security_Codes
+        self.User_Balance:list[int|float] = User_Balance
+
+    #Key Finder
+    def User_func(self,User=None)->int:
+        '''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error'''
+        User_index = self.Available_Accounts.index(User)
+        return User_index
+
+    #Shows The Login Window In The Computer Screen i.e Windows/Mac
     def Display_Login(self):
+        
+        '''This Function Is Used To Display The Login Screen To The User ; So The User Can Able To Login To The Account ; Also This
+        Function Is Used To Show The License, Developer, Documentation Options To The User ; So The User Can Able To View The License,
+        Developer, Documentation ; Also This Function Is Used To Show The Reset Password Screen To The User ; So The User Can Able To
+        Reset The Password If They Forgot The Password'''
 
         global x_login,x_reset
         x_login = 960
@@ -162,8 +200,7 @@ class Login:
         
         #Hides The Reset Password Screen Then Shows The Login Screen in The Window
         def Hide_Forgot_Password_Show_Login():
-            # Login_Display_Items()
-            Window.after(1200,Login_Display_Items)
+            Destroy_Reset_Password_Items()
             Hide_Reset_Password()
             Show_Login()
         
@@ -171,13 +208,7 @@ class Login:
         def Show_Forgot_Password_Hide_Login():
             Destroy_Login_Items()
             Hide_Login()
-            
-
             Show_Reset_Password()
-
-            # Window.after(4000,Hide_Reset_Password)
-            # Window.after(2000,Show_Login)
-            pass
         
         #To Show The Items After The Login Screen Appears
         def Login_Display_Items():
@@ -208,69 +239,208 @@ class Login:
             Login_Button_Delay.place_forget()
             Sign_Up_Delay.place_forget()
             Copyright_Note.place_forget()
-            Window.after(1200,Reset_Password_Display_Items)
+            Window.after(900,Reset_Password_Display_Items)
 
         #To Show The Items After The Reset Password Screen Appears
         def Reset_Password_Display_Items():
             Heading_Reset.place(x=105,y=2)
             Greet_Reset.place(x=30,y=65)
-            Cancel_Reset.place(x=2,y=538)
-
+            Subheading_Reset.place(x=33,y=90)
             User_icon_Reset.place(x=140,y=140)
             Username_At_Reset_Password.place(x=30,y=204)
-            Security_icon_Reset.place(x=120,y=260)
+            Security_icon_Reset.place(x=120,y=250)
+            Forgot_Security_Code_Delay.place(x=270,y=359)
             Security_Code_At_Reset.place(x=30,y=324)
+            Request_Reset_Password.place(x=142,y=400)
+            Cancel_Reset.place(x=2,y=538)
             Copyright_Note_Reset.place(x=247,y=541)
 
         #To Hide The Items Before The Reset Password Screen Disappears
         def Destroy_Reset_Password_Items():
+            Heading_Reset.place_forget()
+            Greet_Reset.place_forget()
+            Subheading_Reset.place_forget()
+            User_icon_Reset.place_forget()
+            Username_At_Reset_Password.place_forget()
+            Security_icon_Reset.place_forget()
+            Forgot_Security_Code_Delay.place_forget()
+            Security_Code_At_Reset.place_forget()
+            Request_Reset_Password.place_forget()
+            Cancel_Reset.place_forget()
+            Copyright_Note_Reset.place_forget()
+            Window.after(900,Login_Display_Items)
             pass
 
         #Redirecting To Signup Screen And All The Processing Is Done Here
         def Signup_Redirecting():
+
+            #Destroying The Login Screen
             Window.destroy()
+
+            #Going Inside The Create_Account Class
             try:
+
                 New_Account = Create_Account(Available_Accounts=self.Available_Accounts,User_Security_Codes=self.User_Security_Codes);New_Account.Creating_New_Account()
+                
+                #Appending All The Data 
                 for User_Name,User_Password,Security_Code in New_Account.New_Account_Details:
+
                     self.Available_Accounts.append(User_Name)
                     self.User_PinCodes.append(User_Password)
                     self.User_Security_Codes.append(Security_Code)
+                
+                #Clearing All The Data From The Class
+                New_Account.Data_Clear()
+
+                #Showing The Login Screen
                 Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
+
             except:
-                pass
+
+                #if The Create_Account Module is Missing
+                Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
 
         #If The Username Matches To The Password Then Redirecting To The User Actions
         def Login_Actions():
             User_Name = Username.get()
             User_Password = Password.get()
-            Security_Code = self.User_Security_Codes[self.Available_Accounts.index(User_Name)]
-            User_Balance = self.User_Balance[self.Available_Accounts.index(User_Name)]
-            Window.destroy()
-            User_Requirements(User_Name,User_Password,Security_Code,User_Balance).User_Interface()
-            Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
 
+            def Redirect_To_User_Actions():
+
+                try:
+                    Security_Code = self.User_Security_Codes[self.User_func(User_Name)]
+                    User_Balance = self.User_Balance[self.User_func(User_Name)]
+                    Window.destroy()
+                    User_Requirements(User_Name,User_Password,Security_Code,User_Balance).User_Interface()
+                    Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
+                except:
+                    pass
+
+            #If the Username Is Not Entered But Password Is Entered 
+            if (not User_Name) and User_Password:
+                Username_Error = CTk.CTkLabel(Frame,text='Username is Incomplete',text_color='Orange');Username_Error.place(x=133,y=442)
+                Username_Error.after(2000,Username_Error.destroy)
+            
+            #If The Given Username Is Already Exists In The Data Base and Password is Entered
+            elif (User_Name and (User_Name not in self.Available_Accounts)) and User_Password:
+                Username_Not_Exists_Error = CTk.CTkLabel(Frame,text=f'The Given Username Does Not Exists',text_color='Orange');Username_Not_Exists_Error.place(x=98,y=442)
+                Username_Not_Exists_Error.after(2000,Username_Not_Exists_Error.destroy)
+                
+            #If The Username is Only Digits and Password is Entered
+            elif User_Name.isdigit() and User_Password:
+                Username_Digit_Error = CTk.CTkLabel(Frame,text='Username Can\'t Be Only Numbers/Digits',text_color='Orange');Username_Digit_Error.place(x=92,y=442)
+                Username_Digit_Error.after(2000,Username_Digit_Error.destroy)
+            
+            #If Both Username And Password Is not Entered
+            elif (not User_Name) and (not User_Password):
+                Username_password_Error = CTk.CTkLabel(Frame,text='Username and Password is Incomplete',text_color='Orange');Username_password_Error.place(x=96,y=442)
+                Username_password_Error.after(2000,Username_password_Error.destroy)
+
+            #If Password Is Not Entered But Username Is Entered
+            elif (not User_Password) and User_Name:
+                Password_Error = CTk.CTkLabel(Frame,text='Password is Incomplete',text_color='Orange');Password_Error.place(x=133,y=442)
+                Password_Error.after(2000,Password_Error.destroy)
+            
+            #If The Username is Entered And The Password Contains Less Than 6 Characters
+            elif User_Name and (User_Password != self.User_PinCodes[self.User_func(User_Name)]):
+                Password_Rule_Error = CTk.CTkLabel(Frame,text='The Password is incorrect. Try Again!',text_color='Orange');Password_Rule_Error.place(x=100,y=442)
+                Password_Rule_Error.after(2000,Password_Rule_Error.destroy)
+
+            #Successfully Passed All The Criteria
+            else:
+                Processing = CTk.CTkLabel(Frame,text='Processing...',text_color='Orange');Processing.place(x=166,y=442)
+                Processing.after(2000,Redirect_To_User_Actions)
+
+        #Shows The License, Developer, Documentation Options
         def License_Developer_Documentation():
+            '''Used To Show The License, Developer, Documentation Options To The User ; So The User Can Able To View The License,
+            Developer, Documentation'''
 
+            #Shows The License Window
             def Show_License_Window():
                 Dev_Doc.destroy()
                 License(Detailed_Licence).Show_License()
 
+            #Shows The Documentation Window
+            def Show_Documentation_Window():
+                Dev_Doc.destroy()
+                Documentation.Show_Documentation()
+
+            #Shows The Developer Window
+            def Show_Developer_Window():
+                Dev_Doc.destroy()
+                Developer(self.User_Balance).Display_Developer()
+
+            #Main Window For The License, Developer, Documentation
             Dev_Doc = CTk.CTk()
             Dev_Doc.geometry('220x182')
             Dev_Doc.resizable(False,False)
-            Dev_Doc.title('Bank!')
+            Dev_Doc.title('Bank\'s Backend Options')
 
+            #Frame For The License, Developer, Documentation
             Dev_Doc_Frame = CTk.CTkFrame(Dev_Doc)
             Dev_Doc_Frame.configure(width=200,height=162)
             Dev_Doc_Frame.place(x=10,y=10)
 
-            CTk.CTkButton(Dev_Doc_Frame,text='Developer',font=('Roboto',16,'bold'),fg_color='Orange',hover_color='Yellow',text_color='Black',width=180,height=38,command=Developer(self.User_Balance).Display_Developer).place(x=10,y=12)
-            CTk.CTkButton(Dev_Doc_Frame,text='Documentation',font=('Roboto',16,'bold'),width=180,height=38,fg_color='#E63B60',hover_color='#067FD0').place(x=10,y=62)
+            #Buttons For The License, Developer, Documentation
+            CTk.CTkButton(Dev_Doc_Frame,text='Developer',font=('Roboto',16,'bold'),fg_color='Orange',hover_color='Yellow',text_color='Black',width=180,height=38,command=Show_Developer_Window).place(x=10,y=12)
+            CTk.CTkButton(Dev_Doc_Frame,text='Documentation',font=('Roboto',16,'bold'),width=180,height=38,fg_color='#E63B60',hover_color='#067FD0',command=Show_Documentation_Window).place(x=10,y=62)
             CTk.CTkButton(Dev_Doc_Frame,text='License',font=('Roboto',16,'bold'),width=180,height=38,fg_color='#797EF6',hover_color='#4ADEDE',command=Show_License_Window).place(x=10,y=112)
             Dev_Doc.mainloop()
 
+        #If The Security Code Was Forgotten
+        def Forgot_Security_Code():
+            Heading_Reset.place_forget();Greet_Reset.place_forget();Subheading_Reset.place_forget();User_icon_Reset.place_forget()
+            Username_At_Reset_Password.place_forget();Security_icon_Reset.place_forget();Forgot_Security_Code_Delay.place_forget()
+            Security_Code_At_Reset.place_forget();Request_Reset_Password.place_forget()
+            
+            pass
 
-        #Main Window
+        #Requesting To Reset The Password
+        def Request_Password_To_Reset():
+            Username_Reset = Username_At_Reset_Password.get()
+            User_Security_Code_Reset = Security_Code_At_Reset.get()
+
+            def Security_Code_Accepted():
+                pass
+            
+            #If the Username Is Not Entered But Password Is Entered 
+            if (not Username_Reset) and User_Security_Code_Reset:
+                Username_Error = CTk.CTkLabel(Frame,text='Username is Incomplete',text_color='Orange');Username_Error.place(x=133,y=442)
+                Username_Error.after(2000,Username_Error.destroy)
+            
+            #If The Given Username Is Already Exists In The Data Base and Password is Entered
+            elif Username_Reset in self.Available_Accounts and User_Security_Code_Reset:
+                Username_Exists_Error = CTk.CTkLabel(Frame,text=f'The Given Username Already Exists',text_color='Orange');Username_Exists_Error.place(x=108,y=442)
+                Username_Exists_Error.after(2000,Username_Exists_Error.destroy)
+                
+            #If The Username is Only Digits and Password is Entered
+            elif Username_Reset.isdigit() and User_Security_Code_Reset:
+                Username_Digit_Error = CTk.CTkLabel(Frame,text='Username Can\'t Be Only Numbers/Digits',text_color='Orange');Username_Digit_Error.place(x=92,y=442)
+                Username_Digit_Error.after(2000,Username_Digit_Error.destroy)
+            
+            #If Both Username And Password Is not Entered
+            elif (not Username_Reset) and (not User_Security_Code_Reset):
+                Username_password_Error = CTk.CTkLabel(Frame,text='Username and Password is Incomplete',text_color='Orange');Username_password_Error.place(x=96,y=442)
+                Username_password_Error.after(2000,Username_password_Error.destroy)
+
+            #If Password Is Not Entered But Username Is Entered
+            elif (not User_Security_Code_Reset) and Username_Reset:
+                Password_Error = CTk.CTkLabel(Frame,text='Password is Incomplete',text_color='Orange');Password_Error.place(x=133,y=442)
+                Password_Error.after(2000,Password_Error.destroy)
+            
+            #If The Username is Entered And The Password Contains Less Than 6 Characters
+            elif Username_Reset and (User_Security_Code_Reset != self.User_Security_Codes[self.User_func(Username_Reset)]):
+                Password_Rule_Error = CTk.CTkLabel(Frame,text='The Security Code is incorrect. Try Again!',text_color='Orange');Password_Rule_Error.place(x=87,y=442)
+                Password_Rule_Error.after(2000,Password_Rule_Error.destroy)
+
+            #Successfully Passed All The Criteria
+            else:
+                Processing = CTk.CTkLabel(Frame,text='Requesting...',text_color='Orange');Processing.place(x=166,y=442)
+                Processing.after(2000,Security_Code_Accepted)
+
+        #Main Window For The Login Screen
+        global Window
         Window = CTk.CTk()
         Window.title('Login')
         Window.geometry('950x600')
@@ -278,9 +448,8 @@ class Login:
         Window.protocol('WM_DELETE_WINDOW',Disable_Exit)
         CTk.CTkLabel(Window,text='',image=CTk.CTkImage(light_image=Login_Background,dark_image=Login_Background,size=(950,600))).place(x=0,y=0)
         Window.after(600,Show_Login)
-        # Window.after(10000,Hide_Login)
 
-        #Login Screen
+        #Login Screen Items
         Frame = CTk.CTkFrame(Window,corner_radius=0)
         Frame.configure(width=400,height=560)
         Frame.place(x=x_login,y=20)
@@ -308,38 +477,31 @@ class Login:
         
         
 
-
         #Reset Password Screen
         Frame_Reset_Password = CTk.CTkFrame(Window,corner_radius=0)
         Frame_Reset_Password.configure(width=400,height=560)
         Frame_Reset_Password.place(x=x_reset,y=20)
 
-        Heading_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Forgot Password',font=('Freestyle Script',42,'bold'),width=5,text_color='Lime')#.place(x=105,y=2)
-        Greet_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Sad To See You Here!',font=('Freestyle Script',32),width=5,text_color='Red')#.place(x=30,y=65)
+        Heading_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Forgot Password',font=('Freestyle Script',42,'bold'),width=5)#.place(x=105,y=2)
+        Greet_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Get Your Account Back!',font=('Roboto',20,'bold'),text_color='#57D956')#.place(x=30,y=65)
+        Subheading_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Enter Required Credentials',font=('Roboto',12),height=0)#.place(x=33,y=90)
+        
         User_icon_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Username',font=('Roboto',24,'bold'),image=CTk.CTkImage(light_image=User_Icon,dark_image=User_Icon,size=(40,40)),compound='top')#.place(x=140,y=140)
         Username_At_Reset_Password = CTk.CTkEntry(Frame_Reset_Password,placeholder_text='Example: Virati Akira Nandhan Reddy',height=40,width=340,corner_radius=5,
                                 font=('Roboto',16))#.place(x=30,y=204)
         
-        Security_icon_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Security Code',font=('Roboto',24,'bold'),image=CTk.CTkImage(light_image=Security_Icon,dark_image=Security_Icon,size=(40,40)),compound='top')#.place(x=120,y=260)
+        Security_icon_Reset = CTk.CTkLabel(Frame_Reset_Password,text='Security Code',font=('Roboto',24,'bold'),image=CTk.CTkImage(light_image=Security_Icon,dark_image=Security_Icon,size=(45,45)),compound='top',height=0)#.place(x=120,y=250)
+        Forgot_Security_Code_Delay = CTk.CTkButton(Frame_Reset_Password,text='Forgot Security Code',height=0,width=0,fg_color='transparent',hover=False,font=('Roboto',10),text_color='#218CFF',command=Forgot_Security_Code)#.place(x=270,y=359)
         Security_Code_At_Reset = CTk.CTkEntry(Frame_Reset_Password,placeholder_text='Example: Viratiaki@Akki',height=40,width=340,corner_radius=5,
                                 font=('Roboto',16))#.place(x=30,y=324)
         
-        Request_Reset_Password = CTk.CTkButton(Frame_Reset_Password,text='Request',width=120,border_width=1,text_color='Purple',
-                                               fg_color='transparent',font=('Roboto',16,'bold'),hover_color='Light Blue',command='').place(x=142,y=400)
+        Request_Reset_Password = CTk.CTkButton(Frame_Reset_Password,text='Request',width=120,border_width=1,text_color='#3264FF',
+                                               fg_color='transparent',font=('Roboto',16,'bold'),hover_color='Light Blue',command=Request_Password_To_Reset)#.place(x=142,y=400)
 
         Cancel_Reset = CTk.CTkButton(Frame_Reset_Password,text='Cancel',fg_color='transparent',height=15,border_width=1,hover_color='#A1FB8E',width=45,command=Hide_Forgot_Password_Show_Login)#.place(x=2,y=538)
-        Window.after(1200,Login_Display_Items)
         
-        
-        
-
-
-
-
-
-
-
-
+        #Showing The Login Screen Items
+        Window.after(1500,Login_Display_Items)
 
         #Copyright Note And The Way To Enter The Developer Options/License Information
         Copyright_Note = CTk.CTkButton(Frame,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',font=('Calibri',8),command=License_Developer_Documentation,hover=False,width=0,
@@ -348,140 +510,4 @@ class Login:
         
         Window.mainloop()
 
-# Login(['Developer','Aki'],['4321','1000'],['eve321','Ki000'],[None,10000]).Display_Login()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def Login(Available_Accounts,PinCodes,Security)->str:
-
-#     def User_func(User=None)->int:
-#         User_index = Available_Accounts.index(User)
-#         return User_index
-
-#     def Disable_Exit():
-#         pass
-
-#     import tkinter as tk
-#     # from . import Create_Account as CA
-#     # from . import Invalid_Error
-#     # from __init__ import Accounts,User_func,PinCodes,Disable_Exit
-#     # from .User_Actions import User_Requirements
-
-#     command_Login = True
-
-#     while command_Login:
-
-#         #Redirecting to Create_Account Module
-#         def Create():
-#             Window.destroy()
-#             # CA.Create_Account(Available_Accounts,PinCodes,Security,User_func)
-#             nonlocal command_Login 
-#             command_Login = False
-
-#         #Getting All The Values
-#         def Values():
-#             global UserName,PinCode
-#             UserName = User.get()    
-#             PinCode = Pin.get()
-#             Window.destroy()
-
-
-#         #Creating The Main Login screen
-#         Window = tk.Tk()
-#         Window.geometry('350x250')
-#         Window.title('Login')
-#         Window.configure(background='#C3C3C3')
-#         Window.resizable(False,False)
-
-#         # tk.Label(Window,text='Login',font=('Roboto 18 bold'),fg='Black').pack()
-
-#         UserIcon = tk.PhotoImage(file=r'Bank_Package\Visual Data\1177568.png')
-#         tk.Label(Window,image=UserIcon,bg='#C3C3C3').grid(row=2,column=2)
-
-#         tk.Label(Window,text='PinCode').grid(row=4,column=2)
-#         User = tk.Entry(Window,bg='#A1A1A1',fg='Dark Green',relief='solid',border=1)
-#         Pin = tk.Entry(Window,fg='Red',bg='#A1A1A1',relief='solid',border=1)
-#         Pin.place(x=72,y=99,relwidth=0.7,relheight=0.1)
-#         User.place(x=72,y=70,relwidth=0.7,relheight=0.1)
-#         New_Acc = tk.Button(Window,text='Sign Up',command=Create,fg='Dark Red').place(x=15,y=210)
-#         Continue = tk.Button(Window,text='Continue',command=Values,fg='Green').grid(row=6,column=3)
-#         Window.protocol("WM_DELETE_WINDOW",Disable_Exit)
-#         Window.mainloop()
-
-
-#         #Using The Info Of Users
-#         try:
-#             print(UserName)
-#             print(PinCode)
-#             if UserName in Available_Accounts:
-#                 if PinCodes[User_func(UserName)] == PinCode:
-#                     User_Requirements.User_Menu(Available_Accounts,PinCodes,Security,User_func)
-#                 elif PinCodes[User_func(UserName)] != PinCode:
-#                     Invalid_Error.Pass_Error()
-
-#             elif UserName == '':
-#                 Invalid_Error.User_blank_Error()
-
-#             elif PinCode == '':
-#                 Invalid_Error.Pin_blank_Error()
-
-#             else:
-#                 try:                    
-
-#                     #If Yes Goes to The Module
-#                     def Yes():
-#                         if Yes_Bt.configure():
-#                             Verify.destroy()
-#                             CA.Create_Account([],[],[],[],[],[],[]).Creating_New_Account()#.New_Account(Available_Accounts,User_func,PinCodes,Security)
-#                             nonlocal command_Login
-#                             command_Login = False
-
-#                     #If No Loop Runs Again
-#                     def No():
-#                         Verify.destroy()
-                        
-#                     Verify = tk.Tk()
-#                     Verify.title('Account Not Available')
-#                     Verify.geometry('300x180')
-#                     Verify.resizable(False,False)
-#                     Verify.protocol("WM_DELETE_WINDOW",Disable_Exit)
-#                     tk.Label(Verify,text='Oops! Account Not Available In The DataBase',fg='Red').pack()
-#                     tk.Label(Verify,text='Do You Want To Create An Account',fg='Blue').pack(pady=20)
-#                     Yes_Bt = tk.Button(Verify,text='Create An Account',fg='Green',command=Yes)
-#                     Yes_Bt.pack()
-#                     No_Bt = tk.Button(Verify,text='No Thanks!',fg='Red',command=No)
-#                     No_Bt.pack(pady=20)
-#                     Verify.mainloop()
-
-#                 except:
-#                     pass
-#         except:
-#             Window.mainloop()
+# Login(['Developer','Aki'],['4321','1000'],['eve321','Ki000'],[0,10000]).Display_Login()
