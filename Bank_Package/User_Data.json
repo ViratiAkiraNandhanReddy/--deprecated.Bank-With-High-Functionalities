@@ -1,0 +1,47 @@
+{
+    "Aki": {
+        "Password": "b'\\xff\\xfeA\\x00k\\x00i\\x00'",
+        "Email": "viratiaki53",
+        "Security_Code": "kdhbvkvhdb",
+        "Balance": 123456765432,
+        "isDark": false,
+        "Loan": 1000000.0,
+        "isPrimum": null
+    },
+    "Developer": {
+        "Password": "dev",
+        "Email": "dev@433",
+        "Security_Code": "kdhbvk6444b",
+        "Balance": 123456765432,
+        "isDark": true,
+        "Loan": 1000000.0,
+        "isPrimum": null
+    },
+    "Virati Akira Nandhan Reddy": {
+        "Password": "alfdtauy",
+        "Email": "akifh@khg",
+        "Security_Code": "katsfajd57",
+        "Balance": 123456765432,
+        "isDark": true,
+        "Loan": 1000000.0,
+        "isPrimum": null
+    },
+    "Akira Nandhan Reddy": {
+        "Password": "akaytdsuy",
+        "Email": "argfsfd",
+        "Security_Code": "katspiyafduofsa",
+        "Balance": 123456765432,
+        "isDark": true,
+        "Loan": 1000000.0,
+        "isPrimum": null
+    },
+    "jyufduyfdfddfeydfeuyfdyefdffdfddfdjfjfadfsgjadasg": {
+        "Password": "akaytdsuy",
+        "Email": "argfsfd",
+        "Security_Code": "katspiyafduofsa",
+        "Balance": 123456765432,
+        "isDark": true,
+        "Loan": 1000000.0,
+        "isPrimum": null
+    }
+}
