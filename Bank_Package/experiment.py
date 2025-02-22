@@ -1,11 +1,59 @@
 import json
 # bytes('Aki',encoding='UTF-16')
-myDict = {'Aki': {'Password':str(bytes('Aki',encoding='UTF-16')),'Email':'viratiaki53','Security_Code':'kdhbvkvhdb','Balance':123456765432,'isDark':False,'Loan':10E5,'isPrimum':None},
-          'Developer': {'Password':'dev','Email':'dev@433','Security_Code':'kdhbvk6444b','Balance':123456765432,'isDark':True,'Loan':10E5,'isPrimum':None},
-          'Virati Akira Nandhan Reddy':{'Password':'alfdtauy','Email':'akifh@khg','Security_Code':'katsfajd57','Balance':123456765432,'isDark':True,'Loan':10E5,'isPrimum':None},
-          'Akira Nandhan Reddy':{'Password':'akaytdsuy','Email':'argfsfd','Security_Code':'katspiyafduofsa','Balance':123456765432,'isDark':True,'Loan':10E5,'isPrimum':None},
-          'jyufduyfdfddfeydfeuyfdyefdffdfddfdjfjfadfsgjadasg':{'Password':'akaytdsuy','Email':'argfsfd','Security_Code':'katspiyafduofsa','Balance':123456765432,'isDark':True,'Loan':10E5,'isPrimum':None}}
+myDict = {'Virati Akira Nandhan Reddy':{
+    'Password':'Viratiaki@Ai@GoogleAi',
+    'Email':'viratiaki53@gmail.com',
+    'Security Code':'Viratiaki@Akki',
+    'Balance':19724228629,
+    'Dark Mode':True,
+    'Email Verified':False,
+    'Account Type':'Gold',
+    'isActive':True,
+    'Created On':'22-Jan-2025 12:52 AM',
+    'Loan':{
+        'Interest':0,
+        'Lend Amount':0,
+        'Total Available':10E6,
+        'Taken On':'12-Jan-2025 07:52 PM',
+        'Repaid':True,
+        'Repaid On':'02-Feb-2025 01:45 PM',
+        'Interest To Bank':0
+    },
+    'Last Five Transactions':{
+        '02-Jan-2025 06:02 PM':'500 Deposit',
+        '01-Jan-2025 12:52 AM':'300 Deposit',
+        '31-Dec-2024 01:15 PM':'700 Deposit'
 
+    }
+    
+},
+    'Akira Nandhan Reddy':{
+    'Password':'Viratiaki@Ai@GoogleAi',
+    'Email':'viratiaki53@gmail.com',
+    'Security Code':'Viratiaki@Akki',
+    'Balance':19724228629,
+    'Dark Mode':True,
+    'Email Verified':False,
+    'Account Type':'Gold',
+    'isActive':True,
+    'Created On':'22-Jan-2025 12:52 AM',
+    'Loan':{
+        'Interest':0,
+        'Lend Amount':0,
+        'Total Available':10E6,
+        'Taken On':'12-Jan-2025 07:52 PM',
+        'Repaid':True,
+        'Repaid On':'02-Feb-2025 01:45 PM',
+        'Interest To Bank':0
+    },
+    'Last Five Transactions':{
+        '02-Jan-2025 06:02 PM':'500 Deposit',
+        '01-Jan-2025 12:52 AM':'300 Deposit',
+        '31-Dec-2024 01:15 PM':'700 Deposit'
+
+    }
+}}
+print(myDict)
 with open(r'Bank_Package\User_Data.json','w') as Data:
     json.dump(myDict,fp=Data,indent=4)
     # Data.write(dat)

@@ -39,6 +39,7 @@ from time import sleep
 from . import Repair_Product
 import customtkinter as CTk
 import PIL
+import json
 
 #Knowing The Path Of The Package
 Check_Location=os.getcwd()
@@ -86,6 +87,18 @@ try:
 except:
     Repair_Product.User_Data_Lost()
     print('Error While Reading User Data')
+
+try:
+    
+    with open(fr'{Path}\User_Data.json','r') as Raw_Data:
+        User_Data = json.load(Raw_Data)
+
+except FileNotFoundError:
+    pass
+
+except json.JSONDecodeError:
+    pass
+
 
 #Key Finder
 def User_func(User=None)->int:
