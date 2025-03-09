@@ -69,8 +69,8 @@ except FileNotFoundError:
     License_Check = False
 
 #Grabing Data From Data_Of_User.txt File
-try:
-    with open(fr'{Path}\Data_Of_User.txt') as Data:
+'''try:
+    with open(fr'{Path}Data_Of_User.txt') as Data:
         Is_Product_Activated:bool = eval(Data.readline())
 
         #User Details
@@ -86,12 +86,23 @@ try:
         Rate_Of_Interest_Per_User:list[float] = eval(Data.readline())
 except:
     Repair_Product.User_Data_Lost()
-    print('Error While Reading User Data')
+    print('Error While Reading User Data')'''
+
+try:
+
+    with open(fr'{Path}\Bank Initialization.json','r') as load:
+        Initial_Data:dict = json.load(load)
+
+except FileNotFoundError:
+    pass
+
+except json.JSONDecodeError:
+    pass
 
 try:
     
-    with open(fr'{Path}\User_Data.json','r') as Raw_Data:
-        User_Data = json.load(Raw_Data)
+    with open(fr'{Path}\User_Data.json','r') as json_Data:
+        User_Data:dict = json.load(json_Data)
 
 except FileNotFoundError:
     pass
@@ -100,11 +111,11 @@ except json.JSONDecodeError:
     pass
 
 
-#Key Finder
+'''#Key Finder
 def User_func(User=None)->int:
-    '''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error'''
+    ''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error''
     User_index = Available_Accounts.index(User)
-    return User_index
+    return User_index'''
 
 #To View The Licence(Summarised/Detailed)
 def License()->None:
@@ -165,7 +176,7 @@ You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Ro
 
 
 print('Hello From __init__')
-print(User_PinCodes)
+# print(User_PinCodes)
 # License()
 # Corrupted()
 

@@ -64,6 +64,10 @@ with open(r'Bank_Package\User_Data.json','r') as Data:
     data = json.load(Data)
     print(type(data))
 
-
+bank = {'isActivated':True,'Manager Name':'Virati Akira Nandhan Reddy','Downloaded On':'12-Dec-2025 01:52 PM',
+        'Path Of User Data':r'D:\GitHub\Bank-With-High-Functionalities\Bank_Package\User_Data.json',
+        'License Check':True,'Recently Used On':'22-Feb-2025 4:53 PM'}
+with open(r'Bank_Package\Bank Initialization.json','w') as Dat:
+    json.dump(bank,Dat,indent=4)
 
     

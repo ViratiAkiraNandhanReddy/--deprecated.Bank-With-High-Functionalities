@@ -4,7 +4,7 @@ from Bank_Package.Product_Activation import Software_Activation
 from Bank_Package.Save_Info import Exit
 from Bank_Package.Login_Screen import Login
 
-if Is_Product_Activated:
+if Initial_Data.get('isActivated'):
     Activated = True 
 else:
     Activated = False
@@ -16,7 +16,7 @@ Product_Activated = False
 def Start_Program():
     if Activated:
         if License_Check:
-            Login(Available_Accounts,User_PinCodes,User_Security_Codes,User_Balance).Display_Login()
+            Login(User_Data).Display_Login()
             print('prg started')
         else:
             Corrupted()
@@ -30,6 +30,6 @@ def Start_Program():
 Start_Program()
 
 if Product_Activated:
-    Exit(Path,Product_Activated,Available_Accounts,User_PinCodes,User_Security_Codes)
+    # Exit(Path,Product_Activated,User_Data)
     Activated = True
     Start_Program()

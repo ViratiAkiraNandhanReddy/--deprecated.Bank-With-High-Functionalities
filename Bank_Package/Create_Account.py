@@ -208,5 +208,5 @@ class Create_Account:
         self.New_Account_Details.clear()
 
 # Create_Account([],[]).Creating_New_Account()
-#Satisfied Code Completion:96%     
+#Satisfied Code Completion:66%     
 '''                                                            End Of Program                                                                 '''

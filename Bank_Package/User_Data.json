@@ -5,10 +5,13 @@
         "Security Code": "Viratiaki@Akki",
         "Balance": 19724228629,
         "Dark Mode": true,
+        "Display Date": true,
+        "Display Security Code": false,
         "Email Verified": false,
         "Account Type": "Gold",
         "isActive": true,
         "Created On": "22-Jan-2025 12:52 AM",
+        "Deleted On": null,
         "Loan": {
             "Interest": 0,
             "Lend Amount": 0,
@@ -24,16 +27,19 @@
             "31-Dec-2024 01:15 PM": "700 Deposit"
         }
     },
-    "Akira Nandhan Reddy Virati": {
+    "Akira Nandhan Reddy": {
         "Password": "Viratiaki@Ai@GoogleAi",
-        "Email": "viratiaki29@gmail.com",
-        "Security Code": "Viratiaki29@Akki",
-        "Balance": 5454548629,
+        "Email": "viratiaki53@gmail.com",
+        "Security Code": "Viratiaki@Akki",
+        "Balance": 19724228629,
         "Dark Mode": true,
+        "Display Date": true,
+        "Display Security Code": true,
         "Email Verified": false,
         "Account Type": "Gold",
         "isActive": true,
         "Created On": "22-Jan-2025 12:52 AM",
+        "Deleted On": null,
         "Loan": {
             "Interest": 0,
             "Lend Amount": 0,

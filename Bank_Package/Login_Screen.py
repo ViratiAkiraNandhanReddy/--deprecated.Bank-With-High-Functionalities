@@ -82,9 +82,9 @@ class Developer:
         Total_Balance.place(x=5,y=5)
         CTk.CTkLabel(Total_Balance,text='Total Balance Present In The Bank',font=('Freestyle Script',26,'bold'),text_color='Purple',height=0,width=690).place(x=5,y=2)
         CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=25)
-        dev = CTk.CTkButton(Developer_Frame,text='',image=CTk.CTkImage(light_image=self.icon,dark_image=self.icon,size=(100,100)),fg_color='transparent',hover=False,width=0,height=0,command='');dev.place(x=89,y=100)
+        dev = CTk.CTkButton(Developer_Frame,text='',image=CTk.CTkImage(light_image=self.icon,dark_image=self.icon,size=(100,100)),fg_color='transparent',hover=False,width=0,height=0);dev.place(x=89,y=100)
         dev.bind('<Motion>',ho)
-        CTk.CTkButton(Developer_Frame,text='Exit',command='').place(x=200,y=300)
+        # CTk.CTkButton(Developer_Frame,text='Exit',command='').place(x=200,y=300)
 
 
 
@@ -152,17 +152,14 @@ class Login:
     Able To Reset The Password If They Forgot The Password'''
 
     #Initialize The Values To Start The Class
-    def __init__(self,Available_Accounts,User_PinCodes,User_Security_Codes,User_Balance):
-        self.Available_Accounts:list[str] = Available_Accounts
-        self.User_PinCodes:list[str] = User_PinCodes
-        self.User_Security_Codes:list[str] = User_Security_Codes
-        self.User_Balance:list[int|float] = User_Balance
+    def __init__(self,User_Data):
+        self.User_Data:dict = User_Data
 
     #Key Finder
-    def User_func(self,User=None)->int:
-        '''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error'''
-        User_index = self.Available_Accounts.index(User)
-        return User_index
+    # def User_func(self,User=None)->int:
+        # '''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error'''
+        # User_index = self.Available_Accounts.index(User)
+        # return User_index
 
     #Shows The Login Window In The Computer Screen i.e Windows/Mac
     def Display_Login(self):
@@ -175,9 +172,9 @@ class Login:
         global x_login,x_reset
         x_login = 960
         x_reset = -410
-        print(self.Available_Accounts)
-        print(self.User_PinCodes)
-        print(self.User_Security_Codes)
+        # print(self.Available_Accounts)
+        # print(self.User_PinCodes)
+        # print(self.User_Security_Codes)
 
 
         '''                                                         Animations                                                                '''
@@ -351,13 +348,13 @@ class Login:
                 try:
 
                     #Getting The Information From The Data Base
-                    Security_Code = self.User_Security_Codes[self.User_func(User_Name)]
-                    User_Balance = self.User_Balance[self.User_func(User_Name)]
+                    Security_Code = self.User_Data[User_Name]['Security Code']
+                    User_Balance = self.User_Data[User_Name]['Balance']
 
                     #Destroy The Login Window And Opens Up The User Actions Module And Then Goes To The Login Window (if They Logout)
                     Window.destroy()
                     User_Requirements(User_Name,User_Password,Security_Code,User_Balance).User_Interface()
-                    Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
+                    Login(self.User_Data).Display_Login()
 
                 except:
                     pass
@@ -368,7 +365,7 @@ class Login:
                 Username_Error.after(2000,Username_Error.destroy)
             
             #If The Given Username Is Does Not Exists In The Data Base and Password is Entered
-            elif (User_Name and (User_Name not in self.Available_Accounts)) and User_Password:
+            elif (User_Name and (User_Name not in self.User_Data)) and User_Password:
                 Username_Not_Exists_Error = CTk.CTkLabel(Frame,text=f'The Given Username Does Not Exists',text_color='Orange');Username_Not_Exists_Error.place(x=98,y=442)
                 Username_Not_Exists_Error.after(2000,Username_Not_Exists_Error.destroy)
             
@@ -383,7 +380,7 @@ class Login:
                 Password_Error.after(2000,Password_Error.destroy)
             
             #If The Username is Entered And The Password Is Wrong
-            elif User_Name and (User_Password != self.User_PinCodes[self.User_func(User_Name)]):
+            elif User_Name and (User_Password != self.User_Data[User_Name]['Password']):
                 Password_Rule_Error = CTk.CTkLabel(Frame,text='The Password is incorrect. Try Again!',text_color='Orange');Password_Rule_Error.place(x=100,y=442)
                 Password_Rule_Error.after(2000,Password_Rule_Error.destroy)
 
