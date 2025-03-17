@@ -1,9 +1,0 @@
-True
-['Virati Akira Nandhan Reddy','Aki']
-['Aki123','1000',]
-['None','Ki000',]
-[198725,10000,125678765432]
-['None','']
-['None','']
-['None','']
-['None','']

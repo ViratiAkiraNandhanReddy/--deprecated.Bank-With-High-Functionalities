@@ -4,18 +4,17 @@ from datetime import datetime
 from PIL import Image
 
 
-
-User_Icon = Image.open(r'Bank_Package\Visual Data\User Icon.png')
+# User_Icon = Image.open(r'Bank_Package\Visual Data\User Icon.png')
 darkModeIcon = Image.open(r'Bank_Package\Visual Data\dark.png')
 lightModeIcon = Image.open(r'Bank_Package\Visual Data\light.png')
-dateIcon = Image.open(r'Bank_Package\Visual Data\date.png')
+dateIcon = Image.open(r'Bank_Package\Visual Data\Date.png')
 AuthenticationIcon = Image.open(r'Bank_Package\Visual Data\Two Factor Authentication.png')
+Danger_Zone_Icon = Image.open(r'Bank_Package\Visual Data\Danger Zone.png')
 # securityCodeIcon = Image.open(r'Bank_Package\Visual Data\securityCode.png')
 # depositIcon = Image.open(r'Bank_Package\Visual Data\deposit.png')
 # withdrawIcon = Image.open(r'Bank_Package\Visual Data\withdraw.png')
 # settingsIcon = Image.open(r'Bank_Package\Visual Data\settings.png')
 # logoutIcon = Image.open(r'Bank_Package\Visual Data\logout.png')
-# userIcon = Image.open(r'Bank_Package\Visual Data\user.png')
 # balanceIcon = Image.open(r'Bank_Package\Visual Data\balance.png')
 # interestIcon = Image.open(r'Bank_Package\Visual Data\interest.png')
 # loanIcon = Image.open(r'Bank_Package\Visual Data\loan.png')
@@ -81,8 +80,8 @@ class User_Requirements:
 
     Universal_Profile_Icon_0 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_0.png')
     Universal_Profile_Icon_1 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_1.png')
-    # Universal_Profile_Icon_2 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_0.png')
-    # Universal_Profile_Icon_3 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_0.png')
+    Universal_Profile_Icon_2 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_2.png')
+    Universal_Profile_Icon_3 = Image.open(r'Bank_Package\Visual Data\User Icons\Universal_Profile_Icon_3.png')
 
     Boys_Profile_Icon_0 = Image.open(r'Bank_Package\Visual Data\User Icons\Boys_Profile_Icon_0.png')
     Boys_Profile_Icon_1 = Image.open(r'Bank_Package\Visual Data\User Icons\Boys_Profile_Icon_1.png')
@@ -131,8 +130,8 @@ class User_Requirements:
     Kids_Profile_Icon_2 = Image.open(r'Bank_Package\Visual Data\User Icons\Kids_Profile_Icon_2.png')
     Kids_Profile_Icon_3 = Image.open(r'Bank_Package\Visual Data\User Icons\Kids_Profile_Icon_3.png')
 
-    def __init__(self,User_Name:str,User_Password:str,Security_Code:str,User_Balance:float,userDetails:dict[str, int | float | str| bool | dict]):
-        self.User_Name = User_Name
+    def __init__(self,User_Name:str,User_Password:str,Security_Code:str,User_Balance:float,userDetails:dict[str,int|float|bool|str|dict]):
+        # self.User_Name = User_Name
         self.userDetails = userDetails
         self.User_Password = User_Password
         self.Security_Code = Security_Code
@@ -154,26 +153,24 @@ class User_Requirements:
 
         def changeProfilePicture():
 
+            currentProfileIcon.configure(state = 'disabled')
+
             def readProfileIcon(Icon:str):
+
                 self.Profile_Icon = Icon
                 User_Info.configure(image = CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(40,40)))
                 currentProfileIcon.configure(image = CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(35,35)))
                 ProfileIconFrame.place_forget()
-                pass
-
-            def vo(hi):
-                print(hi)
+                currentProfileIcon.configure(state = 'normal')
 
             ProfileIconFrame = CTk.CTkScrollableFrame(Settings_Frame,width=232,height=230);ProfileIconFrame.place(x=895,y=248)
-            Hello = CTk.StringVar(ProfileIconFrame,value='current')
-            print(Hello)
 
 
             #Universal Profile Icons
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_0,dark_image=self.Universal_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:vo('wdfadfuaskf')).grid(column=0,row=0)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_0,dark_image=self.Universal_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_0')).grid(column=0,row=0)
             CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_1,dark_image=self.Universal_Profile_Icon_1,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_1')).grid(column=1,row=0,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_0,dark_image=self.Universal_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_0')).grid(column=2,row=0)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=dateIcon,dark_image=dateIcon,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_3')).grid(column=3,row=0,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_2,dark_image=self.Universal_Profile_Icon_2,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_2')).grid(column=2,row=0)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Universal_Profile_Icon_3,dark_image=self.Universal_Profile_Icon_3,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Universal_Profile_Icon_3')).grid(column=3,row=0,padx=5)
 
             #Boys Profile Icons
             CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_0,dark_image=self.Boys_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_0')).grid(column=0,row=1,pady=5)
@@ -183,52 +180,63 @@ class User_Requirements:
             CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_4,dark_image=self.Boys_Profile_Icon_4,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_4')).grid(column=0,row=2)
             CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_5,dark_image=self.Boys_Profile_Icon_5,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_5')).grid(column=1,row=2,padx=5)
             CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_6,dark_image=self.Boys_Profile_Icon_6,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_6')).grid(column=2,row=2)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_7,dark_image=self.Boys_Profile_Icon_7,size=(46,46)),height=0,width=0).grid(column=3,row=2,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_8,dark_image=self.Boys_Profile_Icon_8,size=(46,46)),height=0,width=0).grid(column=0,row=3,pady=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_9,dark_image=self.Boys_Profile_Icon_9,size=(46,46)),height=0,width=0).grid(column=1,row=3,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_10,dark_image=self.Boys_Profile_Icon_10,size=(46,46)),height=0,width=0).grid(column=2,row=3)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_11,dark_image=self.Boys_Profile_Icon_11,size=(46,46)),height=0,width=0).grid(column=3,row=3,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_12,dark_image=self.Boys_Profile_Icon_12,size=(46,46)),height=0,width=0).grid(column=0,row=4)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_13,dark_image=self.Boys_Profile_Icon_13,size=(46,46)),height=0,width=0).grid(column=1,row=4,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_14,dark_image=self.Boys_Profile_Icon_14,size=(46,46)),height=0,width=0).grid(column=2,row=4)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_15,dark_image=self.Boys_Profile_Icon_15,size=(46,46)),height=0,width=0).grid(column=3,row=4,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_16,dark_image=self.Boys_Profile_Icon_16,size=(46,46)),height=0,width=0).grid(column=0,row=5,pady=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_17,dark_image=self.Boys_Profile_Icon_17,size=(46,46)),height=0,width=0).grid(column=1,row=5,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_18,dark_image=self.Boys_Profile_Icon_18,size=(46,46)),height=0,width=0).grid(column=2,row=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_19,dark_image=self.Boys_Profile_Icon_19,size=(46,46)),height=0,width=0).grid(column=3,row=5,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_7,dark_image=self.Boys_Profile_Icon_7,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_7')).grid(column=3,row=2,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_8,dark_image=self.Boys_Profile_Icon_8,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_8')).grid(column=0,row=3,pady=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_9,dark_image=self.Boys_Profile_Icon_9,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_9')).grid(column=1,row=3,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_10,dark_image=self.Boys_Profile_Icon_10,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_10')).grid(column=2,row=3)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_11,dark_image=self.Boys_Profile_Icon_11,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_11')).grid(column=3,row=3,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_12,dark_image=self.Boys_Profile_Icon_12,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_12')).grid(column=0,row=4)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_13,dark_image=self.Boys_Profile_Icon_13,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_13')).grid(column=1,row=4,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_14,dark_image=self.Boys_Profile_Icon_14,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_14')).grid(column=2,row=4)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_15,dark_image=self.Boys_Profile_Icon_15,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_15')).grid(column=3,row=4,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_16,dark_image=self.Boys_Profile_Icon_16,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_16')).grid(column=0,row=5,pady=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_17,dark_image=self.Boys_Profile_Icon_17,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_17')).grid(column=1,row=5,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_18,dark_image=self.Boys_Profile_Icon_18,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_18')).grid(column=2,row=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Boys_Profile_Icon_19,dark_image=self.Boys_Profile_Icon_19,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Boys_Profile_Icon_19')).grid(column=3,row=5,padx=5)
 
             #Girls Profile Icons
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_0,dark_image=self.Girls_Profile_Icon_0,size=(46,46)),height=0,width=0).grid(column=0,row=6)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_1,dark_image=self.Girls_Profile_Icon_1,size=(46,46)),height=0,width=0).grid(column=1,row=6,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_2,dark_image=self.Girls_Profile_Icon_2,size=(46,46)),height=0,width=0).grid(column=2,row=6)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_3,dark_image=self.Girls_Profile_Icon_3,size=(46,46)),height=0,width=0).grid(column=3,row=6,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_4,dark_image=self.Girls_Profile_Icon_4,size=(46,46)),height=0,width=0).grid(column=0,row=7,pady=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_5,dark_image=self.Girls_Profile_Icon_5,size=(46,46)),height=0,width=0).grid(column=1,row=7,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_6,dark_image=self.Girls_Profile_Icon_6,size=(46,46)),height=0,width=0).grid(column=2,row=7)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_7,dark_image=self.Girls_Profile_Icon_7,size=(46,46)),height=0,width=0).grid(column=3,row=7,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_8,dark_image=self.Girls_Profile_Icon_8,size=(46,46)),height=0,width=0).grid(column=0,row=8)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_9,dark_image=self.Girls_Profile_Icon_9,size=(46,46)),height=0,width=0).grid(column=1,row=8,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_10,dark_image=self.Girls_Profile_Icon_10,size=(46,46)),height=0,width=0).grid(column=2,row=8)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_11,dark_image=self.Girls_Profile_Icon_11,size=(46,46)),height=0,width=0).grid(column=3,row=8,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_12,dark_image=self.Girls_Profile_Icon_12,size=(46,46)),height=0,width=0).grid(column=0,row=9,pady=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_13,dark_image=self.Girls_Profile_Icon_13,size=(46,46)),height=0,width=0).grid(column=1,row=9,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_14,dark_image=self.Girls_Profile_Icon_14,size=(46,46)),height=0,width=0).grid(column=2,row=9)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_15,dark_image=self.Girls_Profile_Icon_15,size=(46,46)),height=0,width=0).grid(column=3,row=9,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_16,dark_image=self.Girls_Profile_Icon_16,size=(46,46)),height=0,width=0).grid(column=0,row=10)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_17,dark_image=self.Girls_Profile_Icon_17,size=(46,46)),height=0,width=0).grid(column=1,row=10,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_18,dark_image=self.Girls_Profile_Icon_18,size=(46,46)),height=0,width=0).grid(column=2,row=10)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_19,dark_image=self.Girls_Profile_Icon_19,size=(46,46)),height=0,width=0).grid(column=3,row=10,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_0,dark_image=self.Girls_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_0')).grid(column=0,row=6)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_1,dark_image=self.Girls_Profile_Icon_1,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_1')).grid(column=1,row=6,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_2,dark_image=self.Girls_Profile_Icon_2,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_2')).grid(column=2,row=6)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_3,dark_image=self.Girls_Profile_Icon_3,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_3')).grid(column=3,row=6,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_4,dark_image=self.Girls_Profile_Icon_4,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_4')).grid(column=0,row=7,pady=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_5,dark_image=self.Girls_Profile_Icon_5,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_5')).grid(column=1,row=7,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_6,dark_image=self.Girls_Profile_Icon_6,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_6')).grid(column=2,row=7)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_7,dark_image=self.Girls_Profile_Icon_7,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_7')).grid(column=3,row=7,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_8,dark_image=self.Girls_Profile_Icon_8,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_8')).grid(column=0,row=8)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_9,dark_image=self.Girls_Profile_Icon_9,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_9')).grid(column=1,row=8,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_10,dark_image=self.Girls_Profile_Icon_10,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_10')).grid(column=2,row=8)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_11,dark_image=self.Girls_Profile_Icon_11,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_11')).grid(column=3,row=8,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_12,dark_image=self.Girls_Profile_Icon_12,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_12')).grid(column=0,row=9,pady=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_13,dark_image=self.Girls_Profile_Icon_13,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_13')).grid(column=1,row=9,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_14,dark_image=self.Girls_Profile_Icon_14,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_14')).grid(column=2,row=9)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_15,dark_image=self.Girls_Profile_Icon_15,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_15')).grid(column=3,row=9,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_16,dark_image=self.Girls_Profile_Icon_16,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_16')).grid(column=0,row=10)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_17,dark_image=self.Girls_Profile_Icon_17,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_17')).grid(column=1,row=10,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_18,dark_image=self.Girls_Profile_Icon_18,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_18')).grid(column=2,row=10)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Girls_Profile_Icon_19,dark_image=self.Girls_Profile_Icon_19,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Girls_Profile_Icon_19')).grid(column=3,row=10,padx=5)
 
             #Kids Profile Icons
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_0,dark_image=self.Kids_Profile_Icon_0,size=(46,46)),height=0,width=0).grid(column=0,row=11,pady=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_1,dark_image=self.Kids_Profile_Icon_1,size=(46,46)),height=0,width=0).grid(column=1,row=11,padx=5)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_2,dark_image=self.Kids_Profile_Icon_2,size=(46,46)),height=0,width=0).grid(column=2,row=11)
-            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_3,dark_image=self.Kids_Profile_Icon_3,size=(46,46)),height=0,width=0).grid(column=3,row=11,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_0,dark_image=self.Kids_Profile_Icon_0,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Kids_Profile_Icon_0')).grid(column=0,row=11,pady=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_1,dark_image=self.Kids_Profile_Icon_1,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Kids_Profile_Icon_1')).grid(column=1,row=11,padx=5)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_2,dark_image=self.Kids_Profile_Icon_2,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Kids_Profile_Icon_2')).grid(column=2,row=11)
+            CTk.CTkButton(ProfileIconFrame,text='',fg_color='transparent',hover_color='Grey',image=CTk.CTkImage(light_image=self.Kids_Profile_Icon_3,dark_image=self.Kids_Profile_Icon_3,size=(46,46)),height=0,width=0,command=lambda:readProfileIcon('self.Kids_Profile_Icon_3')).grid(column=3,row=11,padx=5)
 
 
 
+        #Hides/Shows The Date 
+        def HideDate():
+            
+            #Change The Value Of The Data Base - json
+            self.userDetails['Hide Date'] = HideDateSwitch.get()
 
+            #True - Hide Date
+            if self.userDetails.get('Hide Date'):
+                Date_Label.place_forget()
 
+            #False - Show Date
+            elif not self.userDetails.get('Hide Date'):
+                Date_Label.place(x=1070,y=2)
 
 
 
@@ -237,15 +245,8 @@ class User_Requirements:
             
 
 
-
-
-
-
-
-
-
         def com():
-            op = Date.get()
+            op = Appearance_Mode_Switch.get()
             self.Value = op
             print(self.Value)
             
@@ -256,48 +257,47 @@ class User_Requirements:
                 print('Dark Mode')
                 # CTk.set_appearance_mode('dark')
                 # Window.set
-            # print(op)
-            # print(Val)
-        def Va ():
-            Val = CTk.CTkLabel(Window,text=Date_Day,text_color='Orange',height=10)
-            new = Security_Code.get()
-            self.Date = new
-            print(self.Date)
-            print(new)
-            if self.Date:
-                Val.place(x=1070,y=2)
-            elif not new:
-                Val.place_forget()
 
             
 
         #Original Frame
         Settings_Frame = CTk.CTkFrame(Frame,width=1160,height=560)
         Settings_Frame.place(x=0,y=0)
-        CTk.CTkButton(Settings_Frame,text='❌',fg_color='transparent',height=10,width=10,hover_color='Red',font=('Roboto',16),
-                      command=Settings_Frame.place_forget).place(x=1121,y=5)
+        CTk.CTkButton(Settings_Frame,text='❌',fg_color='transparent',height=0,width=0,hover_color='Red',font=('Roboto',16),
+                      command=Settings_Frame.place_forget).place(x=1128,y=4)
 
-        #Show Date Frame
-        Mode = CTk.CTkFrame(Settings_Frame,width=134,height=50);Mode.place(x=10,y=500)
-        Date_Var = CTk.BooleanVar(Mode,self.Value)
-        CTk.CTkLabel(Mode,text='',image=CTk.CTkImage(light_image=lightModeIcon,dark_image=lightModeIcon,size=(40,40))).place(x=5,y=5)
-        CTk.CTkLabel(Mode,text='',image=CTk.CTkImage(light_image=darkModeIcon,dark_image=darkModeIcon,size=(40,40))).place(x=89,y=5)
-        Date = CTk.CTkSwitch(Mode,text='',width=0,height=0,switch_height=16,switch_width=34,progress_color='transparent',variable=Date_Var,onvalue=True,offvalue=False,command=com);Date.place(x=50,y=17)
 
-        #Show Security Code Frame
-        showDate = CTk.CTkFrame(Settings_Frame,width=210,height=50);showDate.place(x=10,y=10)
-        Code_Var = CTk.BooleanVar(showDate,True)
-        CTk.CTkLabel(showDate,text='  Show Date',font=('Freestyle Script',26,'bold'),image=CTk.CTkImage(light_image=dateIcon,dark_image=dateIcon,size=(40,40)),compound='left').place(x=5,y=5)
-        Security_Code = CTk.CTkSwitch(showDate,text='',width=0,height=0,switch_height=16,switch_width=34,command=Va);Security_Code.place(x=159,y=17)
+        #Appearance Mode Frame
+        Appearance_Mode = CTk.CTkFrame(Settings_Frame,width=134,height=50);Appearance_Mode.place(x=10,y=500)
+        _Mode = CTk.BooleanVar(Appearance_Mode,True if self.userDetails.get('Appearance Mode') == 'dark' else False)
+        CTk.CTkLabel(Appearance_Mode,text='',image=CTk.CTkImage(light_image=lightModeIcon,dark_image=lightModeIcon,size=(40,40))).place(x=5,y=5)
+        CTk.CTkLabel(Appearance_Mode,text='',image=CTk.CTkImage(light_image=darkModeIcon,dark_image=darkModeIcon,size=(40,40))).place(x=89,y=5)
+        Appearance_Mode_Switch = CTk.CTkSwitch(Appearance_Mode,text='',width=0,height=0,switch_height=16,switch_width=34,progress_color='transparent',
+                                               variable=_Mode,onvalue=True,offvalue=False,command=com);Appearance_Mode_Switch.place(x=50,y=17)
 
+
+        #Hide Date Frame
+        Hide_Date = CTk.CTkFrame(Settings_Frame,width=210,height=50);Hide_Date.place(x=10,y=10)
+        _Date = CTk.BooleanVar(Hide_Date,bool(self.userDetails.get('Hide Date')))
+
+        CTk.CTkLabel(Hide_Date,text='   Hide Date',font=('Freestyle Script',26,'bold'),image=CTk.CTkImage(light_image=dateIcon,dark_image=dateIcon,size=(40,40)),compound='left').place(x=5,y=5)
+        HideDateSwitch = CTk.CTkSwitch(Hide_Date,text='',width=0,height=0,switch_height=16,switch_width=34,command=HideDate,variable=_Date);HideDateSwitch.place(x=159,y=17)
+
+
+        #Change Profile Icon Frame 
         profileIcon = CTk.CTkFrame(Settings_Frame,width=255,height=50);profileIcon.place(x=895,y=500)
         CTk.CTkLabel(profileIcon,text='Current Profile Picture :',height=40,font=('Freestyle Script',26,'bold')).place(x=5,y=5)
         currentProfileIcon = CTk.CTkButton(profileIcon,text='',height=0,width=0,hover_color='Grey',fg_color='transparent',
                       image=CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(35,35)),compound='right',
                       command=changeProfilePicture);currentProfileIcon.place(x=208,y=4)
         
+
+        
         greetColor = CTk.CTkFrame(Settings_Frame,width=255,height=50);greetColor.place(x=895,y=188)
         CTk.CTkLabel(greetColor,text='change greet color').place(x=0,y=0)
+        currentGreetColor = CTk.CTkButton(greetColor,text='',hover=False,fg_color='#378F9C',height=40,width=40).place(x=209,y=5)
+
+
 
 
         Security_2FA = CTk.CTkFrame(Settings_Frame,width=310,height=50);Security_2FA.place(x=154,y=500)
@@ -336,6 +336,16 @@ class User_Requirements:
         CTk.CTkSwitch(Sec6,text='',width=0,height=0,switch_height=16,switch_width=34).place(x=238,y=17)
 
 
+        contactus = CTk.CTkFrame(Settings_Frame,width=411,height=50);contactus.place(x=474,y=500)
+        CTk.CTkLabel(contactus,text='Contact us  Mail  Feedback  issue  suggestion ').place(x=10,y=10)
+
+
+        Danger_Zone = CTk.CTkFrame(Settings_Frame,width=200,height=50);Danger_Zone.place(x=685,y=440)
+        # CTk.CTkLabel(Danger_Zone,text='danger Zone : del acc , wipe all the data and money(donetes to Bank),etc').place(x=10,y=10)
+        Dan = CTk.CTkButton(Danger_Zone,text='Danger Zone   >',font=('Roboto',16,'bold'),hover_color='Grey',image=CTk.CTkImage(light_image=Danger_Zone_Icon,dark_image=Danger_Zone_Icon,size=(40,40)),
+                            height=46,width=196,fg_color='transparent',compound='left',text_color='Black' if self.userDetails.get('Appearance Mode') == 'light' else 'White').place(x=2,y=2)
+        # CTk.CTkButton(Danger_Zone,text='›',font=('Roboto',35),height=0,width=15,fg_color='transparent').place(x=180,y=1)
+
 
 
 
@@ -356,21 +366,16 @@ class User_Requirements:
     def User_Interface(self):
 
         #Creation Of Window And Settings Also Showing The Date
-        global Window,Frame,User_Info
+        global Window,Frame,User_Info,Date_Label
         Window = CTk.CTk()
         Window.title('User Interface')
         Window.resizable(False,False)
         Window.geometry('1200x600')
         Window.protocol('WM_DELETE_WINDOW',Disable_Exit)
+        CTk.set_appearance_mode(str(self.userDetails.get('Appearance Mode')))
 
-        if self.userDetails.get('Mode') == "dark":
-            CTk.set_appearance_mode('dark')
-
-        if self.userDetails.get('Mode') == "light":
-            CTk.set_appearance_mode('light')
-
-        if self.userDetails.get('showDate') or self.Date:
-            CTk.CTkLabel(Window,text=Date_Day,text_color='Orange',height=10).place(x=1070,y=2)
+        if not self.userDetails.get('Hide Date'):
+            Date_Label = CTk.CTkLabel(Window,text=Date_Day,text_color='Orange',height=10);Date_Label.place(x=1070,y=2)
         # CTk.CTkLabel(Window,text=f'Security Code: {self.Security_Code}',text_color='Orange',height=10).place(x=20,y=2)
         
         
@@ -416,7 +421,7 @@ class User_Requirements:
 
         Window.mainloop()
 
-User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548,userDetails={'showDate':False,'Mode':'dark'}).User_Interface()
+User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548,userDetails={'Hide Date':False,'Appearance Mode':'dark'}).User_Interface()
 
 
 
