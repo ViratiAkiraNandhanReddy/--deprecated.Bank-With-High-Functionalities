@@ -4,7 +4,7 @@ from Bank_Package.Product_Activation import Software_Activation
 from Bank_Package.Save_Info import Exit
 from Bank_Package.Login_Screen import Login
 
-if Initial_Data.get('isActivated'):
+if Initialization_Data.get('isActivated'):
     Activated = True 
 else:
     Activated = False
@@ -24,7 +24,7 @@ def Start_Program():
     else:
         if License_Check:
             global Product_Activated
-            Product_Activated = Software_Activation.Activate()
+            Product_Activated = Software_Activation().Activate()
         else:
             Corrupted()
 Start_Program()

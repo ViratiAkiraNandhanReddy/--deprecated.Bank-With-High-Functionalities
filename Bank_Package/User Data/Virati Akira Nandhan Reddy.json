@@ -1,0 +1,31 @@
+{
+    "User Name": "Virati Akira Nandhan Reddy",
+    "Password": "Viratiaki@Ai@GoogleAi",
+    "Email": "viratiaki53@gmail.com",
+    "Security Code": "Viratiaki@Akki",
+    "Two Factor Authentication": false,
+    "Balance": 19724228629,
+    "Appearance Mode": "dark",
+    "Hide Date": true,
+    "Hide Security Code": false,
+    "Email Verified": false,
+    "Profile Icon": "Universal_Profile_Icon_0",
+    "Account Type": "Gold",
+    "isActive": true,
+    "Created On": "22-Jan-2025 12:52 AM",
+    "Deleted On": null,
+    "Loan": {
+        "Interest": 0,
+        "Lend Amount": 0,
+        "Total Available": 10000000.0,
+        "Taken On": "12-Jan-2025 07:52 PM",
+        "Repaid": true,
+        "Repaid On": "02-Feb-2025 01:45 PM",
+        "Interest To Bank": 0
+    },
+    "Last Ten Transactions": {
+        "02-Jan-2025 06:02 PM": "500 Deposit",
+        "01-Jan-2025 12:52 AM": "300 Deposit",
+        "31-Dec-2024 01:15 PM": "700 Deposit"
+    }
+}

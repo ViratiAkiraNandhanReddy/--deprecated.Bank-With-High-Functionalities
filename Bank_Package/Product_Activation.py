@@ -61,7 +61,7 @@ Then The Program Is Ready To Use\n
  '''
     
     #Main Function
-    def Activate():
+    def Activate(self) -> bool:
 
         #New Window For Product Key
         def Product_Key():

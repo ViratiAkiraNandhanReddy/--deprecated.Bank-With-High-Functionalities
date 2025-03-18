@@ -1,32 +1,113 @@
-''' Copyright (c) 2026 Virati Akira Nandhan Reddy
+''' 
+# Copyright (c) 2026 Virati Akira Nandhan Reddy
 
-            **Owner Details**
-Owner/Author: Virati Akira Nandhan Reddy
-GitHub: ViratiAkiraNandhanReddy
-Instagram: Viratiaki53
-Gmail: Viratiaki29@gmail.com
-LinkedIn: virati-akira-nandhan-reddy
+
+<!-- Owner Details -->
+
+
+---
+## <ins>*Owner Details*</ins>
+#### Owner/Author: *Virati Akira Nandhan Reddy*
+#### GitHub: [ViratiAkiraNandhanReddy](https://github.com/ViratiAkiraNandhanReddy)
+#### Gmail: Viratiaki29@gmail.com 
+#### LinkedIn: [virati-akira-nandhan-reddy](https://linkedin.com/in/virati-akira-nandhan-reddy/)
+#### X(Twitter): [Viratiaki53](https://x.com/Viratiaki53)
+#### Instagram: [Viratiaki53](https://instagram.com/viratiaki53/)
 Nationality: Indian/American 
 
-At Sarting Of This Project My Age Was 16 (Class 11)
+##### <ins>***At Sarting Of This Project My Age Was 16 (Class 11)***</ins>
 
-            **Program Details**
-Python Built Version: 3.13.0 (64-Bit)
-Code Editor: Microsoft's Visual Studio Code
-License: MIT License 
 
-Sarted On: 13-Dec-2024 @ 6:21 PM
+<!-- Program Details -->
 
-Ended On: 
 
-            **Package Details**
+---
+## <ins>*Program Details*</ins>
+##### Python Built Version: 3.13.0 (64-Bit)
+##### Code Editor: Microsoft's Visual Studio Code
+##### License: MIT License (Open Source With Some Restrictions)
+
+
+*Sarted On:* <ins>**13-Dec-2024 @ 6:21 PM**</ins>
+
+*Ended On:* 
+
+
+<!-- Syntax -->
+
+
+---
+## <ins>*Syntax*</ins>
+ ```
+ import Bank_Package
+ or 
+ from Bank_Package import <Required Modules>
+ ```
+
+
+<!-- Package Details -->
+
+
+---
+## <ins>*Package Details*</ins>
 Contains All The Programs And Other Data To Run The Main Program 
 E.g:Login_Screen,Data_Of_User And Many More
 
 This Is A Required Package To Run The Bank-With-High-Functionalities
 
-            **Achievements**
-My First Package Based Biggest Project
+
+<!-- Purpose -->
+
+
+---
+## <ins>*Purpose*</ins>
+The Purpose Of This Package Is To Provide A High Functional Bank Program To The Users With The Help Of Python
+
+
+<!-- Modules -->
+
+
+---
+## <ins>*Modules*</ins>
+#### 1. Login_Screen
+#### 2. Create_Account
+#### 3. Product_Activation
+
+
+<!-- Dependencies -->
+
+
+---
+## <ins>*Dependencies*</ins>
+### 1. `customtkinter`
+### 2. `time`
+### 3. `os`
+### 4. `PIL`
+### 5. `json`
+### 6. `tkinter`
+
+
+
+<!-- Note -->
+
+
+---
+## <ins>*Note*</ins>
+### This Package is Used For The Main Program To Run
+### This Package <ins>*Can't Be Used To Create A New Program*</ins> i.e, It Can't Be Used As A Library
+
+
+
+<!-- Achievements -->
+
+
+---
+## <ins>*Achievements*</ins>
+##### 1. My First Package Based Biggest Project
+##### 2. I Learnt How To Send Gmail To The People From The Python
+
+
+
 
 
 '''
@@ -40,6 +121,12 @@ from . import Repair_Product
 import customtkinter as CTk
 import PIL
 import json
+
+__Version__ = '0.0.1 - Beta'
+__Author__ = 'Virati Akira Nandhan Reddy'
+__License__ = 'MIT License'
+__Python_Version__ = '3.13.0 (64-Bit)'
+__Code_Editer__ = 'Microsoft\'s Visual Studio Code'
 
 #Knowing The Path Of The Package
 Check_Location=os.getcwd()
@@ -91,24 +178,31 @@ except:
 try:
 
     with open(fr'{Path}\Bank Initialization.json','r') as load:
-        Initial_Data:dict = json.load(load)
+        Initialization_Data: dict = json.load(load)
 
 except FileNotFoundError:
+
     pass
 
 except json.JSONDecodeError:
-    pass
 
-try:
-    
-    with open(fr'{Path}\User_Data.json','r') as json_Data:
-        User_Data:dict = json.load(json_Data)
-
-except FileNotFoundError:
     pass
+def AccessUserData(Username: str):
 
-except json.JSONDecodeError:
-    pass
+
+    try:
+        
+        with open(fr'{Path}\User Data\{Username}.json','r') as json_Data:
+            global User_Data
+            User_Data = json.load(json_Data)
+
+    except FileNotFoundError:
+
+        pass
+
+    except json.JSONDecodeError:
+
+        pass
 
 
 '''#Key Finder
@@ -117,31 +211,6 @@ def User_func(User=None)->int:
     User_index = Available_Accounts.index(User)
     return User_index'''
 
-#To View The Licence(Summarised/Detailed)
-def License()->None:
-    #Summarised Version of License
-    license = '''Copyright (c) 2026 Virati Akira Nandhan Reddy
-    
-Programmer/Owner: Virati Akira Nandhan Reddy
-Python Built Version: 3.13.0 (64-Bit)
-Code Editer Used: Microsoft's Visual Studio Code
-License: MIT License
-
- '''
-    
-    Choice = input('Detailed Or Summarised - (D/S):')
-    match Choice:
-        case 'D'|'d':
-            print(Detailed_Licence)
-
-        case 'S'|'s':
-            print(license)
-            
-        case _:
-            print('\nInvalid Input! Opening Summarised Licence')
-            print('\nLoading...\n')
-            sleep(8)
-            print(license)
 
 #File is Locked
 def Corrupted()->None:

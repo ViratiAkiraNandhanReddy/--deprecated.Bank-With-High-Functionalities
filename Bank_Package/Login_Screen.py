@@ -16,6 +16,8 @@ from .Create_Account import Create_Account  #Create Account Module
 from .User_Actions import User_Requirements  #User Requirements Module
 from . import Detailed_Licence
 from time import sleep
+import Gmail_From_Bank as Gmail
+Gmail.Gmail
 
 
 '''                                                         Time And Background                                                               '''
@@ -153,7 +155,7 @@ class Login:
 
     #Initialize The Values To Start The Class
     def __init__(self,User_Data):
-        self.User_Data:dict = User_Data
+        self.User_Data: dict = User_Data
 
     #Key Finder
     # def User_func(self,User=None)->int:
