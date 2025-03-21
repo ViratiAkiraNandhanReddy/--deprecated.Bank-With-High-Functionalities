@@ -124,7 +124,7 @@ import json
 
 __Version__ = '0.0.1 - Beta'
 __Author__ = 'Virati Akira Nandhan Reddy'
-__License__ = 'MIT License'
+__License__ = 'MIT License ( Restructured )'
 __Python_Version__ = '3.13.0 (64-Bit)'
 __Code_Editer__ = 'Microsoft\'s Visual Studio Code'
 
@@ -187,23 +187,38 @@ except FileNotFoundError:
 except json.JSONDecodeError:
 
     pass
-def AccessUserData(Username: str):
 
+try:
+
+    with open(fr'{Path}\User Data Bridge.json','r') as Bridge:
+        BridgeData: dict = json.load(Bridge)
+
+except FileNotFoundError:
+
+    pass
+
+except json.JSONDecodeError:
+
+    pass
+
+def AccessUserData(Username: str) -> dict:
 
     try:
         
         with open(fr'{Path}\User Data\{Username}.json','r') as json_Data:
-            global User_Data
             User_Data = json.load(json_Data)
+
+        #Returns The The Data To The Module
+        return User_Data
 
     except FileNotFoundError:
 
-        pass
+        return {'FileNotFoundError': True , 'JSONDecodeError': False} 
 
     except json.JSONDecodeError:
 
-        pass
-
+        return {'JSONDecodeError': True , 'FileNotFoundError': False}
+    
 
 '''#Key Finder
 def User_func(User=None)->int:

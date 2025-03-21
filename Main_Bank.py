@@ -16,7 +16,7 @@ Product_Activated = False
 def Start_Program():
     if Activated:
         if License_Check:
-            Login(User_Data).Display_Login()
+            Login().Display_Login()
             print('prg started')
         else:
             Corrupted()

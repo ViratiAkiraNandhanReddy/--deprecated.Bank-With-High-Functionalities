@@ -14,9 +14,9 @@ from random import randint  #Random Module To Generate Random Wallpaper
 from datetime import datetime  #DateTime Module To Show The Date
 from .Create_Account import Create_Account  #Create Account Module
 from .User_Actions import User_Requirements  #User Requirements Module
-from . import Detailed_Licence
+from . import Detailed_Licence, BridgeData, AccessUserData
 from time import sleep
-import Gmail_From_Bank as Gmail
+import Bank_Package.Gmail_From_Bank as Gmail
 Gmail.Gmail
 
 
@@ -54,8 +54,7 @@ class Developer:
     User ; This Class Is Used To Show The Total Balance Present In The Bank ; So The User Can Able To Know The Total Balance Present
     In The Bank ; This Class Is Used To Show The Developer's Information To The User'''
 
-    def __init__(self,User_Balance):
-        self.User_Balance = User_Balance
+    def __init__(self):
         self.icon = Developer_Icon
 
     def Developer_Autentication(self):
@@ -83,7 +82,7 @@ class Developer:
         Total_Balance = CTk.CTkFrame(Developer_Frame,width=900,height=40,fg_color='Yellow',border_color='Orange',border_width=1)
         Total_Balance.place(x=5,y=5)
         CTk.CTkLabel(Total_Balance,text='Total Balance Present In The Bank',font=('Freestyle Script',26,'bold'),text_color='Purple',height=0,width=690).place(x=5,y=2)
-        CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=25)
+        # CTk.CTkLabel(Total_Balance,text=f'${sum(self.User_Balance)}',font=('Roboto',10,'bold'),text_color='Green',height=0).place(x=2,y=25)
         dev = CTk.CTkButton(Developer_Frame,text='',image=CTk.CTkImage(light_image=self.icon,dark_image=self.icon,size=(100,100)),fg_color='transparent',hover=False,width=0,height=0);dev.place(x=89,y=100)
         dev.bind('<Motion>',ho)
         # CTk.CTkButton(Developer_Frame,text='Exit',command='').place(x=200,y=300)
@@ -141,7 +140,7 @@ class Documentation:
         pass
 
     #Documentation Of The SoftWare
-    def Show_Documentation():
+    def Show_Documentation(self):
         pass
 
 #Class For The Login
@@ -153,9 +152,12 @@ class Login:
     View The License, Developer, Documentation ; This Class Is Used To Show The Reset Password Screen To The User ; So The User Can
     Able To Reset The Password If They Forgot The Password'''
 
+
     #Initialize The Values To Start The Class
-    def __init__(self,User_Data):
-        self.User_Data: dict = User_Data
+    def __init__(self):
+        # self.UserData: dict = dict()
+        self.UserData: dict
+        
 
     #Key Finder
     # def User_func(self,User=None)->int:
@@ -257,7 +259,8 @@ class Login:
             Forgot_Password_Delay.place(x=288,y=359)
             Password.place(x=30,y=324)
             Login_Button_Delay.place(x=142,y=400)
-            Sign_Up_Delay.place(x=2,y=538)
+            SignUpMessage.place(x=117,y=480)
+            Sign_Up_Delay.place(x=247,y=477)
             Copyright_Note.place(x=243,y=547)
 
         #To Hide The Items Before The Login Screen Disappears
@@ -272,6 +275,7 @@ class Login:
             Forgot_Password_Delay.place_forget()
             Password.place_forget()
             Login_Button_Delay.place_forget()
+            SignUpMessage.place_forget()
             Sign_Up_Delay.place_forget()
             Copyright_Note.place_forget()
             Window.after(900,Reset_Password_Display_Items)
@@ -319,45 +323,52 @@ class Login:
             #Going Inside The Create_Account Class
             try:
 
-                New_Account = Create_Account(Available_Accounts=self.Available_Accounts,User_Security_Codes=self.User_Security_Codes);New_Account.Creating_New_Account()
+                # New_Account = Create_Account(Available_Accounts=self.Available_Accounts,User_Security_Codes=self.User_Security_Codes);New_Account.Creating_New_Account()
                 
                 #Appending All The Data 
-                for User_Name,User_Password,Security_Code in New_Account.New_Account_Details:
+                # for User_Name,User_Password,Security_Code in New_Account.New_Account_Details:
 
-                    self.Available_Accounts.append(User_Name)
-                    self.User_PinCodes.append(User_Password)
-                    self.User_Security_Codes.append(Security_Code)
+                    # self.Available_Accounts.append(User_Name)
+                    # self.User_PinCodes.append(User_Password)
+                    # self.User_Security_Codes.append(Security_Code)
                 
                 #Clearing All The Data From The Class
-                New_Account.Data_Clear()
+                # New_Account.Data_Clear()
 
                 #Showing The Login Screen
-                Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
+                Login().Display_Login()
 
             except:
 
                 #if The Create_Account Module is Missing
-                Login(self.Available_Accounts,self.User_PinCodes,self.User_Security_Codes,self.User_Balance).Display_Login()
+                Login().Display_Login()
 
         #If The Username Matches To The Password Then Redirecting To The User Actions
         def Login_Actions():
+
             User_Name = Username.get()
             User_Password = Password.get()
+
+            self.UserData = AccessUserData(User_Name)
 
             #Goes Into The Module
             def Redirect_To_User_Actions():
 
                 try:
 
-                    #Getting The Information From The Data Base
-                    Security_Code = self.User_Data[User_Name]['Security Code']
-                    User_Balance = self.User_Data[User_Name]['Balance']
-
                     #Destroy The Login Window And Opens Up The User Actions Module And Then Goes To The Login Window (if They Logout)
-                    Window.destroy()
-                    User_Requirements(User_Name,User_Password,Security_Code,User_Balance).User_Interface()
-                    Login(self.User_Data).Display_Login()
+                    try:
 
+                        if self.UserData.get('FileNotFoundError') or self.UserData.get('JSONDecodeError'):
+                            pass
+
+                        else:
+                            Window.destroy()
+                            User_Requirements(self.UserData).User_Interface()
+                            Login().Display_Login()
+
+                    except KeyError:
+                        print('Hello From KeyError')
                 except:
                     pass
 
@@ -367,7 +378,7 @@ class Login:
                 Username_Error.after(2000,Username_Error.destroy)
             
             #If The Given Username Is Does Not Exists In The Data Base and Password is Entered
-            elif (User_Name and (User_Name not in self.User_Data)) and User_Password:
+            elif (User_Name and (User_Name not in BridgeData)) and User_Password:
                 Username_Not_Exists_Error = CTk.CTkLabel(Frame,text=f'The Given Username Does Not Exists',text_color='Orange');Username_Not_Exists_Error.place(x=98,y=442)
                 Username_Not_Exists_Error.after(2000,Username_Not_Exists_Error.destroy)
             
@@ -382,7 +393,7 @@ class Login:
                 Password_Error.after(2000,Password_Error.destroy)
             
             #If The Username is Entered And The Password Is Wrong
-            elif User_Name and (User_Password != self.User_Data[User_Name]['Password']):
+            elif User_Name and (User_Password != self.UserData.get('Password', None)):
                 Password_Rule_Error = CTk.CTkLabel(Frame,text='The Password is incorrect. Try Again!',text_color='Orange');Password_Rule_Error.place(x=100,y=442)
                 Password_Rule_Error.after(2000,Password_Rule_Error.destroy)
 
@@ -408,12 +419,12 @@ class Login:
             #Shows The Documentation Window
             def Show_Documentation_Window():
                 Dev_Doc.destroy()
-                Documentation.Show_Documentation()
+                Documentation().Show_Documentation()
 
             #Shows The Developer Window
             def Show_Developer_Window():
                 Dev_Doc.destroy()
-                Developer(self.User_Balance).Developer_Autentication()
+                Developer().Developer_Autentication()
 
             #Main Window For The License, Developer, Documentation
             Dev_Doc = CTk.CTk()
@@ -507,7 +518,7 @@ class Login:
                         try:
 
                             #Changing The Password
-                            self.User_PinCodes[self.User_func(Username_Reset)] = New_Password
+                            self.UserData['Password'] = New_Password
 
                             #Saying That The Password is Changed
                             Change_Successful = CTk.CTkLabel(Frame_Reset_Password,text='Password Changed Successfully!\nRedirecting To Login Screen',text_color='Orange');Change_Successful.place(x=105,y=442)
@@ -547,7 +558,7 @@ class Login:
                 Username_Error.after(2000,Username_Error.destroy)
             
             #If The Given Username Is Does Not Exists In The Data Base and Password is Entered
-            elif (Username_Reset and(Username_Reset not in self.Available_Accounts)) and User_Security_Code_Reset:
+            elif (Username_Reset and(Username_Reset not in BridgeData)) and User_Security_Code_Reset:
                 Username_Exists_Error = CTk.CTkLabel(Frame_Reset_Password,text=f'The Given Username Does Not Exists',text_color='Orange');Username_Exists_Error.place(x=98,y=442)
                 Username_Exists_Error.after(2000,Username_Exists_Error.destroy)
             
@@ -562,7 +573,7 @@ class Login:
                 Password_Error.after(2000,Password_Error.destroy)
             
             #If The Username is Entered And The Security Code Is Incorect
-            elif Username_Reset and (User_Security_Code_Reset != self.User_Security_Codes[self.User_func(Username_Reset)]):
+            elif Username_Reset and (User_Security_Code_Reset != self.UserData.get('Security Code')):
                 Password_Rule_Error = CTk.CTkLabel(Frame_Reset_Password,text='The Security Code is incorrect. Try Again!',text_color='Orange');Password_Rule_Error.place(x=87,y=442)
                 Password_Rule_Error.after(2000,Password_Rule_Error.destroy)
 
@@ -609,8 +620,9 @@ class Login:
         #Login Button And SignUp Button
         Login_Button_Delay = CTk.CTkButton(Frame,text='Login',width=120,border_width=1,text_color='Green',fg_color='transparent',font=('Roboto',16,'bold'),
                       command=Login_Actions)#.place(x=142,y=400)
-        Sign_Up_Delay = CTk.CTkButton(Frame,text='Sign Up',width=50,height=15,border_width=1,text_color='Lime',fg_color='transparent',font=('Roboto',12,'bold'),
-                                      command=Signup_Redirecting,corner_radius=10)#.place(x=2,y=538)
+        SignUpMessage = CTk.CTkLabel(Frame,text='Don\'t You Have An Account? ',font=('Roboto',10,'italic'),width=0,height=0)#.place()
+        Sign_Up_Delay = CTk.CTkButton(Frame,text='Sign Up',width=0,height=0,text_color='#00A2E8',fg_color='transparent',font=('Roboto',10,'italic'),hover=False,
+                                      command=Signup_Redirecting)#.place(x=2,y=538)
         
 
         '''                                                         Reset Password                                                            '''

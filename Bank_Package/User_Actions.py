@@ -130,13 +130,9 @@ class User_Requirements:
     Kids_Profile_Icon_2 = Image.open(r'Bank_Package\Visual Data\User Icons\Kids_Profile_Icon_2.png')
     Kids_Profile_Icon_3 = Image.open(r'Bank_Package\Visual Data\User Icons\Kids_Profile_Icon_3.png')
 
-    def __init__(self,User_Name:str,User_Password:str,Security_Code:str,User_Balance:float,userDetails:dict[str,int|float|bool|str|dict]):
-        # self.User_Name = User_Name
-        self.userDetails = userDetails
-        self.User_Password = User_Password
-        self.Security_Code = Security_Code
-        self.User_Balance = User_Balance
-        self.Profile_Icon = 'self.Universal_Profile_Icon_0'
+    def __init__(self,UserData: dict):
+        self.UserData = UserData
+        self.ProfileIcon: str = 'self.' + UserData.get('ProfileIcon','Universal_Profile_Icon_0')
         self.Value = True
         self.Date = False
     
@@ -157,9 +153,9 @@ class User_Requirements:
 
             def readProfileIcon(Icon:str):
 
-                self.Profile_Icon = Icon
-                User_Info.configure(image = CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(40,40)))
-                currentProfileIcon.configure(image = CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(35,35)))
+                self.ProfileIcon = Icon
+                User_Info.configure(image = CTk.CTkImage(light_image=eval(self.ProfileIcon),dark_image=eval(self.ProfileIcon),size=(40,40)))
+                currentProfileIcon.configure(image = CTk.CTkImage(light_image=eval(self.ProfileIcon),dark_image=eval(self.ProfileIcon),size=(35,35)))
                 ProfileIconFrame.place_forget()
                 currentProfileIcon.configure(state = 'normal')
 
@@ -228,14 +224,14 @@ class User_Requirements:
         def HideDate():
             
             #Change The Value Of The Data Base - json
-            self.userDetails['Hide Date'] = HideDateSwitch.get()
+            self.UserData['Hide Date'] = HideDateSwitch.get()
 
             #True - Hide Date
-            if self.userDetails.get('Hide Date'):
+            if self.UserData.get('Hide Date'):
                 Date_Label.place_forget()
 
             #False - Show Date
-            elif not self.userDetails.get('Hide Date'):
+            elif not self.UserData.get('Hide Date'):
                 Date_Label.place(x=1070,y=2)
 
 
@@ -269,7 +265,7 @@ class User_Requirements:
 
         #Appearance Mode Frame
         Appearance_Mode = CTk.CTkFrame(Settings_Frame,width=134,height=50);Appearance_Mode.place(x=10,y=500)
-        _Mode = CTk.BooleanVar(Appearance_Mode,True if self.userDetails.get('Appearance Mode') == 'dark' else False)
+        _Mode = CTk.BooleanVar(Appearance_Mode,True if self.UserData.get('Appearance Mode') == 'dark' else False)
         CTk.CTkLabel(Appearance_Mode,text='',image=CTk.CTkImage(light_image=lightModeIcon,dark_image=lightModeIcon,size=(40,40))).place(x=5,y=5)
         CTk.CTkLabel(Appearance_Mode,text='',image=CTk.CTkImage(light_image=darkModeIcon,dark_image=darkModeIcon,size=(40,40))).place(x=89,y=5)
         Appearance_Mode_Switch = CTk.CTkSwitch(Appearance_Mode,text='',width=0,height=0,switch_height=16,switch_width=34,progress_color='transparent',
@@ -278,7 +274,7 @@ class User_Requirements:
 
         #Hide Date Frame
         Hide_Date = CTk.CTkFrame(Settings_Frame,width=210,height=50);Hide_Date.place(x=10,y=10)
-        _Date = CTk.BooleanVar(Hide_Date,bool(self.userDetails.get('Hide Date')))
+        _Date = CTk.BooleanVar(Hide_Date,bool(self.UserData.get('Hide Date')))
 
         CTk.CTkLabel(Hide_Date,text='   Hide Date',font=('Freestyle Script',26,'bold'),image=CTk.CTkImage(light_image=dateIcon,dark_image=dateIcon,size=(40,40)),compound='left').place(x=5,y=5)
         HideDateSwitch = CTk.CTkSwitch(Hide_Date,text='',width=0,height=0,switch_height=16,switch_width=34,command=HideDate,variable=_Date);HideDateSwitch.place(x=159,y=17)
@@ -288,7 +284,7 @@ class User_Requirements:
         profileIcon = CTk.CTkFrame(Settings_Frame,width=255,height=50);profileIcon.place(x=895,y=500)
         CTk.CTkLabel(profileIcon,text='Current Profile Picture :',height=40,font=('Freestyle Script',26,'bold')).place(x=5,y=5)
         currentProfileIcon = CTk.CTkButton(profileIcon,text='',height=0,width=0,hover_color='Grey',fg_color='transparent',
-                      image=CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(35,35)),compound='right',
+                      image=CTk.CTkImage(light_image=eval(self.ProfileIcon),dark_image=eval(self.ProfileIcon),size=(35,35)),compound='right',
                       command=changeProfilePicture);currentProfileIcon.place(x=208,y=4)
         
 
@@ -343,7 +339,7 @@ class User_Requirements:
         Danger_Zone = CTk.CTkFrame(Settings_Frame,width=200,height=50);Danger_Zone.place(x=685,y=440)
         # CTk.CTkLabel(Danger_Zone,text='danger Zone : del acc , wipe all the data and money(donetes to Bank),etc').place(x=10,y=10)
         Dan = CTk.CTkButton(Danger_Zone,text='Danger Zone   >',font=('Roboto',16,'bold'),hover_color='Grey',image=CTk.CTkImage(light_image=Danger_Zone_Icon,dark_image=Danger_Zone_Icon,size=(40,40)),
-                            height=46,width=196,fg_color='transparent',compound='left',text_color='Black' if self.userDetails.get('Appearance Mode') == 'light' else 'White').place(x=2,y=2)
+                            height=46,width=196,fg_color='transparent',compound='left',text_color='Black' if self.UserData.get('Appearance Mode') == 'light' else 'White').place(x=2,y=2)
         # CTk.CTkButton(Danger_Zone,text='›',font=('Roboto',35),height=0,width=15,fg_color='transparent').place(x=180,y=1)
 
 
@@ -372,9 +368,9 @@ class User_Requirements:
         Window.resizable(False,False)
         Window.geometry('1200x600')
         Window.protocol('WM_DELETE_WINDOW',Disable_Exit)
-        CTk.set_appearance_mode(str(self.userDetails.get('Appearance Mode')))
+        CTk.set_appearance_mode(str(self.UserData.get('Appearance Mode')))
 
-        if not self.userDetails.get('Hide Date'):
+        if not self.UserData.get('Hide Date'):
             Date_Label = CTk.CTkLabel(Window,text=Date_Day,text_color='Orange',height=10);Date_Label.place(x=1070,y=2)
         # CTk.CTkLabel(Window,text=f'Security Code: {self.Security_Code}',text_color='Orange',height=10).place(x=20,y=2)
         
@@ -385,7 +381,7 @@ class User_Requirements:
         Frame.place(x=20,y=20)
         
         #User Greetings And Logout
-        CTk.CTkLabel(Frame,text=f'{Greetings}, {self.User_Name}',font=('Freestyle Script',40,'bold'),text_color='#378F9C').place(x=10,y=2)
+        CTk.CTkLabel(Frame,text=f'{Greetings}, {self.UserData.get('User Name')}',font=('Freestyle Script',40,'bold'),text_color='#378F9C').place(x=10,y=2)
         # CTk.CTkButton(Frame,text='Logout',font=('Freestyle Script',30),fg_color='transparent',hover=False,width=40,height=14,text_color='Red',command=Window.destroy).place(x=1100,y=1)
         CTk.CTkLabel(Frame,text='-'*1160,text_color='Grey',font=('Roboto',2),height=0).place(x=0,y=48)
 
@@ -394,8 +390,8 @@ class User_Requirements:
         Balance_Frame.configure(width=200,height=50)
         Balance_Frame.place(x=10,y=60)
         CTk.CTkLabel(Balance_Frame,text='Your Bank Balance:',font=('Roboto',16),height=14).place(x=5,y=3)
-        Balance = CTk.CTkLabel(Balance_Frame,text=f'${self.User_Balance:.2f}',text_color='Lime').place(x=5,y=20)
-        User_Info = CTk.CTkButton(Frame,text='',image=CTk.CTkImage(light_image=eval(self.Profile_Icon),dark_image=eval(self.Profile_Icon),size=(40,40)),
+        Balance = CTk.CTkLabel(Balance_Frame,text=f'${self.UserData.get('Balance'):.2f}',text_color='Lime').place(x=5,y=20)
+        User_Info = CTk.CTkButton(Frame,text='',image=CTk.CTkImage(light_image=eval(self.ProfileIcon),dark_image=eval(self.ProfileIcon),size=(40,40)),
                                   height=0,width=0,fg_color='transparent',hover=False,command=self.Settings);User_Info.place(x=1112,y=0)
 
 
@@ -421,7 +417,7 @@ class User_Requirements:
 
         Window.mainloop()
 
-User_Requirements('Virati Akira Nandhan Reddy','','Virati181@Akki',1234567986548,userDetails={'Hide Date':False,'Appearance Mode':'dark'}).User_Interface()
+# User_Requirements(UserData={'Hide Date':False,'Appearance Mode':'dark','Balance':62472572,'User Name':'Virati Akira Nandhan Reddy'}).User_Interface()
 
 
 
