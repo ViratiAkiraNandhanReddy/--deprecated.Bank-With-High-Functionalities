@@ -1,21 +1,21 @@
-import smtplib, time
+import smtplib
 from email.message import EmailMessage
-from . import SingleGmail, CREDENTIALS, Authorization_Code
+from . import SingleGmail, CREDENTIALS
 
-class Two_Factor_Authentication(SingleGmail):
+class WelcomeGreetings(SingleGmail):
 
-    Code = None
+    def __init__(self, ReceiverMailAddress: str, Username: str) -> None:
+        super().__init__(ReceiverMailAddress)
+        self.Username = Username
 
-    # Changes The html Code With The Given 2FA-Code
-    def html_Code(self, Code: str) -> str: # Code For The html Mail
-
+    # Changes The html Code With The Given Username
+    def html_Code(self, Username: str) -> str: # Code For The html Mail
+        
         '''
         ## <ins>***Parameters***</ins>
-        ### Code: str = 265A74J74L (len = 10)
-
+        ### Username: str = `"Virati Akira Nandhan Reddy"`
         ## <ins>***Returns***</ins>
-        ### A Code Of The html Which Consists Of The Given 2FA-Code 
-        ### <ins>***Return Type : str***</ins> * 
+        ### A Code Of The html Which Consists Of The Given Username
         '''
 
         return '''
@@ -25,10 +25,11 @@ class Two_Factor_Authentication(SingleGmail):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Factor Authentication Code</title>
+    <title>Welcome to Our Service</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
@@ -47,7 +48,7 @@ class Two_Factor_Authentication(SingleGmail):
         .header {
             text-align: center;
             padding: 20px 0;
-            background-color: #007bff;
+            background-color: #4CAF50; /* Green color */
             color: #ffffff;
         }
         .header h1 {
@@ -56,13 +57,12 @@ class Two_Factor_Authentication(SingleGmail):
         }
         .content {
             padding: 20px;
-        }
-        .code {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
             text-align: center;
-            margin: 20px 0;
+        }
+        .content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
         }
         .footer {
             text-align: center;
@@ -74,7 +74,7 @@ class Two_Factor_Authentication(SingleGmail):
             margin: 0;
         }
         .footer a {
-            color: #007bff;
+            color: #4CAF50; /* Green color */
             text-decoration: none;
         }
         .footer a:hover {
@@ -88,60 +88,56 @@ class Two_Factor_Authentication(SingleGmail):
 <body>
     <div class="container">
         <div class="header">
-            <h1>Two Factor Authentication</h1>
+            <h1>Welcome to Our Service, USERNAME!</h1>
         </div>
         <div class="content">
-            <p>Dear User,</p>
-            <p>To Complete Your login, Please Use The Following Two Factor Authentication (2FA) Code:</p>
-            <div class="code">2FA-Code</div>
-            <p>This Code is Valid For 10 Minutes. If You Did Not Request This Code, Please Ignore This Email.</p>
-            <p>Thank You For Using Our Service.</p>
+            <img src="https://via.placeholder.com/600x200" alt="Welcome Image">
+            <p>Dear USERNAME,</p>
+            <p>We Are Thrilled To Have You With Us. Thank You For Joining Our Service!</p>
+            <p>We Are Committed To Providing You With The Best Experience Possible. If You Have Any Questions Or Need Assistance, Please Do Not Hesitate To Reach Out To Our Support Team.</p>
             <p>Best Regards,</p>
             <p><b>Virati Akira Nandhan Reddy</b></p>
         </div>
         <div class="footer">
             <p>&copy; 2026 Virati Akira Nandhan Reddy. All Rights Reserved.</p>
             <p><a href="https://github.com/ViratiAkiraNandhanReddy">GitHub</a> | <a href="https://linkedin.com/in/virati-akira-nandhan-reddy">LinkedIn</a> | <a href="https://x.com/Viratiaki53">Twitter</a> | <a href="https://instagram.com/Viratiaki53">Instagram</a></p>
-            <p><b> This is An Automated Email </b></p> 
+            <p><b> This is An Automated Email </b></p>
             <p><b> Please Do Not Reply To This Email </b></p>
         </div>
     </div>
 </body>
 </html>
 
-'''.replace('2FA-Code',Code)
+'''.replace('USERNAME', Username)
 
     def Send_Gmail(self) -> None:
 
         Email = EmailMessage()
 
-        self.Code = Authorization_Code()
-        HTML_DATA = self.html_Code(self.Code)
+        HTML_DATA = self.html_Code(self.Username)
 
-        Email['Subject'] = 'Two Factor Authentication Code'
+        Email['Subject'] = 'Welcome to Our Service'
         Email['From'] = 'Virati Akira Nandhan Reddy'
         Email['To'] = self.ReceiverMailAddress
-        
-        Email.set_content(HTML_DATA, subtype = 'html')
 
-                    
+        Email.set_content(HTML_DATA, subtype='html')
+
         try:
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-                SMTP.login(CREDENTIALS.get('User Name','None'), CREDENTIALS.get('Password','None'))
+                SMTP.login(CREDENTIALS.get('User Name', 'None'), CREDENTIALS.get('Password', 'None'))
                 SMTP.send_message(Email)
 
         except smtplib.SMTPAuthenticationError:
-            
+
             pass
 
         except smtplib.SMTPServerDisconnected:
 
             pass
 
-
+    
     def Resend_Gmail(self) -> None:
         self.Send_Gmail()
-
-
+    

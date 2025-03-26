@@ -141,8 +141,8 @@ Then The Program Is Ready To Use\n
         #Acceptance Check
         Check = tk.Checkbutton(Window,text='Accept All Terms And Conditions',underline=0,variable=OK,onvalue=True,\
                             offvalue=False,command=Accepted,bg='Light Blue',activebackground='Light Blue').place(x=25,y=410)
-        Next = tk.Button(Window,text='Next',state='disabled',command=Product_Key,font=(10),activebackground='#316E7A',bg='#68ABC9',relief='ridge')
-        tk.Button(Window,text='Cancel',fg='Red',command=Window.destroy,font=(10),activebackground='#316E7A',bg='#68ABC9',relief='ridge').place(x=662,y=435)
+        Next = tk.Button(Window,text='Next',state='disabled',command=Product_Key,font=('Roboto 10'),activebackground='#316E7A',bg='#68ABC9',relief='ridge')
+        tk.Button(Window,text='Cancel',fg='Red',command=Window.destroy,font=('Roboto 10'),activebackground='#316E7A',bg='#68ABC9',relief='ridge').place(x=662,y=435)
         Next.place(x=580,y=435,width=60)
 
         #Copyright Note 

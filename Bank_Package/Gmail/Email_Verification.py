@@ -2,11 +2,11 @@ import smtplib, time
 from email.message import EmailMessage
 from . import SingleGmail, CREDENTIALS, Authorization_Code
 
-class Two_Factor_Authentication(SingleGmail):
-
+class EmailVerification(SingleGmail):
+    
     Code = None
-
-    # Changes The html Code With The Given 2FA-Code
+    
+    # Changes The html Code With The Given Email Verification Code
     def html_Code(self, Code: str) -> str: # Code For The html Mail
 
         '''
@@ -14,7 +14,7 @@ class Two_Factor_Authentication(SingleGmail):
         ### Code: str = 265A74J74L (len = 10)
 
         ## <ins>***Returns***</ins>
-        ### A Code Of The html Which Consists Of The Given 2FA-Code 
+        ### A Code Of The html Which Consists Of The Given Email Verification Code
         ### <ins>***Return Type : str***</ins> * 
         '''
 
@@ -25,7 +25,7 @@ class Two_Factor_Authentication(SingleGmail):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Factor Authentication Code</title>
+    <title>Email Verification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,7 +47,7 @@ class Two_Factor_Authentication(SingleGmail):
         .header {
             text-align: center;
             padding: 20px 0;
-            background-color: #007bff;
+            background-color: #ff6600;
             color: #ffffff;
         }
         .header h1 {
@@ -60,7 +60,7 @@ class Two_Factor_Authentication(SingleGmail):
         .code {
             font-size: 24px;
             font-weight: bold;
-            color: #007bff;
+            color: #ff6600;
             text-align: center;
             margin: 20px 0;
         }
@@ -74,7 +74,7 @@ class Two_Factor_Authentication(SingleGmail):
             margin: 0;
         }
         .footer a {
-            color: #007bff;
+            color: #ff6600;
             text-decoration: none;
         }
         .footer a:hover {
@@ -88,13 +88,13 @@ class Two_Factor_Authentication(SingleGmail):
 <body>
     <div class="container">
         <div class="header">
-            <h1>Two Factor Authentication</h1>
+            <h1>Email Verification</h1>
         </div>
         <div class="content">
             <p>Dear User,</p>
-            <p>To Complete Your login, Please Use The Following Two Factor Authentication (2FA) Code:</p>
-            <div class="code">2FA-Code</div>
-            <p>This Code is Valid For 10 Minutes. If You Did Not Request This Code, Please Ignore This Email.</p>
+            <p>To Verify Your Email Address, Please Use The Following Verification Code:</p>
+            <div class="code">Email-Verification</div>
+            <p>This Code is Valid For 10 Minutes. If You Did Not Request This Verification, Please Ignore This Email.</p>
             <p>Thank You For Using Our Service.</p>
             <p>Best Regards,</p>
             <p><b>Virati Akira Nandhan Reddy</b></p>
@@ -109,22 +109,22 @@ class Two_Factor_Authentication(SingleGmail):
 </body>
 </html>
 
-'''.replace('2FA-Code',Code)
+'''.replace('Email-Verification', Code)
 
-    def Send_Gmail(self) -> None:
-
+    def Send_Gmail(self) ->None:
+        
         Email = EmailMessage()
-
+            
         self.Code = Authorization_Code()
         HTML_DATA = self.html_Code(self.Code)
 
-        Email['Subject'] = 'Two Factor Authentication Code'
+        Email['Subject'] = 'Email Verification'
         Email['From'] = 'Virati Akira Nandhan Reddy'
         Email['To'] = self.ReceiverMailAddress
         
         Email.set_content(HTML_DATA, subtype = 'html')
 
-                    
+
         try:
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
@@ -139,9 +139,7 @@ class Two_Factor_Authentication(SingleGmail):
         except smtplib.SMTPServerDisconnected:
 
             pass
-
+        
 
     def Resend_Gmail(self) -> None:
         self.Send_Gmail()
-
-
