@@ -1,8 +1,26 @@
-import smtplib, time
+import smtplib, time, datetime, socket
 from email.message import EmailMessage
-from . import SingleGmail, CREDENTIALS, Authorization_Code
+from . import SingleGmail, CREDENTIALS, HISTORY, Authorization_Code
+
 
 class Two_Factor_Authentication(SingleGmail):
+    
+    '''
+    # Two_Factor_Authentication Class Documentation
+
+    ## <ins>***Overview***</ins>
+    ### The `Two_Factor_Authentication` class is a child class of `SingleGmail` and is used to send Two-Factor Authentication (2FA) emails to a \
+    given Gmail address. It generates a unique 2FA code, embeds it in an HTML email template, and sends the email to the specified recipient.
+
+    ## <ins>***Attributes***</ins>
+    ### `Code` : Stores the generated 2FA code. Default is None.
+
+    ## <ins>***Methods***</ins>
+    ### *1. html_Code(self, Code: str) -> str*
+    > #### Generates the HTML content for the 2FA email with the provided 2FA code.
+    ### *2. Send_Gmail(self) -> str*
+    > #### Jekbrbkbfkbksbkkbkbkjbk
+    '''
 
     Code = None
 
@@ -111,7 +129,7 @@ class Two_Factor_Authentication(SingleGmail):
 
 '''.replace('2FA-Code',Code)
 
-    def Send_Gmail(self) -> None:
+    def Send_Gmail(self) -> str:
 
         Email = EmailMessage()
 
@@ -129,16 +147,31 @@ class Two_Factor_Authentication(SingleGmail):
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-                SMTP.login(CREDENTIALS.get('User Name','None'), CREDENTIALS.get('Password','None'))
+                SMTP.login(CREDENTIALS.get('Bank Email','None'), CREDENTIALS.get('Password','None'))
                 SMTP.send_message(Email)
 
+                HISTORY.write(f'\nTwo Factor Authentication Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Successful  :  Reason: Error Free')
+                return 'Error Free'
+            
         except smtplib.SMTPAuthenticationError:
             
-            pass
+            HISTORY.write(f'\nTwo Factor Authentication Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Credentials Error')
+            return 'Credentials Error'
 
         except smtplib.SMTPServerDisconnected:
 
-            pass
+            HISTORY.write(f'\nTwo Factor Authentication Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Slow Internet')
+            return 'Slow Internet'
+        
+        except socket.gaierror:
+
+            HISTORY.write(f'\nTwo Factor Authentication Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: No Internet')
+            return 'No Internet'
+        
+        except Exception:
+
+            HISTORY.write(f'\nTwo Factor Authentication Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Unknown Error')
+            return 'Unknown Error'
 
 
     def Resend_Gmail(self) -> None:

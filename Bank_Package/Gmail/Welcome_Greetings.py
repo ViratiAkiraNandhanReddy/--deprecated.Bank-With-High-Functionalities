@@ -91,8 +91,8 @@ class WelcomeGreetings(SingleGmail):
             <h1>Welcome to Our Service, USERNAME!</h1>
         </div>
         <div class="content">
-            <img src="https://via.placeholder.com/600x200" alt="Welcome Image">
-            <p>Dear USERNAME,</p>
+            <img src="https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/0d0b232404b94a6306a87b89615c34609deaf46d/Bank_Package/Visual%20Data/Welcome%20Image.png?raw=true" alt="Welcome Image">
+            <p>Dear <i><b>USERNAME</b></i>,</p>
             <p>We Are Thrilled To Have You With Us. Thank You For Joining Our Service!</p>
             <p>We Are Committed To Providing You With The Best Experience Possible. If You Have Any Questions Or Need Assistance, Please Do Not Hesitate To Reach Out To Our Support Team.</p>
             <p>Best Regards,</p>

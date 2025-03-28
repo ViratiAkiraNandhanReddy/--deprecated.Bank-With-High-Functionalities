@@ -1,6 +1,6 @@
-import smtplib, time
+import smtplib, time, datetime, socket
 from email.message import EmailMessage
-from . import SingleGmail, CREDENTIALS, Authorization_Code
+from . import SingleGmail, CREDENTIALS, HISTORY, Authorization_Code
 
 class EmailVerification(SingleGmail):
     
@@ -111,7 +111,7 @@ class EmailVerification(SingleGmail):
 
 '''.replace('Email-Verification', Code)
 
-    def Send_Gmail(self) ->None:
+    def Send_Gmail(self) -> str:
         
         Email = EmailMessage()
             
@@ -129,17 +129,31 @@ class EmailVerification(SingleGmail):
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-                SMTP.login(CREDENTIALS.get('User Name','None'), CREDENTIALS.get('Password','None'))
+                SMTP.login(CREDENTIALS.get('Bank Email','None'), CREDENTIALS.get('Password','None'))
                 SMTP.send_message(Email)
+                
+                HISTORY.write(f'\nEmail Verification Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Successful  : Reason: Error Free')
+                return 'Error Free'
 
         except smtplib.SMTPAuthenticationError:
             
-            pass
+            HISTORY.write(f'\nEmail Verification Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Credentials Error')
+            return 'Credentials Error'
 
         except smtplib.SMTPServerDisconnected:
 
-            pass
+            HISTORY.write(f'\nEmail Verification Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Slow Internet')
+            return 'Slow Internet'
         
+        except socket.gaierror:
+
+            HISTORY.write(f'\nEmail Verification Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: No Internet')
+            return 'No Internet'
+        
+        except Exception:
+
+            HISTORY.write(f'\nEmail Verification Mail To {self.ReceiverMailAddress} At {datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}  :  Status: Unsuccessful  :  Reason: Unknown Error')
+            return 'Unknown Error'
 
     def Resend_Gmail(self) -> None:
         self.Send_Gmail()

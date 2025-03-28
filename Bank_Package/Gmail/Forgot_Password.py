@@ -110,7 +110,7 @@ class Forgot_Password(SingleGmail):
 
 '''.replace('Forgot-Password', Code)
 
-    def Send_Gmail(self) -> None:
+    def Send_Gmail(self) -> str:
         Email = EmailMessage()
 
         self.Code = Authorization_Code()
@@ -126,7 +126,7 @@ class Forgot_Password(SingleGmail):
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-                SMTP.login(CREDENTIALS.get('User Name','None'), CREDENTIALS.get('Password','None'))
+                SMTP.login(CREDENTIALS.get('Bank Email','None'), CREDENTIALS.get('Password','None'))
                 SMTP.send_message(Email)
 
         except smtplib.SMTPAuthenticationError:

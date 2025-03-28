@@ -4,5 +4,5 @@ from . import MultipleGmail, CREDENTIALS
 
 class PromotionalMail(MultipleGmail):
     
-    def SendGmails(self) -> None:
+    def SendGmails(self) -> str:
         pass 

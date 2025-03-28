@@ -10,10 +10,13 @@ import json
 from random import random, randint
 from abc import ABC, abstractmethod
 
+HISTORY = open(r'Bank_Package\Gmail\Gmail History.txt', 'a')
+
 #Reads The Important Login Credentials Which Are Used For Sending The Mail's
 with open(r'Bank_Package\Gmail\Login Credentials.json', 'r') as LOGIN:
     
     CREDENTIALS: dict = json.load(LOGIN)
+
 
 # A Code Of Length 10 Characters  
 def Authorization_Code() -> str: # EG: 546G63W55E
@@ -40,7 +43,7 @@ class SingleGmail(ABC):
         self.ReceiverMailAddress: str = ReceiverMailAddress 
 
     @abstractmethod
-    def Send_Gmail(self) -> None:
+    def Send_Gmail(self) -> str:
         pass
     
     @abstractmethod
@@ -54,6 +57,6 @@ class  MultipleGmail(ABC):
         self.ReceiverMailAddresses = ReceiverMailAddresses
 
     @abstractmethod
-    def SendGmails(self) -> None:
+    def SendGmails(self) -> str:
         pass
 
