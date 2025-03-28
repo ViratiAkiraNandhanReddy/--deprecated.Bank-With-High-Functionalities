@@ -91,7 +91,7 @@ class WelcomeGreetings(SingleGmail):
             <h1>Welcome to Our Service, USERNAME!</h1>
         </div>
         <div class="content">
-            <img src="https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/0d0b232404b94a6306a87b89615c34609deaf46d/Bank_Package/Visual%20Data/Welcome%20Image.png?raw=true" alt="Welcome Image">
+            <img src="https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Welcome%20Image.png?raw=true" alt="Welcome Image">
             <p>Dear <i><b>USERNAME</b></i>,</p>
             <p>We Are Thrilled To Have You With Us. Thank You For Joining Our Service!</p>
             <p>We Are Committed To Providing You With The Best Experience Possible. If You Have Any Questions Or Need Assistance, Please Do Not Hesitate To Reach Out To Our Support Team.</p>
@@ -110,7 +110,7 @@ class WelcomeGreetings(SingleGmail):
 
 '''.replace('USERNAME', Username)
 
-    def Send_Gmail(self) -> None:
+    def Send_Gmail(self) -> str:
 
         Email = EmailMessage()
 
@@ -126,16 +126,20 @@ class WelcomeGreetings(SingleGmail):
 
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-                SMTP.login(CREDENTIALS.get('User Name', 'None'), CREDENTIALS.get('Password', 'None'))
+                SMTP.login(CREDENTIALS.get('Bank Email', 'None'), CREDENTIALS.get('Password', 'None'))
                 SMTP.send_message(Email)
+
+                return ''
 
         except smtplib.SMTPAuthenticationError:
 
             pass
+            return ''
 
         except smtplib.SMTPServerDisconnected:
 
             pass
+            return ''
 
     
     def Resend_Gmail(self) -> None:
