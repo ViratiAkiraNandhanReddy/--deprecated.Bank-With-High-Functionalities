@@ -1,9 +1,9 @@
-# Bank With Python(GUI)
+# Bank-With-High-Functionalities 🏦
 
 ## Project Info
-Name: Bank With Python(GUI)\
-Purpose: To Create A Bank Management System Using Python and Tkinter\
-Author: Virati Akira Nandhan Reddy\
+Name: Bank With Python(GUI)  
+Purpose: To Create A Bank Management System Using Python and Tkinter  
+Author: Virati Akira Nandhan Reddy  
 Email:viratiaki29@gmail.com
 
 This Is A Simple Python Project That Uses Tkinter Module To Create A Bank Application. It Is A GUI Based Project. The Main Objectives Are As Follows:
