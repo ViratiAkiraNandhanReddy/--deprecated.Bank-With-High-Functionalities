@@ -1,3 +1,5 @@
+![Banner Image](https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Banner%20Image.jpg)
+
 # Bank-With-High-Functionalities 🏦
 
 ## Project Info
