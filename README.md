@@ -1,8 +1,8 @@
 ![Banner Image](https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Banner%20Image.jpg)
 
-## Bank-With-High-Functionalities 🏦
+## ***Bank-With-High-Functionalities***
 
-### Project Info
+### ***Project Info***
 Name: Bank With Python(GUI)  
 Purpose: To Create A Bank Management System Using Python and Tkinter  
 Author: Virati Akira Nandhan Reddy  
@@ -28,7 +28,7 @@ This Is A Simple Python Project That Uses Tkinter Module To Create A Bank Applic
 
 
 
-
+---
 ### External Modules
 1. customtkinter 
 2. importlib
@@ -36,7 +36,7 @@ This Is A Simple Python Project That Uses Tkinter Module To Create A Bank Applic
 4. pillow (PIL)
 5. 
 
-
+---
 ### Owner Info
 The Whole Script is Written In Python\
 Python Version Used: 3.13.0 (64-Bit)\
