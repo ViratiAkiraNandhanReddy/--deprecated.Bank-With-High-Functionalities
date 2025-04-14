@@ -5,170 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Comprehensive documentation for the Bank With High Functionalities project, a Python-based banking system with an intuitive GUI.">
     <meta name="author" content="Virati Akira Nandhan Reddy">
-    <title>Bank With High Functionalities - Documentation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        /* General Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.8;
-            background: #f8f9fa;
-            color: #333;
-        }
-
-        /* Header Styles */
-        header {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            animation: fadeIn 1.5s ease-in-out;
-        }
-        header h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        header p {
-            font-size: 1.2rem;
-            font-style: italic;
-        }
-
-        /* Navigation Bar */
-        nav {
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 10px 0;
-        }
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            gap: 20px;
-        }
-        nav ul li {
-            font-weight: 500;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: #333;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease-in-out;
-        }
-        nav ul li a:hover {
-            background: #007bff;
-            color: white;
-        }
-
-        /* Section Styles */
-        section {
-            max-width: 1100px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            animation: slideIn 1s ease-in-out;
-        }
-        section h2 {
-            font-size: 2rem;
-            color: #007bff;
-            font-family: 'Roboto', sans-serif;
-            border-bottom: 3px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        section h3 {
-            font-size: 1.6rem;
-            color: #0056b3;
-            margin-top: 20px;
-        }
-        section p, ul, ol {
-            margin-top: 10px;
-        }
-        ul, ol {
-            padding-left: 20px;
-        }
-        ul li, ol li {
-            margin-bottom: 10px;
-        }
-        code, pre {
-            background: #f1f1f1;
-            display: block;
-            padding: 15px;
-            border-left: 5px solid #007bff;
-            overflow-x: auto;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-block;
-            background: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease-in-out;
-        }
-        .btn:hover {
-            background: #0056b3;
-            transform: scale(1.05);
-        }
-
-        /* Footer */
-        footer {
-            background: #343a40;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
-        }
-        footer p {
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
+    <title>Bank With High Functionalities</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Bank With High Functionalities</h1>
-        <p>A Python-based banking system with a user-friendly GUI</p>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <h1>Bank With High Functionalities</h1>
+            <p>A Python-based banking system with an intuitive GUI</p>
+            <a href="#overview" class="btn primary-btn">Explore Documentation</a>
+        </div>
     </header>
-    
-    <nav>
+
+    <!-- Navbar -->
+    <nav class="navbar">
         <ul>
             <li><a href="#overview">Overview</a></li>
             <li><a href="#features">Features</a></li>
@@ -179,83 +32,102 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
-    
-    <section id="overview">
-        <h2>Overview</h2>
-        <p>The <strong>Bank With High Functionalities</strong> project is a Python-based banking system that offers an intuitive GUI. It provides essential banking features like account management, secure transactions, loan processing, and detailed transaction history. This project is designed to enhance the user experience, enabling seamless and efficient financial operations.</p>
-        <a href="#features" class="btn">Learn More</a>
-    </section>
-    
-    <section id="features">
-        <h2>Features</h2>
-        <ul>
-            <li><strong>Account Management:</strong> Create, update, and delete user accounts securely.</li>
-            <li><strong>Secure Transactions:</strong> Perform deposits, withdrawals, and transfers.</li>
-            <li><strong>Loan Services:</strong> Apply for and manage loans with automated repayment tracking.</li>
-            <li><strong>Transaction History:</strong> View transaction logs for better financial management.</li>
-            <li><strong>User-Friendly GUI:</strong> Simple and intuitive interface for effortless navigation.</li>
-        </ul>
-    </section>
-    
-    <section id="technologies">
-        <h2>Technologies Used</h2>
-        <p>This project is powered by:</p>
-        <ul>
-            <li><strong>Python:</strong> For all backend logic and processing.</li>
-            <li><strong>Tkinter:</strong> To design the graphical interface.</li>
-            <li><strong>SQLite:</strong> To store account and transaction data securely.</li>
-        </ul>
-    </section>
-    
-    <section id="setup">
-        <h2>Setup Instructions</h2>
-        <ol>
-            <li>Clone the repository:
-                <pre><code>git clone https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities.git</code></pre>
-            </li>
-            <li>Navigate to the project directory:
-                <pre><code>cd Bank-With-High-Functionalities</code></pre>
-            </li>
-            <li>Install the required dependencies:
-                <pre><code>pip install -r requirements.txt</code></pre>
-            </li>
-            <li>Run the application:
-                <pre><code>python main.py</code></pre>
-            </li>
-        </ol>
-        <a href="#usage" class="btn">Proceed to Usage</a>
-    </section>
-    
-    <section id="usage">
-        <h2>Usage</h2>
-        <p>After setting up the project, you can:</p>
-        <ul>
-            <li>Create and manage user accounts.</li>
-            <li>Perform secure deposits, withdrawals, and transfers.</li>
-            <li>Apply for loans and manage repayment schedules.</li>
-            <li>Access detailed transaction history logs.</li>
-        </ul>
-    </section>
-    
-    <section id="faq">
-        <h2>FAQ</h2>
-        <h3>1. What should I do if I encounter an error?</h3>
-        <p>Check the logs for error details and ensure you’ve installed all required dependencies.</p>
-        <h3>2. Can I contribute to this project?</h3>
-        <p>Yes, contributions are welcome! Fork the repo, make changes, and submit a pull request.</p>
-    </section>
-    
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>For any questions or support, you can reach out via:</p>
-        <ul>
-            <li><strong>GitHub:</strong> <a href="https://github.com/ViratiAkiraNandhanReddy" target="_blank">Virati Akira Nandhan Reddy</a></li>
-            <li><strong>Email:</strong> your-email@example.com</li>
-        </ul>
-    </section>
-    
-    <footer>
+
+    <!-- Sections -->
+    <main>
+        <section id="overview" class="section">
+            <div class="container">
+                <h2>Overview</h2>
+                <p>The <strong>Bank With High Functionalities</strong> project is a Python-based banking system that offers an intuitive GUI. It provides essential banking features like account management, secure transactions, and loan processing.</p>
+                <a href="#features" class="btn">Learn More</a>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <div class="container">
+                <h2>Features</h2>
+                <ul>
+                    <li><strong>Account Management:</strong> Manage user accounts securely.</li>
+                    <li><strong>Secure Transactions:</strong> Perform deposits, withdrawals, and transfers.</li>
+                    <li><strong>Loan Services:</strong> Apply for and manage loans efficiently.</li>
+                    <li><strong>Transaction History:</strong> View detailed logs for better financial management.</li>
+                    <li><strong>User-Friendly GUI:</strong> Intuitive and simple interface.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="technologies" class="section">
+            <div class="container">
+                <h2>Technologies</h2>
+                <p>This project is powered by:</p>
+                <ul>
+                    <li><strong>Python:</strong> For backend logic and processing.</li>
+                    <li><strong>Tkinter:</strong> For the graphical interface.</li>
+                    <li><strong>SQLite:</strong> For secure data storage.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="setup" class="section">
+            <div class="container">
+                <h2>Setup</h2>
+                <ol>
+                    <li>Clone the repository:
+                        <pre><code>git clone https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities.git</code></pre>
+                    </li>
+                    <li>Navigate to the directory:
+                        <pre><code>cd Bank-With-High-Functionalities</code></pre>
+                    </li>
+                    <li>Install dependencies:
+                        <pre><code>pip install -r requirements.txt</code></pre>
+                    </li>
+                    <li>Run the application:
+                        <pre><code>python main.py</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="usage" class="section">
+            <div class="container">
+                <h2>Usage</h2>
+                <p>After setting up, you can:</p>
+                <ul>
+                    <li>Create and manage user accounts.</li>
+                    <li>Perform secure transactions.</li>
+                    <li>Apply for loans and manage repayment schedules.</li>
+                    <li>Access detailed transaction history.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="container">
+                <h2>FAQ</h2>
+                <h3>1. What should I do if I encounter an error?</h3>
+                <p>Check the logs and ensure you’ve installed all required dependencies.</p>
+                <h3>2. Can I contribute?</h3>
+                <p>Yes, contributions are welcome! Fork the repo, make changes, and submit a pull request.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <h2>Contact</h2>
+                <p>For questions or support, reach out via:</p>
+                <ul>
+                    <li><strong>GitHub:</strong> <a href="https://github.com/ViratiAkiraNandhanReddy" target="_blank">Virati Akira Nandhan Reddy</a></li>
+                    <li><strong>Email:</strong> your-email@example.com</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
         <p>© 2025 Bank With High Functionalities. All Rights Reserved.</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
