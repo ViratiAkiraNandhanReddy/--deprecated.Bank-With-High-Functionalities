@@ -1,1 +1,231 @@
-<h1>Hello! Virati Akira Nandhan Reddy</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comprehensive documentation for the Bank With High Functionalities project, a Python-based banking system with an intuitive GUI.">
+    <meta name="author" content="Virati Akira Nandhan Reddy">
+    <title>Bank With High Functionalities - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        header p {
+            margin: 5px 0 0;
+            font-style: italic;
+        }
+        nav {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        section {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        section h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        section h3 {
+            color: #0056b3;
+        }
+        code, pre {
+            background: #f8f9fa;
+            display: block;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #007bff;
+            overflow-x: auto;
+        }
+        ul, ol {
+            margin: 20px 0;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        footer p {
+            margin: 0;
+        }
+        .sub-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bank With High Functionalities</h1>
+        <p>A Python-based banking system with a user-friendly GUI</p>
+    </header>
+    <nav>
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#technologies">Technologies</a>
+        <a href="#setup">Setup</a>
+        <a href="#usage">Usage</a>
+        <a href="#project-structure">Project Structure</a>
+        <a href="#detailed-feature-explanation">Feature Details</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contributing">Contributing</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section id="overview">
+        <h2>Overview</h2>
+        <p><strong>Bank With High Functionalities</strong> is a Python-based banking system with an intuitive graphical user interface (GUI). It provides features such as account management, secure transactions, loan processing, and detailed transaction history. This project aims to deliver a seamless, interactive, and efficient banking experience, showcasing Python's capabilities in building functional and user-friendly applications.</p>
+    </section>
+    <section id="features">
+        <h2>Features</h2>
+        <p>This project includes a comprehensive set of functionalities:</p>
+        <ul>
+            <li><strong>Account Management:</strong> Create, update, and delete user accounts securely.</li>
+            <li><strong>Secure Transactions:</strong> Perform deposits, withdrawals, and transfers with integrity.</li>
+            <li><strong>Loan Services:</strong> Simulate loan applications, approvals, and repayment tracking.</li>
+            <li><strong>Transaction History:</strong> View and analyze past transactions with detailed logs.</li>
+            <li><strong>User-Friendly GUI:</strong> Interactive and intuitive interface for effortless navigation.</li>
+        </ul>
+    </section>
+    <section id="technologies">
+        <h2>Technologies Used</h2>
+        <ul>
+            <li><strong>Python:</strong> Used for backend logic and overall implementation.</li>
+            <li><strong>Tkinter:</strong> Provides the graphical user interface for the application.</li>
+            <li><strong>SQLite:</strong> Ensures secure and efficient data storage for accounts and transactions.</li>
+        </ul>
+    </section>
+    <section id="setup">
+        <h2>Setup Instructions</h2>
+        <p>Follow these steps to set up the project on your local system:</p>
+        <ol>
+            <li>Clone the repository:
+                <pre><code>git clone https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities.git</code></pre>
+            </li>
+            <li>Navigate to the project directory:
+                <pre><code>cd Bank-With-High-Functionalities</code></pre>
+            </li>
+            <li>Install dependencies:
+                <pre><code>pip install -r requirements.txt</code></pre>
+            </li>
+            <li>Run the application:
+                <pre><code>python main.py</code></pre>
+            </li>
+        </ol>
+    </section>
+    <section id="usage">
+        <h2>Usage</h2>
+        <p>Once the application is running, you can perform various banking operations, such as:</p>
+        <ul>
+            <li>Creating and managing user accounts.</li>
+            <li>Making deposits, withdrawals, and transfers.</li>
+            <li>Applying for and managing loans.</li>
+            <li>Viewing detailed transaction histories.</li>
+        </ul>
+    </section>
+    <section id="project-structure">
+        <h2>Project Structure</h2>
+        <p>The project is organized as follows:</p>
+        <pre><code>
+Bank-With-High-Functionalities/
+├── main.py                # Entry point of the application
+├── gui/                   # GUI-related components
+│   ├── account_gui.py     # GUI for account management
+│   ├── transaction_gui.py # GUI for transactions
+│   └── loan_gui.py        # GUI for loan features
+├── database/              # Database files and scripts
+│   ├── database.py        # Database logic
+│   └── schema.sql         # Database schema
+├── utils/                 # Helper modules
+│   ├── auth.py            # Authentication utilities
+│   ├── logger.py          # Logging and error handling
+│   └── validators.py      # Input validation
+└── README.md              # Documentation
+        </code></pre>
+    </section>
+    <section id="detailed-feature-explanation">
+        <h2>Detailed Feature Explanation</h2>
+        <div class="sub-section">
+            <h3>Account Management</h3>
+            <p>Users can create, update, and delete accounts with ease. Each account is securely stored in the database and includes features such as account balance tracking and personal details.</p>
+        </div>
+        <div class="sub-section">
+            <h3>Secure Transactions</h3>
+            <p>Users can perform deposits, withdrawals, and transfers. Each transaction is validated and securely logged in the system to ensure data integrity and transparency.</p>
+        </div>
+        <div class="sub-section">
+            <h3>Loan Services</h3>
+            <p>The system allows users to apply for loans, track approvals, and manage repayments. Loan data is stored securely, and repayment schedules are generated automatically.</p>
+        </div>
+        <div class="sub-section">
+            <h3>Transaction History</h3>
+            <p>All transactions are logged and can be viewed with detailed information, including timestamps and transaction IDs, for better financial tracking and analysis.</p>
+        </div>
+        <div class="sub-section">
+            <h3>User-Friendly GUI</h3>
+            <p>The application uses Tkinter to provide a simple and intuitive interface. Users can navigate between features effortlessly, making it accessible even to non-technical users.</p>
+        </div>
+    </section>
+    <section id="faq">
+        <h2>FAQ</h2>
+        <p><strong>1. What happens if I encounter an error?</strong><br>If an error occurs, the system logs it for review. Check the logs for detailed information.</p>
+        <p><strong>2. Can I extend this project?</strong><br>Yes, the project is modular and can be extended with new features.</p>
+    </section>
+    <section id="contributing">
+        <h2>Contributing</h2>
+        <p>Contributions are welcome! Follow these steps to contribute:</p>
+        <ol>
+            <li>Fork the repository and clone it locally.</li>
+            <li>Create a new branch for your feature or bug fix:
+                <pre><code>git checkout -b feature-name</code></pre>
+            </li>
+            <li>Commit your changes with a descriptive message:
+                <pre><code>git commit -m "Description of changes"</code></pre>
+            </li>
+            <li>Push your branch and open a pull request.</li>
+        </ol>
+    </section>
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>For feedback or support, reach out:</p>
+        <ul>
+            <li><strong>GitHub:</strong> <a href="https://github.com/ViratiAkiraNandhanReddy" target="_blank">Virati Akira Nandhan Reddy</a></li>
+            <li><strong>Email:</strong>viratiaki53@gmail.com</li>
+        </ul>
+    </section>
+    <footer>
+        <p>© 2026 Virati Akira Nandhan Reddy. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
