@@ -1,8 +1,7 @@
 #Importing Required Modules/Packages
 from Bank_Package import *
 from Bank_Package.Product_Activation import Software_Activation
-from Bank_Package.Save_Info import Exit
-from Bank_Package.Login_Screen import Login
+from Bank_Package.Login import Login
 
 if Initialization_Data.get('isActivated'):
     Activated = True 

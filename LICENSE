@@ -2,21 +2,21 @@ MIT License
 
 Copyright (c) 2026 Virati Akira Nandhan Reddy
 
-Permission is hereby granted, free of charge, to any person obtaining a 
+Permission is hereby granted, free of charge, to any person obtaining a
 copyof this software and associated documentation files (the "Software"),
-to deal in the Software with restriction, including without limitation 
-the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-and/or sell copies of the Software, and to permit persons to whom the 
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included 
-in allcopies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
 OTHER DEALINGS IN THE SOFTWARE.
 
@@ -60,35 +60,78 @@ license file ensures the continued validity of the licensing agreement and
 protects the rights of both the licensor and the licensee.
 
 
+**Prohibition Against Plagiarism**
+
+Plagiarism, in any form, is strictly prohibited and constitutes a severe 
+violation of intellectual property rights. This includes, but is not limited
+to, copying, reproducing, or redistributing the software, its components,
+or any associated documentation without proper authorization or attribution
+to the original owner. The following points outline the seriousness of
+plagiarism and its consequences:
+
+1. **Definition of Plagiarism**:
+   - Plagiarism refers to the unauthorized use or representation of another's
+   work as one's own, without proper acknowledgment or permission.
+   - This includes copying code, documentation, designs, or any other
+   intellectual property associated with this software.
+
+2. **Consequences of Plagiarism**:
+   - Legal Action: Engaging in plagiarism may result in legal proceedings,
+   including lawsuits, fines, and penalties.
+   - Revocation of License: Any instance of plagiarism will lead to the
+   immediate termination of the license agreement, rendering the software
+   unusable.
+   - Reputational Damage: Plagiarism can severely harm the reputation of
+   the individual or organization involved, leading to loss of credibility
+   and trust.
+
+3. **Owner's Rights**:
+   - The owner retains full rights to the software and its associated
+   intellectual property.
+   - Any unauthorized use, reproduction, or distribution will be treated
+   as a breach of contract and intellectual property laws.
+
+4. **User's Responsibility**:
+   - Users must ensure that they use the software in compliance with the
+   terms and conditions outlined in this license.
+   - Proper attribution must be given to the owner in any permitted use
+   or distribution of the software.
+
+5. **Reporting Plagiarism**:
+   - If you suspect or become aware of any instance of plagiarism involving
+   this software, please report it immediately to the owner using the contact
+   details provided below.
+
+**Contact Me**
+
+Gmail: viratiaki53@gmail.com  
+Instagram: Viratiaki53  
+Facebook: Viratiaki53  
+GitHub: ViratiAkiraNandhanReddy  
+LinkedIn: virati-akira-nandhan-reddy  
+
+By adhering to these guidelines, users can ensure the ethical and lawful
+use of this software, preserving the integrity of intellectual property
+rights and fostering a culture of respect and fairness.
+
+
 **Owner's Note And Guidelines**
 
 MODIFYING THE OWNERSHIP DETAILS AND LICENSE FILE ARE STRICTLY FORBIDDEN
 
-Removing Of Any File May Leads To Crash Whole Program, Be Careful While Modifying
-*MODIFYING THE FILE [Data_Of_User.txt] IS A KIND OF DATA LEAK
-
 Be AWAY From The File [__init__.py] It Contains All The REQUIRED INITIALIZATION
-Modification of [__init__.py] May Leads To Malfunction Of The Software
+Removing Of Any File and Modification of [__init__.py] May Leads To Malfunction 
+Of The Software
 
 *Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
 
 
 **IMPORTANT NOTES FOR USER BY OWNER**
 
-DON'T DELETE THE FILE [Data_Of_User.txt], All The Required Details Are Saved In It
+DON'T DELETE ANY *DATABASE* OR *JSON* FILES, All The Required Details Are Saved In It
 If So Owner is Not Responsible For Lose Of User Data
 
-
-**Contact Me**
-                        
-Gmail: viratiaki29@gmail.com
-Instagram: Viratiaki53
-FaceBook: Viratiaki53
-GitHub: ViratiAkiraNandhanReddy
-LinkedIn: virati-akira-nandhan-reddy
-
-
-                                      ***Restricted Zone***
+***Restricted Zone***
 
 Modifying Restricted Zone is STRICTLY FORBIDDEN!
 

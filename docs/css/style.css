@@ -1,113 +1,123 @@
-/* General Styles */
+/* General Styles: Define the overall look and feel of the website */
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background-image: url('../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f5f5f5;
     margin: 0;
-    line-height: 1.6;
-    color: #333;
-    background: #f8f9fa;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* Header */
-.header {
-    background: linear-gradient(90deg, #007bff, #0056b3);
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    font-family: 'Pacifico', cursive;
-}
-
-.header p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-}
-
-.header .btn {
-    padding: 10px 20px;
-    border-radius: 25px;
-    background: white;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.header .btn:hover {
-    background: #0056b3;
-    color: white;
-}
-
-/* Navbar */
-.navbar {
-    background: white;
+/* Header Styles: Styling for the navigation bar and header */
+header {
+    background: rgba(255, 255, 255, 0.1); /* Fully transparent with a subtle white tint */
+    backdrop-filter: blur(10px); /* Added blur effect for better aesthetics */
+    padding: 0.5rem 0; /* Adjusted padding for better fit */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.navbar ul {
+nav ul {
     display: flex;
     justify-content: center;
     list-style: none;
     margin: 0;
-    padding: 10px 0;
-    gap: 20px;
+    padding: 0;
 }
 
-.navbar li a {
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: #fff; /* White text for better visibility */
     text-decoration: none;
-    color: #333;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #00d4ff; /* Accent color */
+}
+
+/* Main Content Styles: Define the layout and typography for the main content */
+main {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+h1, h2 {
+    font-family: 'Pacifico', cursive;
+    color: #00d4ff;
+}
+
+p, li {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.logo {
+    max-width: 300px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.feature-img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Footer Styles: Styling for the footer section */
+footer {
+    background: rgba(255, 255, 255, 0.1); /* Transparent background with acrylic effect */
+    backdrop-filter: blur(15px); /* Blur effect */
+    color: #fff; /* White text for visibility */
+    text-align: center;
+    padding: 0.8rem 0; /* Reduced padding */
+    box-shadow: none; /* Removed shadow for compactness */
+    font-size: 0.9rem; /* Smaller font size */
+}
+
+footer a {
+    color: #00d4ff; /* Accent color for links */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #fff; /* Hover effect for links */
+}
+
+/* Buttons: Define the appearance and hover effects for buttons */
+button {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    border: none;
     padding: 10px 20px;
     border-radius: 25px;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.navbar li a:hover {
-    background: #007bff;
-    color: white;
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 212, 255, 0.5);
 }
 
-/* Sections */
-.section {
-    padding: 60px 20px;
-    background: white;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1.5s ease-in-out;
-}
-
-.section h2 {
-    font-size: 2rem;
-    color: #007bff;
-    font-family: 'Pacifico', cursive;
-    border-bottom: 3px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-/* Footer */
-.footer {
-    background: #343a40;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-}
-
-/* Animations */
+/* Animations: Keyframes for smooth fade-in effects */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -116,5 +126,82 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Highlight the active navigation link */
+nav ul li a.active {
+    color: #00d4ff; /* Bright futuristic color */
+    border-bottom: 2px solid #00d4ff; /* Underline effect */
+    font-weight: bold; /* Emphasize the active link */
+}
+
+main > * {
+    animation: fadeIn 1s ease both;
+}
+
+/* Added animations for homepage sections */
+section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Styles: Ensure compatibility with mobile and PC */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: row; /* Ensure row layout */
+        justify-content: space-around; /* Distribute items evenly */
+        padding: 0; /* Remove extra padding */
+    }
+
+    nav ul li {
+        margin: 0; /* Remove margin for compact fit */
+    }
+
+    nav ul li a {
+        font-size: 1rem; /* Adjust font size for mobile */
+        color: #fff; /* White text for visibility */
+    }
+
+    main {
+        padding: 2rem 1rem;
+    }
+
+    .logo {
+        max-width: 200px;
+    }
+
+    .feature-img {
+        margin-top: 1rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+@media (min-width: 769px) {
+    main {
+        padding: 4rem 3rem;
+    }
+
+    .logo {
+        max-width: 300px;
+    }
+
+    .feature-img {
+        margin-top: 2rem;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 10px 20px;
     }
 }

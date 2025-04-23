@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Bank-With-High-Functionalities for support and inquiries.">
+    <meta name="keywords" content="Contact, Banking, Support">
+    <meta name="author" content="Virati Akira Nandhan Reddy">
+    <title>Contact - Bank-With-High-Functionalities</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li><a href="roadmap.html">Roadmap</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Contact Us</h1>
+        <p>If you have any questions or need support, feel free to reach out to us:</p>
+        <ul class="contact-info">
+            <li>
+                <strong>GitHub:</strong>
+                <a href="https://github.com/ViratiAkiraNandhanReddy" target="_blank">ViratiAkiraNandhanReddy</a>
+            </li>
+            <li>
+                <strong>Email:</strong>
+                <a href="mailto:viratiakirareddy@example.com">viratiakirareddy@example.com</a>
+            </li>
+            <li>
+                <strong>Live Demo:</strong>
+                <a href="https://viratiakiranandhanreddy.github.io/Bank-With-High-Functionalities/" target="_blank">Bank-With-High-Functionalities</a>
+            </li>
+        </ul>
+        <img src="assets/contact.jpg" alt="Contact Illustration" class="feature-img">
+
+        <!-- Added a feedback form -->
+        <section>
+            <h2>Feedback</h2>
+            <p>We value your feedback. Please fill out the form below to share your thoughts and suggestions:</p>
+            <form action="/submit-feedback" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Find Us</h2>
+            <p>Our headquarters are located in Silicon Valley. Visit us or reach out through our social media channels:</p>
+            <ul>
+                <li><a href="https://twitter.com/BankWithHigh">Twitter</a></li>
+                <li><a href="https://facebook.com/BankWithHigh">Facebook</a></li>
+                <li><a href="https://linkedin.com/company/BankWithHigh">LinkedIn</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Find Us on the Map</h2>
+            <div id="map" style="width: 100%; height: 300px;">
+                <!-- Map integration placeholder -->
+            </div>
+            <script>
+                function initMap() {
+                    const location = { lat: 37.7749, lng: -122.4194 };
+                    const map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 12,
+                        center: location
+                    });
+                    new google.maps.Marker({
+                        position: location,
+                        map: map
+                    });
+                }
+            </script>
+            <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+        </section>
+
+        <section>
+            <h2>Live Chat</h2>
+            <p>Need immediate assistance? Use our live chat feature to connect with a support agent.</p>
+            <button onclick="startChat()">Start Chat</button>
+            <script>
+                function startChat() {
+                    alert('Live chat feature coming soon!');
+                }
+            </script>
+        </section>
+
+        <section>
+            <h2>Support</h2>
+            <p>Need help? Contact our support team at <a href="mailto:support@bankwithhigh.com">support@bankwithhigh.com</a> or call us at +1-800-555-1234.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Bank-With-High-Functionalities. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,4 +1,3 @@
-from turtle import width
 import customtkinter as CTk
 from datetime import datetime
 from PIL import Image
@@ -21,11 +20,6 @@ Danger_Zone_Icon = Image.open(r'Bank_Package\Visual Data\Danger Zone.png')
 # loanInterestIcon = Image.open(r'Bank_Package\Visual Data\loanInterest.png')
 # loanCalculatorIcon = Image.open(r'Bank_Package\Visual Data\loanCalculator.png')
 
-#Deny The User To Close The Window
-def Disable_Exit():
-    ''' This Function Will Be Called When The User Clicked The Exit Button In The Window ; Then This Function Does Nothing Because This 
-    Function Has No Statements Other Than Pass ; So That Window Can't Be Closed'''
-    pass
 
 #The Present/Current Time As Available In Your Computer
 Raw_Time = datetime.now()
@@ -367,7 +361,7 @@ class User_Requirements:
         Window.title('User Interface')
         Window.resizable(False,False)
         Window.geometry('1200x600')
-        Window.protocol('WM_DELETE_WINDOW',Disable_Exit)
+        Window.protocol('WM_DELETE_WINDOW',lambda: None)
         CTk.set_appearance_mode(str(self.UserData.get('Appearance Mode')))
 
         if not self.UserData.get('Hide Date'):

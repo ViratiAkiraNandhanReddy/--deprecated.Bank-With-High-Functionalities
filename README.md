@@ -1,5 +1,3 @@
-![Banner Image](https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Banner%20Image.jpg)
-
 # 💵 Bank-With-High-Functionalities 🏦🔥
 
 Welcome to **Bank-With-High-Functionalities**, a Python-based GUI banking system that provides an intuitive and feature-rich platform for managing financial operations. With functionalities like account management, secure transactions, loan processing, and transaction history, this project offers a seamless, interactive, and efficient banking experience.
@@ -75,15 +73,16 @@ Welcome to **Bank-With-High-Functionalities**, a Python-based GUI banking system
 ├── Bank_Package/
 │   ├── __init__.py              # Initialization and security checks
 │   ├── Create_Account.py        # Account creation logic
-│   ├── Login_Screen.py          # Login screen implementation
-│   ├── User_Actions.py          # User-specific banking operations
+│   ├── Login.py                 # Login screen implementation
+│   ├── Dashboard.py             # User-specific banking operations
 │   ├── Save_Info.py             # Handles data persistence
 │   └── Visual Data/             # Assets like icons and images
 ├── docs/
 │   ├── index.html               # Documentation site
-├── Main_Bank.py                 # Entry point of the application
+├── main.py                      # Entry point of the application
 ├── README.md                    # Project documentation
-└── requirements.txt             # List of dependencies
+├── requirements.txt             # List of dependencies
+└── Uninstall.py                 # To Uninstall The Software
 ```
 
 ---

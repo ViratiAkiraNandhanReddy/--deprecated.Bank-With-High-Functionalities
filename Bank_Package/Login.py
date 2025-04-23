@@ -13,11 +13,9 @@ import PIL.Image  #Pillow Module To Open The Image
 from random import randint  #Random Module To Generate Random Wallpaper
 from datetime import datetime  #DateTime Module To Show The Date
 from .Create_Account import Create_Account  #Create Account Module
-from .User_Actions import User_Requirements  #User Requirements Module
-from .. import Detailed_Licence, BridgeData, AccessUserData
+from .Dashboard import User_Requirements  #User Requirements Module
+from . import Detailed_Licence, BridgeData, AccessUserData, Gmail
 from time import sleep
-import Bank_Package.Gmail_From_Bank as Gmail
-Gmail.Gmail
 
 
 '''                                                         Time And Background                                                               '''
@@ -129,7 +127,7 @@ class License:
         #Frame And The Text
         License_Frame = CTk.CTkScrollableFrame(License_Window,height=400,width=600,label_text='License And Conditions',
                                                label_font=('Roboto',24));License_Frame.place(x=10,y=10)
-        CTk.CTkLabel(License_Frame,text=self.Detailed_Licence[:4427],font=('Roboto',14)).pack()
+        CTk.CTkLabel(License_Frame,text=self.Detailed_Licence[:6445],font=('Roboto',14)).pack()
         License_Window.mainloop()
 
 #Class For The Documentation
