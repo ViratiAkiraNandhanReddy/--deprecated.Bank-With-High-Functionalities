@@ -1,0 +1,84 @@
+# Bank With High Functionalities - Product Documentation
+
+## Overview
+This project is a banking application designed to provide advanced functionalities for managing accounts, transactions, loans, and customer data. It is built using Python and leverages the `tkinter` library for GUI.
+
+---
+
+## Modules
+
+### 1. `Login_Screen`
+- **Purpose**: Handles user authentication, including login, password reset, and account recovery.
+- **Key Features**:
+  - Login validation.
+  - Password recovery.
+  - Access to license, developer information, and documentation.
+
+### 2. `Create_Account`
+- **Purpose**: Manages the creation of new user accounts and generates security codes for account recovery.
+- **Key Features**:
+  - User input validation.
+  - Security code generation.
+  - Redirects to the login screen after account creation.
+
+### 3. `Product_Activation`
+- **Purpose**: Handles software activation using product keys and ensures compliance with licensing terms.
+- **Key Features**:
+  - Product key validation.
+  - Terms and conditions acceptance.
+
+### 4. `User_Actions`
+- **Purpose**: Provides core functionalities for users, such as deposits, withdrawals, and settings management.
+- **Key Features**:
+  - User interface for account management.
+  - Profile customization.
+  - Two-factor authentication (2FA).
+
+### 5. `Gmail`
+- **Purpose**: Handles email-related functionalities, including sending single or multiple emails and generating authorization codes.
+- **Key Features**:
+  - Email sending via `SingleGmail` and `MultipleGmail` classes.
+  - Authorization code generation.
+
+### 6. `Repair_Product`
+- **Purpose**: Handles recovery and repair of corrupted or missing data files.
+- **Key Features**:
+  - Data recovery mechanisms.
+  - Warnings for corrupted files.
+
+### 7. `Save_Info`
+- **Purpose**: Manages the saving of user data and application state.
+- **Key Features**:
+  - Saves activation state.
+  - Writes user data to files upon logout or exit.
+
+### 8. `Chat_Bot`
+- **Purpose**: Provides a chatbot interface for user queries.
+- **Key Features**:
+  - Interactive chatbot for FAQs.
+
+### 9. `Main_Bank`
+- **Purpose**: Acts as the entry point for the application.
+- **Key Features**:
+  - Initializes the application.
+  - Directs users to appropriate modules based on activation and license status.
+
+---
+
+## Usage
+1. **Setup**: Ensure all dependencies are installed and the required files (e.g., `Data_Of_User.txt`, `Login Credentials.json`) are in place.
+2. **Run**: Execute `Main_Bank.py` to start the application.
+3. **Modules**: Navigate through the application using the provided GUI.
+
+---
+
+## Notes
+- **Dependencies**: The project uses external libraries like `customtkinter` and `Pillow`.
+- **Data Integrity**: Ensure that critical files like `Data_Of_User.txt` and `Gmail History.txt` are not deleted or modified manually.
+- **License**: The project is licensed under the MIT License with additional restrictions.
+
+---
+
+## Contact
+For further assistance, contact the project maintainer at `maintainer@example.com`.
+

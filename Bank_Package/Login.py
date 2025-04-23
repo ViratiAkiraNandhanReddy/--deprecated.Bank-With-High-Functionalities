@@ -14,7 +14,7 @@ from random import randint  #Random Module To Generate Random Wallpaper
 from datetime import datetime  #DateTime Module To Show The Date
 from .Create_Account import Create_Account  #Create Account Module
 from .User_Actions import User_Requirements  #User Requirements Module
-from . import Detailed_Licence, BridgeData, AccessUserData
+from .. import Detailed_Licence, BridgeData, AccessUserData
 from time import sleep
 import Bank_Package.Gmail_From_Bank as Gmail
 Gmail.Gmail
