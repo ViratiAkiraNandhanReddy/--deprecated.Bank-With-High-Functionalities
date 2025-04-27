@@ -1,0 +1,6 @@
+[ERROR]: [Setup.py][26/Apr/2025 @ 06:25:43 PM] - Failed To Open Google Chrome Browser ; ErrorType: [ [WinError 2] The system cannot find the file specified ]
+[ERROR]: [Setup.py][26/Apr/2025 @ 06:25:58 PM] - Failed To Open Google Chrome Browser ; ErrorType: [ [WinError 2] The system cannot find the file specified ]
+[ERROR]: [Setup.py][27/Apr/2025 @ 07:41:54 PM] - Failed To Open www.google.com ; ErrorType:  ]
+[ERROR]: [Setup.py][27/Apr/2025 @ 07:42:48 PM] - Failed To Open www.google.com ; ErrorType:  ]
+[ERROR]: [Setup.py][27/Apr/2025 @ 07:43:37 PM] - Failed To Open www.google.com ; ErrorType:  ]
+[ERROR]: [Setup.py][27/Apr/2025 @ 07:45:05 PM] - Failed To Open www.google.com ; ErrorType:  ]

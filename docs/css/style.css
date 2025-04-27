@@ -23,28 +23,71 @@ header {
     z-index: 1000;
 }
 
-nav ul {
+/* Updated Navigation Bar Styles */
+.navbar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    padding: 0.4rem 0.4rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-list {
     list-style: none;
+    display: flex;
+    gap: 0rem;
     margin: 0;
     padding: 0;
 }
 
-nav ul li {
-    margin: 0 1rem;
+.nav-list li {
+    position: relative;
 }
 
-nav ul li a {
-    color: #fff; /* White text for better visibility */
+.nav-list a {
     text-decoration: none;
+    color: #333;
     font-weight: bold;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-nav ul li a:hover {
-    color: #00d4ff; /* Accent color */
+.nav-list a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Updated Dropdown Menu Styles for Acrylic Effect */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 200%;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.1); /* Reduced opacity for acrylic effect */
+    backdrop-filter: blur(10px); /* Blur effect for transparency */
+    list-style: none;
+    padding: 0.5rem 0;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown:focus-within .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li {
+    padding: 0.5rem 1rem;
+}
+
+.dropdown-menu a {
+    color: #333;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.dropdown-menu a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Main Content Styles: Define the layout and typography for the main content */
@@ -142,6 +185,13 @@ main > * {
 
 /* Added animations for homepage sections */
 section {
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    z-index: 1;
+    padding: 4rem 2rem;
+    color: #fff;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.6s ease, transform 0.6s ease;
@@ -150,6 +200,40 @@ section {
 section.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Section-specific background images with scrolling effect */
+section#about {
+    background-image: url('../assets/about-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    color: #fff;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+section#services {
+    background-image: url('../assets/services-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    color: #fff;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+section#contact {
+    background-image: url('../assets/contact-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    color: #fff;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* Responsive Styles: Ensure compatibility with mobile and PC */
@@ -184,6 +268,26 @@ section.visible {
     button {
         font-size: 0.9rem;
         padding: 8px 16px;
+    }
+
+    section {
+        background-attachment: scroll;
+        position: relative;
+        z-index: 1;
+        padding: 4rem 2rem;
+        color: #fff;
+    }
+
+    /* Add a parallax simulation using transform */
+    body {
+        overflow-x: hidden;
+    }
+
+    section[data-parallax] {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        transform: translateZ(0);
     }
 }
 
