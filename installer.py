@@ -1,5 +1,7 @@
-try:
-    import requests
-except ImportError or ModuleNotFoundError:
-    import subprocess
-    subprocess.run(['pip','install','requests'])
+import io
+import ctypes
+import requests
+import customtkinter
+
+class install:
+    pass
