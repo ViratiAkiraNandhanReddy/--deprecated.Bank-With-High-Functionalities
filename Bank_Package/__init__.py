@@ -1,5 +1,5 @@
 ''' 
-# Copyright (c) 2026 Virati Akira Nandhan Reddy
+# Copyright (c) 2024 - 2026 Virati Akira Nandhan Reddy
 
 
 <!-- Owner Details -->
@@ -38,7 +38,7 @@ Nationality: Indian/American
 
 ---
 ## <ins>*Syntax*</ins>
- ```
+ ```python
  import Bank_Package
  or 
  from Bank_Package import <Required Modules>
@@ -105,7 +105,7 @@ The Purpose Of This Package Is To Provide A High Functional Bank Program To The 
 ## <ins>*Achievements*</ins>
 ##### 1. My First Package Based Biggest Project
 ##### 2. I Learnt How To Send Gmail To The People From The Python
-
+##### 3. I Wrote My First 1000 lines Program For a Module `Setup.py` \\[ 13-May-2025 @ 2:12 PM\\]
 
 
 

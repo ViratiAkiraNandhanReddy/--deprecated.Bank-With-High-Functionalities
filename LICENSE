@@ -119,16 +119,15 @@ rights and fostering a culture of respect and fairness.
 
 MODIFYING THE OWNERSHIP DETAILS AND LICENSE FILE ARE STRICTLY FORBIDDEN
 
-Be AWAY From The File [__init__.py] It Contains All The REQUIRED INITIALIZATION
-Removing Of Any File and Modification of [__init__.py] May Leads To Malfunction 
-Of The Software
+Be AWAY From The File [`__init__.py`](Bank_Package\__init__.py) It Contains All The REQUIRED INITIALIZATION
 
-*Owner Is Not Responsible For Any Kind Of Issue Regarding This Software
+*Removing Of Any File and Modification May Leads To Malfunction Of The Software*
+*Owner Is Not Responsible For Any Kind Of Issue Regarding This Software*
 
 
 **IMPORTANT NOTES FOR USER BY OWNER**
 
-DON'T DELETE ANY *DATABASE* OR *JSON* FILES, All The Required Details Are Saved In It
+DON'T DELETE ANY *DATABASE* OR *JSON* FILES, All The Required Details Are Saved In It.
 If So Owner is Not Responsible For Lose Of User Data
 
 ***Restricted Zone***
