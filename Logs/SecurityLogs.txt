@@ -1,0 +1,13 @@
+---
+
+Security Logs
+  * Purpose: To track security-related events, such as failed login attempts or unauthorized access.
+  * File Name: SecurityLogs.txt
+  * Content:
+      * Timestamp of the event.
+      * Description of the security event.
+      * IP address or user details (if applicable).
+  * Example:
+        [WARNING]:[Setup.py][15-May-2025 @ 10:45:00 AM] - Failed login attempt for Manager Username: viratiaki53.
+
+---

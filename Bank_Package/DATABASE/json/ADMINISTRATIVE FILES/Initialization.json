@@ -1,12 +1,25 @@
 {
     "isActivated": true,
-    "Developer Name": "Virati Akira Nandhan Reddy",
-    "Developer Password": "",
-    "Developer Security Code": "",
-    "Downloaded On": "12-Dec-2025 01:52 PM",
-    "Path Of User Data": "D:\\GitHub\\Bank-With-High-Functionalities\\Bank_Package\\User_Data.json",
-    "Back-up User Data": null,
-    "License Check": true,
-    "Recently Used On": "22-Feb-2025 4:53 PM",
-    "Bank's Balance": 176543132
+    "License Verification": null,
+    "Current Version": "0.0.1 - Alpha",
+    "Manager Name": "Virati Akira Nandhan Reddy",
+    "Manager Username": "viratiaki53",
+    "Manager Password": "akiranandhan@1.py@Ai@Python",
+    "Manager Security Code": "@<~g+@>)FN|^{%NOsq",
+    "Manager Email": null,
+    "Manager Email App Password": null,
+    "isEmailVerified": false,
+    "Downloaded On": "15-May-2025 -- Thursday @ 02:49:23 PM",
+    "Recently Used On": null,
+    "DATABASE TYPE": "MySQL",
+    "DATABASE PATH": "No Path For MySQL",
+    "BACKUP DATABASE PATH": "No Path For MySQL",
+    "MySQL Credentials": {
+        "Host": "localhost",
+        "Port": 3306,
+        "Username": "root",
+        "Password": "akiranandhan@1.py@Ai@Oracle",
+        "Database": null,
+        "Charset": ""
+    }
 }

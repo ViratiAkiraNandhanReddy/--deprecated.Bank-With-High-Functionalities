@@ -1,1 +1,15 @@
+---
+
+Error Logs
+  * Purpose: To record any errors or exceptions that occur during the execution of the application.
+  * File Name: ErrorLogs.txt
+  * Content:
+      * Timestamp of the error.
+      * Error type and message.
+      * File and function where the error occurred.
+  * Example:
+        [ERROR]:[Setup.py][15-May-2025 @ 10:45:23 AM] - Failed To Connect To MySQL Server; ErrorType: [mysql.connector.Error]
+
+---
+
 [ERROR]:[Setup.py][14/May/2025 @ 02:48:52 PM] - Failed To Connect To MySQL Server ; ErrorType: [ 1045 (28000): Access denied for user ''@'localhost' (using password: NO) ]

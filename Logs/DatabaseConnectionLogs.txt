@@ -1,0 +1,14 @@
+---
+
+Database Connection Logs
+  * Purpose: To log the status of database connection attempts.
+  * File Name: DatabaseConnectionLogs.txt
+  * Content:
+      * Timestamp of the connection attempt.
+      *  Database type and credentials used (excluding sensitive information like passwords).
+      * Connection status (e.g., success, failure).
+  * Example:
+        [INFO]:[Setup.py][15-May-2025 @ 10:40:00 AM] - Attempting to connect to MySQL server at localhost:3306.
+        [SUCCESS]:[Setup.py][15-May-2025 @ 10:40:05 AM] - Connected to MySQL server successfully.
+
+---

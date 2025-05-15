@@ -21,6 +21,7 @@ import mysql.connector
 import subprocess, platform
 import customtkinter as CTk
 from tkinter import messagebox
+from win32com.client import Dispatch
 from email.message import EmailMessage
 from random import choice, randint, random
 
@@ -268,6 +269,88 @@ class CheckMySQLDatabaseConnection:
 
 # Email Verification For Manager
 class Manager_Email_Verification:
+
+    ''' <!-- Doc Strings -->
+    ## Purpose
+    The `Manager_Email_Verification` class is responsible for handling the email verification process for the manager during the setup phase. It generates a unique verification code, sends it to the manager's email address, and provides functionality to resend the email if needed.
+
+    ## Attributes
+    - **Code**: A class-level attribute that stores the generated verification code.
+    - **ReceiverMailAddress**: The email address of the manager to which the verification email will be sent.
+
+    ## Methods
+
+    ### 1. `__init__(self, ReceiverMailAddress: str = SETUPDATA['Manager Email']) -> None`
+    - **Purpose**: Initializes the `Manager_Email_Verification` class with the manager's email address.
+    - **Parameters**:
+      - `ReceiverMailAddress` (str): The email address of the manager. Defaults to the value in `SETUPDATA['Manager Email']`.
+    - **Return Type**: None
+
+    ### 2. `Send_Gmail(self) -> str`
+    - **Purpose**: Sends a verification email to the manager's email address with a unique verification code.
+    - **Process**:
+      1. Generates a unique verification code.
+      2. Creates an HTML email template with the verification code.
+      3. Sends the email using the SMTP protocol.
+    - **Return Type**: str
+      - Returns `'Error Free'` if the email is sent successfully.
+      - Returns `'Credentials Error'` if there is an issue with the email credentials.
+      - Returns `'No Internet'` if there is no internet connection.
+    - **Security**:
+      - The manager's email app password is securely used to authenticate the SMTP session.
+      - The verification code is embedded in the email but not stored permanently.
+
+    ### 3. `Resend_Gmail(self) -> None`
+    - **Purpose**: Resends the verification email to the manager's email address.
+    - **Process**: Calls the `Send_Gmail` method to resend the email.
+    - **Return Type**: None
+
+    ## Example Usage
+    ```python
+    # Initialize the email verification class
+    email_verification = Manager_Email_Verification(ReceiverMailAddress="manager@example.com")
+
+    # Send the verification email
+    result = email_verification.Send_Gmail()
+    print(result)  # Output: 'Error Free' or an error message
+
+    # Resend the verification email
+    email_verification.Resend_Gmail()
+    ```
+
+    ## Notes
+    - Ensure that the `SETUPDATA['Manager Email']` and `SETUPDATA['Manager App Password']` are correctly configured before using this class.
+    - The email template is designed to be responsive and visually appealing.
+
+    ## Example Email Template
+    ```
+    Subject: [Code] Is Your Verification Code To Access Your Manager Account.
+    Body:
+    Hi [Manager Name],
+
+    Were excited to have you on board! To finish setting up your account and ensure your security, please verify your email address by using the verification code below:
+
+    [Code]
+
+    This code will expire in 10 minutes. If it does, you can request a new one.
+
+    Best Regards,
+    Bank-With-High-Functionalities Team
+    ```
+
+    ## Dependencies
+    - Requires the `smtplib` module for sending emails.
+    - Requires the `email.message.EmailMessage` class for constructing the email.
+    - Relies on the `random` and `randint` functions to generate the verification code.
+
+    ## Security
+    - The manager's email app password is not stored in plaintext and is only used during the SMTP session.
+    - The verification code is temporary and expires after 10 minutes.
+
+    ## Limitations
+    - The email sending functionality depends on the availability of an internet connection.
+    - If the email credentials are incorrect, the email will not be sent.
+    '''
 
     Code = None
 
@@ -583,6 +666,42 @@ class Setup:
     
     def SetupWindows(self) -> None:
 
+        ''' <!-- Short Doc Strings -->
+        ## Purpose
+        The `SetupWindows` function manages the entire setup process for the application through a graphical user interface (GUI). \
+        It guides the user step-by-step to configure the software.
+
+        ## Functionality
+        - Navigates through multiple setup frames:
+        1. Welcome Screen
+        2. Terms and Conditions
+        3. Software Activation
+        4. Manager Mode Setup
+        5. Gmail Verification
+        6. Database Selection
+        7. MySQL Setup (if selected)
+        8. Final Review
+        9. Finish Setup
+        - Validates user inputs at each step.
+        - Updates the `SETUPDATA` dictionary with user-provided information.
+
+        ## Parameters
+        - **None**: This function does not take any parameters.
+
+        ## Return Type
+        - **None**: This function does not return any value.
+
+        ## Notes
+        - Ensure all required dependencies (e.g., `customtkinter`) are installed.
+        - The function uses global variables for GUI components and state management.
+
+        ## Example Usage
+        ```python
+        setup = Setup()
+        setup.SetupWindows()
+        ```
+        '''
+
         def GoTo_TermsAndConditionsFrame() -> None: # WelcomeFrame -> TermsAndConditionsFrame -- 1
             WelcomeFrame.place_forget()
             Window.geometry('800x600')
@@ -683,7 +802,7 @@ class Setup:
 
         WelcomeFrame = CTk.CTkFrame(Window,790,390) ; WelcomeFrame.place(x=5,y=5)
         CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image=WelcomeImage,dark_image=WelcomeImage,size=(790,358))).place(x=0,y=0)
-        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_FinalReviewFrame).place(x=648,y=360)
+        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_TermsAndConditionsFrame).place(x=648,y=360)
         
         # Terms & Conditions
 
@@ -755,7 +874,63 @@ class Setup:
         self.isPasswordConditionSatisfied: bool = False
 
         def GenerateSecurityCode() -> None: # Gives a Unique Code e.g., 4Hfi~x>kVW]ZOrh:<r
-        
+            
+            ''' <!-- Doc Strings -->
+            ## Purpose
+            The `GenerateSecurityCode` function generates a unique, secure code for the manager. This code is used as an additional layer of security \
+            during the setup process. The generated code is displayed in the GUI and can be copied and saved by the user.
+
+            ## Functionality
+            - Generates a random 18-character security code.
+            - The code consists of a mix of:
+            - Uppercase letters
+            - Lowercase letters
+            - Numbers
+            - Special characters
+            - Updates the `ManagerSecurityCode` entry field in the GUI with the generated code.
+            - Ensures that the security code is refreshed each time the function is called.
+
+            ## Parameters
+            - **None**: This function does not take any parameters.
+
+            ## Return Type
+            - **None**: This function does not return any value.
+
+            ## Process
+            1. Sets the `SecurityCodeRefreshed` attribute to `True` to indicate that a new code has been generated.
+            2. Clears the `ManagerSecurityCode` entry field in the GUI.
+            3. Generates an 18-character random code using the `SEQUENCE` list.
+            4. Inserts the generated code into the `ManagerSecurityCode` entry field.
+            5. Sets the `ManagerSecurityCode` entry field to read-only to prevent manual edits.
+
+            ## Example Usage
+            ```python
+            # Call the function to generate a new security code
+            GenerateSecurityCode()
+            ```
+
+            ## Example Output
+            The generated security code will look like this:
+            
+            > `4Hfi~x>kVW]ZOrh:<r`
+            
+            ## Notes
+            - The `SEQUENCE` list contains all possible characters that can be used in the security code.
+            - The function ensures that the security code is always 18 characters long.
+            - The `SecurityCodeRefreshed` attribute must be set to `True` before proceeding with the setup process.
+
+            ## Security
+            - The generated security code is displayed in the GUI but is not stored permanently.
+            - The code is designed to be complex and difficult to guess, enhancing security.
+
+            ## Dependencies
+            - Requires the `choice` function from the `random` module to randomly select characters from the `SEQUENCE` list.
+
+            ## GUI Integration
+            - Updates the `ManagerSecurityCode` entry field in the GUI.
+            - Disables manual editing of the `ManagerSecurityCode` field after the code is generated.
+            '''
+            
             self.SecurityCodeRefreshed = True # To Enhance Security
             
             ManagerSecurityCode.configure(state = 'normal')
@@ -770,6 +945,79 @@ class Setup:
                 ManagerSecurityCode.configure(state = 'readonly')
                 
         def _GetManagerData_() -> None: # Get Manager Data
+
+            ''' <!-- Doc Strings -->
+            ## Purpose
+            The `_GetManagerData_` function is responsible for collecting and validating the manager's data entered during the setup process. It ensures that all required fields are filled, \
+            the security code is refreshed, and the input criteria are satisfied before saving the data into the `SETUPDATA` dictionary.
+
+            ## Functionality
+            - Retrieves the following manager details from the GUI:
+            - Manager Name
+            - Manager Username
+            - Manager Password
+            - Manager Security Code
+            - Validates the collected data to ensure:
+            1. All fields are filled.
+            2. The security code has been refreshed.
+            3. Input criteria for name, username, and password are satisfied.
+            - Updates the `SETUPDATA` dictionary with the validated data.
+            - Disables further editing of the fields after successful submission.
+
+            ## Parameters
+            - **None**: This function does not take any parameters.
+
+            ## Return Type
+            - **None**: This function does not return any value.
+
+            ## Process
+            1. Retrieves data from the GUI fields.
+            2. Checks if all fields are filled. If not, displays an error message.
+            3. Verifies if the security code has been refreshed. If not, displays an error message.
+            4. Ensures that the input criteria for name, username, and password are satisfied. If not, displays an error message.
+            5. If all validations pass:
+            - Updates the `SETUPDATA` dictionary with the collected data.
+            - Disables the input fields to prevent further editing.
+            - Enables the "Continue" button to proceed to the next step.
+
+            ## Example Usage
+            ```python
+            # Call the function to collect and validate manager data
+            _GetManagerData_()
+            ```
+
+            ## Example Output
+            If all validations pass, the `SETUPDATA` dictionary is updated as follows:
+            ```python
+            {
+                "Manager Name": "Virati Akira Nandhan Reddy",
+                "Manager Username": "viratiaki53",
+                "Manager Password": "securepassword",
+                "Manager Security Code": "4Hfi~x>kVW]ZOrh:<r"
+            }
+            ```
+
+            ## Notes
+            - Ensure that the GUI fields for manager data are properly initialized before calling this function.
+            - The function relies on the `SETUPDATA` dictionary to store the collected data.
+
+            ## Error Handling
+            - Displays error messages in the GUI if:
+            - Any required field is empty.
+            - The security code has not been refreshed.
+            - Input criteria for name, username, or password are not satisfied.
+
+            ## Security
+            - The manager's password and security code are stored in the `SETUPDATA` dictionary. Ensure that this data is handled securely and not exposed to unauthorized users.
+
+            ## Dependencies
+            - Relies on the `SETUPDATA` dictionary to store the collected data.
+            - Requires the GUI fields for manager data to be properly initialized and accessible.
+
+            ## GUI Integration
+            - Updates the GUI to disable input fields after successful submission.
+            - Enables the "Continue" button to proceed to the next step.
+            '''
 
             Name, Username, Password, SecurityCode = [x.get() for x in [ManagerName, ManagerUsername, ManagerPassword, ManagerSecurityCode]]
 
@@ -1085,14 +1333,65 @@ class Setup:
 
         def Return_Setup_Log() -> str:
             
-            '''
-            
+            ''' <!-- Doc Strings--> 
+            # Return_Setup_Log Function
+
+            ## Purpose
+            The `Return_Setup_Log` function generates a detailed log of the setup process, summarizing all the key information \
+            collected during the setup. This log is primarily used for review purposes and can be copied to the clipboard for reference.
+
+            ## Returns
+            - **str**: A formatted string containing the following setup details:
+            - Manager Name
+            - Manager Username
+            - Manager Password
+            - Manager Security Code
+            - Manager Email
+            - Manager Email App Password (redacted for security)
+            - Email Verification Status
+            - Database Type
+            - Current Application Version
+
+            ## Security
+            - Sensitive information such as the manager's email app password is redacted to ensure confidentiality.
+            - The log is designed to provide only the necessary details for review without exposing critical credentials.
+
+            ## Example Output
+            ```
+            Manager Name: John Doe
+            Manager Username: johndoe123
+            Manager Password: john@doe
+            Manager Security Code: '%^*^$&jg758fj^($&)'
+            Manager Email: johndoe@example.com
+            Manager Email App Password: The Information Has Been Redacted For Security And Confidentiality Purposes.
+            isEmailVerified: True
+            Database Type: SQLite3
+            Current App Version: 0.0.1 - Alpha
+            ```
+
+            ## Usage
+            This function is typically called during the final review step of the setup process to display or copy the setup log.
+
+            ## Notes
+            - Ensure that the SETUPDATA dictionary is populated with valid data before calling this function.
+            - The function relies on the SETUPDATA dictionary to retrieve the setup details.
+
+            ## Example Usage
+            ```python
+            setup_log = Return_Setup_Log()
+            print(setup_log)
+            ```
             '''
 
             return f'''Manager Name: {SETUPDATA["Manager Name"]}
 Manager Username: {SETUPDATA["Manager Username"]}
 Manager Password: {SETUPDATA["Manager Password"]}
-
+Manager Security Code: {SETUPDATA["Manager Security Code"]}
+Manager Email: {SETUPDATA["Manager Email"]}
+Manager Email App Password: The Information Has Been Redacted For Security And Confidentiality Purposes.
+isEmailVerified: {SETUPDATA["isEmailVerified"]}
+Database Type: {SETUPDATA["DATABASE TYPE"]}
+Current App Version: {SETUPDATA["Current Version"]}
 '''
 
         REVIEWED = CTk.BooleanVar()
@@ -1125,7 +1424,28 @@ Manager Password: {SETUPDATA["Manager Password"]}
         # Finish Greeting
 
         def _exec_func_() -> None:
-            pass
+            # C:\Users\Virati Akira Nandhan Reddy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
+            
+            def Shortcut_At_Start_Menu() -> None:
+                pass
+
+            def Shortcut_At_Desktop() -> None:
+                pass
+
+            def Open_main_exe() -> None:
+                pass
+
+            if CREATE_SHORTCUT:
+
+                # Create a shortcut at `Desktop``
+                Shortcut_At_Desktop()
+
+            elif OPEN_MAIN_EXE:
+
+                # Opens the main.exe (Access Application)
+                Open_main_exe()
+            
+            Shortcut_At_Start_Menu()
         
         CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar()
         FinishSetupFrame = CTk.CTkFrame(Window, 790, 590)
@@ -1137,9 +1457,87 @@ Manager Password: {SETUPDATA["Manager Password"]}
 
     def Inject_Initialization_Data_Into_JSON_Files(self) -> None:
         
+        ''' <!-- Doc Strings --> 
+        ## Purpose
+        The `Inject_Initialization_Data_Into_JSON_Files` function is responsible for saving the setup data into JSON files. This ensures that the collected initialization data is stored persistently for future use by the application.
+
+        ## Functionality
+        - Saves the setup data (`SETUPDATA`) into two JSON files:
+        1. **Main Initialization File**: Located in the primary database directory.
+        2. **Backup Initialization File**: Located in the backup database directory.
+        - Adds a timestamp (`Downloaded On`) to the `SETUPDATA` dictionary to record when the data was saved.
+
+        ## Parameters
+        - **None**: This function does not take any parameters.
+
+        ## Return Type
+        - **None**: This function does not return any value.
+
+        ## Process
+        1. Updates the `Downloaded On` field in the `SETUPDATA` dictionary with the current date and time.
+        2. Writes the updated `SETUPDATA` dictionary to:
+        - `Initialization.json` in the main database directory.
+        - `Initialization.json` in the backup database directory.
+
+        ## Example Usage
+        ```python
+        setup = Setup()
+        setup.Inject_Initialization_Data_Into_JSON_Files()
+        ```
+
+        ## Notes
+        - Ensure that the `SETUPDATA` dictionary is populated with valid data before calling this function.
+        - The file paths for the main and backup JSON files are hardcoded and must exist for the function to work correctly.
+        - This function overwrites any existing data in the target JSON files.
+
+        ## Example Output
+        The following JSON structure is saved to the files:
+        ```
+        {
+            "isActivated": true,
+            "License Verification": "Passed",
+            "Current Version": "0.0.1 - Alpha",
+
+            "Manager Name": "John Doe",
+            "Manager Username": "johndoe123",
+            "Manager Password": "********",
+            "Manager Security Code": "%^*^$&jg758fj^($&)",
+            "Manager Email": "johndoe@example.com",
+            "Manager Email App Password": "********",
+            "isEmailVerified": true,
+
+            "Downloaded On": "15-May-2025 -- Thursday @ 10:30:00 AM",
+            "DATABASE TYPE": "SQLite3",
+            "DATABASE PATH": "path/to/database_main.sqlite3",
+            "BACKUP DATABASE PATH": "path/to/database_backup.sqlite3",
+            
+            "MySQL Credentials": {
+
+                "Host": "localhost",
+                "Port": 3306,
+                "Username": "root",
+                "Password": "********",
+                "Database": "Bank-With-High-Functionalities",
+                "Charset": "utf8mb4"
+
+            }
+        }
+        ```
+
+        ## Security
+        - Sensitive information such as passwords is stored in the JSON files. Ensure that these files are secured and not accessible to unauthorized users.
+
+        ## Dependencies
+        - Requires the `json` module for serializing the `SETUPDATA` dictionary into JSON format.
+        - Relies on the `datetime` module to generate the timestamp for the `Downloaded On` field.
+
+        ## File Paths
+        - **Main File**: `Bank_Package/DATABASE/JSON/ADMINISTRATIVE FILES/Initialization.json`
+        - **Backup File**: `BACKUP - DATABASE/JSON/ADMINISTRATIVE FILES/Initialization.json`
+        
         '''
-        ### This function injects the initialization data into the JSON files. 
-        '''
+
+        SETUPDATA['Downloaded On'] = datetime.datetime.now().strftime('%d-%b-%Y -- %A @ %I:%M:%S %p')
 
         with open(fr'{PATH}\Bank_Package\DATABASE\JSON\ADMINISTRATIVE FILES\Initialization.json', 'w') as MAIN:
             

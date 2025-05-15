@@ -1,0 +1,12 @@
+---
+
+Debug Logs
+  * Purpose: To provide detailed information for debugging purposes, especially during development or troubleshooting.
+  * File Name: DebugLogs.txt
+  * Content:
+      * Detailed information about function calls, variable values, and execution flow.
+  * Example:
+        [DEBUG]:[Setup.py][15-May-2025 @ 10:15:00 AM] - Entered function Validate_Name
+        [DEBUG]:[Setup.py][15-May-2025 @ 10:15:05 AM] - Manager name validation passed.
+
+---

@@ -1,0 +1,5 @@
+customtkinter
+mysql-connector-python
+pillow
+requests
+pywin32

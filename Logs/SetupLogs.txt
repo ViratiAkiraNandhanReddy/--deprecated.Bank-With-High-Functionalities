@@ -1,0 +1,15 @@
+---
+
+Setup Logs
+  * Purpose: To record the progress and completion of the setup process.
+  * File Name: SetupLogs.txt
+  * Content:
+      * Timestamp of each setup step.
+      * Details of the step (e.g., terms accepted, product key validated).
+      * Status of the setup process.
+  * Example:
+        [INFO]:[Setup.py][15-May-2025 @ 10:20:00 AM] - Terms and conditions accepted.
+        [INFO]:[Setup.py][15-May-2025 @ 10:25:00 AM] - Product key validated successfully.
+        [INFO]:[Setup.py][15-May-2025 @ 10:55:00 AM] - Setup completed successfully.
+
+---

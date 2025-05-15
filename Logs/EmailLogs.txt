@@ -1,0 +1,15 @@
+---
+
+Email Logs
+  * Purpose: To track email-related activities, such as sending verification emails.
+  * File Name: EmailLogs.txt
+  * Content:
+      * Timestamp of the email activity.
+      * Recipient email address.
+      * Status of the email (e.g., sent, failed).
+      * Error details (if any).
+  * Example:
+        [INFO]:[Manager_Email_Verification][15-May-2025 @ 10:50:00 AM] - Verification email sent to johndoe@example.com.
+        [ERROR]:[Manager_Email_Verification][15-May-2025 @ 10:51:00 AM] - Failed to send email; ErrorType: [SMTPAuthenticationError].
+
+---

@@ -1,0 +1,13 @@
+---
+
+Performance Logs (Optional)
+  * Purpose: To monitor the performance of the application, such as execution time for critical functions.
+  * File Name: PerformanceLogs.txt
+  * Content:
+      * Timestamp of the performance measurement.
+      * Function or process being measured.
+      * Execution time or resource usage.
+  * Example:
+        [PERFORMANCE]:[Setup.py][15-May-2025 @ 10:30:00 AM] - Database connection established in 2.5 seconds.
+
+---
