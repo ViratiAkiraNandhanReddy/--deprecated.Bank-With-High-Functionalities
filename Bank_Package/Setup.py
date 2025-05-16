@@ -21,6 +21,7 @@ import mysql.connector
 import subprocess, platform
 import customtkinter as CTk
 from tkinter import messagebox
+from urllib.request import urlopen
 from win32com.client import Dispatch
 from email.message import EmailMessage
 from random import choice, randint, random
@@ -93,14 +94,23 @@ MYSQL_ON_LINUX_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on
 MYSQL_ON_MAC_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+mac'
 
 WelcomeImage = Image.open(r'Bank_Package\Visual Data\WelcomeImageAtSetup.jpg')
+
 DatabaseComparisonDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Dark.png')
 DatabaseComparisonLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
+AppPasswordLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
+AppPasswordDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
+
+INFO_Icon = Image.open(r'Bank_Package\Visual Data\info.png')
+LINK_Icon = Image.open(r'Bank_Package\Visual Data\link.png')
+EXCLAMATION_Icon = Image.open(r'Bank_Package\Visual Data\Exclamation.png')
 DatabaseIcon = Image.open(r'Bank_Package\Visual Data\Database -- icon.png')
+
 MySQL_Logo = Image.open(r'Bank_Package\Visual Data\MySQL -- Logo.png')
+Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
 
 MYSQLLOG = """ """ # Empty For A Reason
 
-ERRORLOGS = open(fr'{PATH}\Log Files\ErrorLogs.txt','a')
+ERRORLOGS = open(fr'{PATH}\Logs\ErrorLogs.txt','a')
 
 with open(fr'{PATH}\TERMS OF SERVICE.txt') as FILE:
 
@@ -794,15 +804,16 @@ class Setup:
         global Window
         Window = CTk.CTk()
         Window.title('Setup')
-        Window.geometry('800x400+100+40')
         Window.resizable(False,False)
+        Window.geometry('800x400+100+40')
+        Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Setup.ico')
         Window.protocol('WM_DELETE_WINDOW', lambda: Window.destroy() if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
 
         # Welcome Greeting
 
         WelcomeFrame = CTk.CTkFrame(Window,790,390) ; WelcomeFrame.place(x=5,y=5)
         CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image=WelcomeImage,dark_image=WelcomeImage,size=(790,358))).place(x=0,y=0)
-        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_TermsAndConditionsFrame).place(x=648,y=360)
+        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_GmailVerificationFrame).place(x=648,y=360)
         
         # Terms & Conditions
 
@@ -1166,9 +1177,29 @@ class Setup:
         
         # Gmail Verification
 
-        GmailVerificationFrame = CTk.CTkFrame(Window,790,390)        
+        GmailVerificationFrame = CTk.CTkFrame(Window, 790, 390)
+        CTk.CTkLabel(GmailVerificationFrame, text = 'Bank Email Setup', font = ('Arial', 28, 'bold'), height = 0).place(x = 10, y = 10)
+        CTk.CTkLabel(GmailVerificationFrame, text = 'Please Register By Entering The Email Credentials Below.', font = ('Arial', 10), height = 0).place(x = 10, y = 40)
+        CTk.CTkLabel(GmailVerificationFrame, text = '', image = CTk.CTkImage(light_image = Google_Logo, dark_image = Google_Logo, size = (45,45))).place(x = 730, y = 0)
         
-        
+        CTk.CTkLabel(GmailVerificationFrame, text = 'Email Address :', font = ('Roboto', 16, 'bold')).place(x = 10, y = 80)       
+        Email = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., example@gmail.com', width = 230).place(x = 140, y = 80)
+
+        CTk.CTkLabel(GmailVerificationFrame, text = 'App Password :', font = ('Roboto', 16, 'bold')).place(x = 10, y = 120)
+        AppPassword = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., abgd wbdw spkv jdgw', width = 230).place(x = 140, y = 120)
+
+        Verification_Code = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'VERIFICATON CODE HERE', width = 182).place(x = 30, y = 200)
+
+        CTk.CTkButton(GmailVerificationFrame, text = f'{APPPASSWORDWEBSITE}', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = LINK_Icon, dark_image = LINK_Icon, size = (12, 12)), fg_color = 'transparent', hover = False, text_color = '#21968B',
+                     compound = 'left', height = 0, width = 0, command = lambda: OpenBrowserForSpecifiedUrl(APPPASSWORDWEBSITE)).place(x = -1, y = 336)
+        CTk.CTkLabel(GmailVerificationFrame, text = ' The provided email must have Two Factor Authentication enabled to generate app passwords.', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = EXCLAMATION_Icon, dark_image = EXCLAMATION_Icon, size = (12, 12)),
+                     compound = 'left', height = 0).place(x = 3, y = 358)
+        CTk.CTkLabel(GmailVerificationFrame, text = ' This email address is used to send automated emails to the users of this prototype. Email setup is mandatory.', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (12, 12)),
+                     compound = 'left', height = 0).place(x = 3, y = 375)
+
+
+        EmailSetupGuide = CTk.CTkScrollableFrame(GmailVerificationFrame, 300, 293) ; EmailSetupGuide.place(x = 465, y = 45)
+        CTk.CTkLabel(EmailSetupGuide, text = '', image = CTk.CTkImage(light_image = AppPasswordLightImage, dark_image = AppPasswordDarkImage, size = (300,1070))).pack()
         
         CTk.CTkButton(GmailVerificationFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100 ,command = GoBackTo_ManagerModeSetupFrame).place(x = 580, y = 357)
         ContinueToChooseDatabase = CTk.CTkButton(GmailVerificationFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color = '#45A049',
@@ -1176,7 +1207,7 @@ class Setup:
         
         # Choose Data Base
 
-        def SetDatabaseTypeAndPath() -> None: # Set Database Type & Path [ SQLite3, MySQL, JSON ]
+        def SetDatabaseTypeAndPath() -> None: # Set Database Type & Path [ SQLite3, MySQL, JSON ] 
             
             '''
             ### This function sets the database type and path based on the selected option from the radio buttons. \
@@ -1424,22 +1455,287 @@ Current App Version: {SETUPDATA["Current Version"]}
         # Finish Greeting
 
         def _exec_func_() -> None:
-            # C:\Users\Virati Akira Nandhan Reddy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
             
+            ''' <!-- Doc Strings -->
+            ### Purpose
+            Handles post-setup actions after the user completes the setup process for the Bank-With-High-Functionalities application.
+
+            ### Functionality
+            - Optionally creates a shortcut to the application on the user's Desktop.
+            - Optionally sends an automated email notification to the developer about the new client registration.
+            - Optionally launches the main application executable (`main.exe`).
+            - Always creates a shortcut in the Windows Start Menu's Programs folder.
+
+            ### Notes
+            - The function uses three Boolean variables (`CREATE_SHORTCUT`, `OPEN_MAIN_EXE`, `GREET_DEVELOPER`) to determine which actions to perform.
+            - The function is intended to be called after setup data is saved and the setup window is closed.
+
+            ### Dependencies
+            - Requires the `os` module for path operations.
+            - Requires `win32com.client.Dispatch` for shortcut creation.
+            - Requires `subprocess` for launching executables.
+            - Requires `smtplib`, `email.message.EmailMessage`, and `urllib.request.urlopen` for sending emails.
+
+            ### Security
+            - Ensure the `PATH` variable is trusted to avoid creating shortcuts or launching unintended executables.
+            - Email credentials are used securely and not exposed in logs or messages.
+
+            ### Limitations
+            - If any action fails (e.g., shortcut creation, email sending, launching the executable), the error is silently ignored.
+            - The function is designed for Windows environments. 
+            '''
+            
+            Shell = Dispatch('WScript.Shell')
+
             def Shortcut_At_Start_Menu() -> None:
-                pass
+
+                ''' <!-- Doc Strings -->
+                ### Purpose
+                Creates a shortcut for the Bank-With-High-Functionalities application in the Windows Start Menu's Programs folder.
+
+                ### Functionality
+                - Uses the Windows Scripting Host (via `win32com.client.Dispatch`) to create a `.lnk` shortcut.
+                - Sets the shortcut's target to the application's `main.exe`.
+                - Configures the working directory, description, and icon for the shortcut.
+                - Saves the shortcut in the Start Menu Programs directory for the current user.
+
+                ### Notes
+                - The shortcut is created at: `%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Bank-With-High-Functionalities.lnk`
+                - The function assumes the global `PATH` variable points to the application's root directory.
+                - This function is intended for Windows environments only.
+
+                ### Dependencies
+                - Requires the `os` module for path operations.
+                - Requires `win32com.client.Dispatch` for shortcut creation.
+
+                ### Security
+                - Ensure the `PATH` variable is trusted to avoid creating shortcuts to unintended executables.
+                '''
+
+                Start = Shell.CreateShortcut(os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Bank-With-High-Functionalities.lnk"))
+                Start.TargetPath = fr'{PATH}\main.exe'
+                Start.WorkingDirectory = os.path.dirname(fr'{PATH}\main.exe')
+                Start.Description = 'Python Based GUI Banking System Prototype.'
+                Start.IconLocation = fr'{PATH}\Bank_Package\Visual Data\ICO Files\Bank Image.ico'
+                Start.save()
 
             def Shortcut_At_Desktop() -> None:
-                pass
+
+                ''' <!-- Doc Strings -->
+                ### Purpose
+                Creates a shortcut for the Bank-With-High-Functionalities application on the user's Desktop.
+
+                ### Functionality
+                - Uses the Windows Scripting Host (via `win32com.client.Dispatch`) to create a `.lnk` shortcut.
+                - Sets the shortcut's target to the application's `main.exe`.
+                - Configures the working directory, description, and icon for the shortcut.
+                - Saves the shortcut on the Desktop for the current user.
+
+                ### Notes
+                - The shortcut is created at: `%USERPROFILE%\\Desktop\\Bank-With-High-Functionalities.lnk`
+                - The function assumes the global `PATH` variable points to the application's root directory.
+                - This function is intended for Windows environments only.
+
+                ### Dependencies
+                - Requires the `os` module for path operations.
+                - Requires `win32com.client.Dispatch` for shortcut creation.
+
+                ### Security
+                - Ensure the `PATH` variable is trusted to avoid creating shortcuts to unintended executables.
+                '''
+
+                Desktop = Shell.CreateShortcut(os.path.join(os.environ["USERPROFILE"], "Desktop", "Bank-With-High-Functionalities.lnk"))
+                Desktop.TargetPath = fr'{PATH}\main.exe'
+                Desktop.WorkingDirectory = os.path.dirname(fr'{PATH}\main.exe')
+                Desktop.Description = 'Python Based GUI Banking System Prototype.'
+                Desktop.IconLocation = fr'{PATH}\Bank_Package\Visual Data\ICO Files\Bank Image.ico'
+                Desktop.save()
 
             def Open_main_exe() -> None:
-                pass
+                
+                ''' <!-- Doc Strings -->
+                ### Purpose
+                Launches the main executable (`main.exe`) of the Bank-With-High-Functionalities application after setup is complete.
 
+                ### Functionality
+                - Uses `subprocess.Popen` to start the main application executable.
+                - Ensures the application is launched in a new process, allowing the setup window to close independently.
+
+                ### Notes
+                - The path to `main.exe` is determined by the global `PATH` variable.
+                - This function is intended to be called at the end of the setup process to provide a seamless transition for the user.
+
+                ### Dependencies
+                - Relies on the `subprocess` module.
+                - Requires the `PATH` variable to be correctly set to the application's root directory.
+
+                ### Security
+                - Ensure that the path to `main.exe` is trusted and not user-modifiable to prevent execution of unintended files.
+                '''
+
+                subprocess.Popen(fr'{PATH}\main.exe', shell = True)
+
+            def Greet_Developer() -> None:
+
+                ''' <!-- Doc Strings -->
+                ### Purpose
+                Sends an automated email notification to the developer when a new client completes the setup process for the Bank-With-High-Functionalities application.
+
+                ### Functionality
+                - Retrieves the client's location data (region and country) using the `ipinfo.io` API.
+                - Generates an HTML email containing:
+                - Client name
+                - Registration date and time
+                - Client region and country
+                - Sends the email to the developer's email address using SMTP with SSL.
+
+                ### Notes
+                - The function uses the `SETUPDATA` dictionary to get the manager's name and email credentials.
+                - The developer's email address is hardcoded as the recipient.
+                - The email is sent in HTML format for better readability.
+
+                ### Dependencies
+                - Requires `json`, `datetime`, `smtplib`, `email.message.EmailMessage`, and `urllib.request.urlopen`.
+                - Relies on internet connectivity to fetch location data and send the email.
+
+                ### Security
+                - Uses the manager's email and app password for SMTP authentication.
+                - Sensitive credentials are not exposed in the email content.
+
+                ### Limitations
+                - If the internet connection is unavailable or credentials are incorrect, the email may not be sent.
+                - Exceptions are caught and silently passed; errors are not reported to the user.
+    
+                '''
+
+                with urlopen("https://ipinfo.io/json") as Location:
+                    Location_Data = json.load(Location)
+                
+                HTML = ''' <!-- html Data -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Client Registration Alert</title>
+    <style>
+      body {
+        background-color: #f0f4f8;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgb(19, 77, 184);
+        overflow: hidden;
+      }
+      .header {
+        background-color: #408cd8;
+        color: white;
+        padding: 24px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .body {
+        padding: 30px;
+        color: #333;
+      }
+      .body h2 {
+        margin-top: 0;
+        color: #444;
+      }
+      .info-box {
+        background: #f6f8fa;
+        padding: 20px;
+        border-left: 4px solid #0366d6;
+        margin: 20px 0;
+        font-family: monospace;
+      }
+      .footer {
+        background-color: #f9f9f9;
+        text-align: center;
+        padding: 16px;
+        font-size: 12px;
+        color: #888;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🛠 New Client Registered</h1>
+      </div>
+      <div class="body">
+        <h2>Hello! Virati Akira Nandhan Reddy,</h2>
+        <p>A New Client Has Successfully Registered On The Platform.</p>
+        
+        <div class="info-box">
+          <strong>Client Name:</strong> [CLIENTNAME]<br/>
+          <strong>Registered On:</strong> [DATE]<br/>
+          <strong>Time:</strong> [TIME]<br/>
+          <strong>Region:</strong> [REGION]<br/>
+          <strong>Country:</strong> [COUNTRY]<br/>
+        </div>
+
+        <p style="color: #408cd8;font-size: x-small;"> 
+            <strong>Bank-With-High-Functionalities, Developed & Distributed By Virati Akira Nandhan Reddy</strong><br/>
+        </p>
+      </div>
+      <div class="footer">
+        &copy; 2024 - 2026 Virati Akira Nandhan Reddy • Bank-With-High-Functionalities
+      </div>
+    </div>
+  </body>
+</html>
+
+'''.replace(
+    '[CLIENTNAME]', str(SETUPDATA['Manager Name'])
+    ).replace(
+        '[DATE]', str(datetime.datetime.now().strftime('%d-%b-%Y -- %A'))
+        ).replace(
+            '[TIME]', str(datetime.datetime.now().astimezone().strftime('%I:%M:%S %p (%Z)'))
+            ).replace(
+                '[REGION]', str(Location_Data.get("region", "N/A"))
+                ).replace(
+                    '[COUNTRY]', str(Location_Data.get("country", "N/A")))
+
+                Email = EmailMessage()
+
+                Email['Subject'] = 'Hello! Virati Akira Nandhan Reddy, New Client Registered 🩵'
+                Email['From'] = 'Bank-With-High-Functionalities Team'
+                Email['To'] = 'viratiaki29@gmail.com'
+
+                Email.set_content(HTML, subtype = 'html')
+
+                try:
+
+                    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
+
+                        SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager App Password'])
+                        SMTP.send_message(Email)
+                        raise NotImplementedError
+
+                except Exception as e:
+                    # log it Hello See Here
+                    pass
+                    
             if CREATE_SHORTCUT:
 
-                # Create a shortcut at `Desktop``
+                # Create a shortcut at `Desktop`
                 Shortcut_At_Desktop()
 
+            elif GREET_DEVELOPER:
+
+                # Mail To Developer
+                Greet_Developer()
+            
             elif OPEN_MAIN_EXE:
 
                 # Opens the main.exe (Access Application)
@@ -1447,8 +1743,11 @@ Current App Version: {SETUPDATA["Current Version"]}
             
             Shortcut_At_Start_Menu()
         
-        CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar()
+        CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar() ; GREET_DEVELOPER = CTk.BooleanVar()
+        CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True) ; GREET_DEVELOPER.set(True)
         FinishSetupFrame = CTk.CTkFrame(Window, 790, 590)
+
+
 
         CTk.CTkButton(FinishSetupFrame, text = 'Finish Setup!', corner_radius=4, fg_color = '#4CAF50', text_color = 'Black', hover_color='#45A049', width = 100, 
                       command = lambda: [self.Inject_Initialization_Data_Into_JSON_Files(), Window.destroy(), _exec_func_()]).place(x = 685, y = 357)
