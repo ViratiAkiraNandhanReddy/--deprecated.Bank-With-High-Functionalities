@@ -88,6 +88,14 @@ SEQUENCE = [ # For Security Code Generation
 APPPASSWORDWEBSITE = 'https://myaccount.google.com/apppasswords'
 GITHUBREPOWEBSITE = 'https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities'
 DATABASEINFOWEBSITE = ''
+x = 'https://x.com/Viratiaki53'
+mail = 'mailto:viratiaki53@gmail.com'
+github = 'https://github.com/ViratiAkiraNandhanReddy'
+webpage = 'https://viratiakiranandhanreddy.github.io/Bank-With-High-Functionalities'
+facebook = 'https://www.facebook.com/ViratiAkiraNandhanReddy'
+linkedin = 'https://www.linkedin.com/in/viratiakiranandhanreddy'
+instagram = 'https://www.instagram.com/viratiaki53'
+
 
 MYSQL_ON_WINDOWS_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+windows'
 MYSQL_ON_LINUX_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+linux'
@@ -99,11 +107,21 @@ DatabaseComparisonDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Res
 DatabaseComparisonLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
 AppPasswordLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
 AppPasswordDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
+ThankYouDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Dark.png')
+ThankYouLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Light.png')
 
 INFO_Icon = Image.open(r'Bank_Package\Visual Data\info.png')
 LINK_Icon = Image.open(r'Bank_Package\Visual Data\link.png')
 EXCLAMATION_Icon = Image.open(r'Bank_Package\Visual Data\Exclamation.png')
 DatabaseIcon = Image.open(r'Bank_Package\Visual Data\Database -- icon.png')
+
+instagram_icon = Image.open(r'Bank_Package\Visual Data\icons\instagram.png')
+x_icon = Image.open(r'Bank_Package\Visual Data\icons\x.png')
+facebook_icon = Image.open(r'Bank_Package\Visual Data\icons\facebook.png')
+github_icon = Image.open(r'Bank_Package\Visual Data\icons\github.png')
+linkedin_icon = Image.open(r'Bank_Package\Visual Data\icons\linkedin.png')
+webpage_icon = Image.open(r'Bank_Package\Visual Data\icons\webpage.png')
+gmail_icon = Image.open(r'Bank_Package\Visual Data\icons\gmail.png')
 
 MySQL_Logo = Image.open(r'Bank_Package\Visual Data\MySQL -- Logo.png')
 Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
@@ -790,6 +808,23 @@ class Setup:
                 ChooseDatabaseFrame.place_forget()
 
             Window.geometry('800x400')
+
+            for widget,_text_ in [ # Live Update 
+
+                (Final_Manager_Name__Update__, f'Manager Name: {SETUPDATA["Manager Name"]}'),
+                (Final_Manager_Username__Update__, f'Manager Username: {SETUPDATA["Manager Username"]}'),
+                (Final_Manager_Password__Update__, f'Manager Password: {SETUPDATA["Manager Password"]}'),
+                (Final_Manager_Security_Code__Update__, f'Manager Security Code: {SETUPDATA["Manager Security Code"]}'),
+                (Final_Manager_Email__Update__, f'Manager Email: {SETUPDATA["Manager Email"]}'),
+                (Final_Manager_Email_App_Password__Update__, f'Manager Email App Password: {SETUPDATA["Manager Email App Password"]}'),
+                (Final_isEmailVerified__Update__, f'isEmailVerified: {SETUPDATA["isEmailVerified"]}'),
+                (Final_Database_Type__Update__, f'Database Type: {SETUPDATA["DATABASE TYPE"]}'),
+                (Final_Current_App_Version__Update__, f'Current App Version: {SETUPDATA["Current Version"]}')
+
+                ]:
+
+                widget.configure(text = _text_)
+
             FinalReviewFrame.place(x = 5, y = 5)
         
         def GoBackTo_GetMySQLDataFrame() -> None: # MySQLSetupFrame <- FinalReviewFrame -- 14 [ if MySQL is Selected ]
@@ -799,6 +834,7 @@ class Setup:
 
         def GoTo_FinishSetupFrame() -> None: # FinalReviewFrame -> FinishSetupFrame -- 15
             FinalReviewFrame.place_forget()
+            Window.geometry('800x600')
             FinishSetupFrame.place(x = 5, y = 5)
 
         global Window
@@ -813,7 +849,7 @@ class Setup:
 
         WelcomeFrame = CTk.CTkFrame(Window,790,390) ; WelcomeFrame.place(x=5,y=5)
         CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image=WelcomeImage,dark_image=WelcomeImage,size=(790,358))).place(x=0,y=0)
-        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_GmailVerificationFrame).place(x=648,y=360)
+        CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_TermsAndConditionsFrame).place(x=648,y=360)
         
         # Terms & Conditions
 
@@ -1354,7 +1390,6 @@ class Setup:
 
 
         Buffering_MySQL_Data = CTk.CTkProgressBar(GetMySQLDataFrame, mode = 'indeterminate', width = 225, height = 5, progress_color = '#4CAF50') ; Buffering_MySQL_Data.place(x = 100, y = 430)
-        Buffering_MySQL_Data.set(0)
         CTk.CTkButton(GetMySQLDataFrame, text = 'Copy Debug Log To Clipboard', corner_radius = 4)
         CTk.CTkButton(GetMySQLDataFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100 ,command = GoBackTo_ChooseDatabaseFrame).place(x = 580, y = 557)
         ContinueToFinalReview = CTk.CTkButton(GetMySQLDataFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color='#45A049',
@@ -1429,16 +1464,25 @@ Current App Version: {SETUPDATA["Current Version"]}
         FinalReviewFrame = CTk.CTkFrame(Window, 790, 390)
         CTk.CTkLabel(FinalReviewFrame, text = 'Final Review', font = ('Arial', 36, 'bold'), height = 0).place(x = 10, y = 10)
         CTk.CTkLabel(FinalReviewFrame, text = 'Review The Information Before Proceeding.', font = ('Arial', 10), height = 0).place(x = 11, y = 45)
-        
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Name: {SETUPDATA["Manager Name"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 100)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Username: {SETUPDATA["Manager Username"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 128)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Password: {SETUPDATA["Manager Password"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 156)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Security Code: {SETUPDATA["Manager Security Code"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 184)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Email: {SETUPDATA["Manager Email"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 212)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Manager Email App Password: {SETUPDATA["Manager Email App Password"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 240)
-        CTk.CTkLabel(FinalReviewFrame, text = f'isEmailVerified: {SETUPDATA["isEmailVerified"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 268)    
-        CTk.CTkLabel(FinalReviewFrame, text = f'Database Type: {SETUPDATA["DATABASE TYPE"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 296)
-        CTk.CTkLabel(FinalReviewFrame, text = f'Current App Version: {SETUPDATA["Current Version"]}', font = ('Segoe UI', 14, 'bold'), justify = 'left').place(x = 10, y = 324)
+         
+        Final_Manager_Name__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Name: {SETUPDATA["Manager Name"]}',
+                                                    font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Name__Update__.place(x = 10, y = 100)
+        Final_Manager_Username__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Username: {SETUPDATA["Manager Username"]}',
+                                                        font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Username__Update__.place(x = 10, y = 128)
+        Final_Manager_Password__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Password: {SETUPDATA["Manager Password"]}',
+                                                        font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Password__Update__.place(x = 10, y = 156)
+        Final_Manager_Security_Code__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Security Code: {SETUPDATA["Manager Security Code"]}',
+                                                             font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Security_Code__Update__.place(x = 10, y = 184)
+        Final_Manager_Email__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Email: {SETUPDATA["Manager Email"]}',
+                                                     font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Email__Update__.place(x = 10, y = 212)
+        Final_Manager_Email_App_Password__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Email App Password: {SETUPDATA["Manager Email App Password"]}',
+                                                                  font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Email_App_Password__Update__.place(x = 10, y = 240)
+        Final_isEmailVerified__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'isEmailVerified: {SETUPDATA["isEmailVerified"]}',
+                                                       font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_isEmailVerified__Update__.place(x = 10, y = 268)    
+        Final_Database_Type__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Database Type: {SETUPDATA["DATABASE TYPE"]}',
+                                                     font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Database_Type__Update__.place(x = 10, y = 296)
+        Final_Current_App_Version__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Current App Version: {SETUPDATA["Current Version"]}',
+                                                           font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Current_App_Version__Update__.place(x = 10, y = 324)
 
         CTk.CTkCheckBox(FinalReviewFrame, text = '' , font = ('Segoe UI', 12), variable = REVIEWED, offvalue = False, onvalue = True,
                         command = lambda: Finish_Setup.configure(state = 'normal', fg_color = '#4CAF50') if REVIEWED.get() else Finish_Setup.configure(state = 'disabled', fg_color = '#B0B0B0'), border_width = 1,
@@ -1725,32 +1769,231 @@ Current App Version: {SETUPDATA["Current Version"]}
                 except Exception as e:
                     # log it Hello See Here
                     pass
-                    
-            if CREATE_SHORTCUT:
 
-                # Create a shortcut at `Desktop`
+            def Greet_Manager() -> None:
+                
+                
+                HTML = ''' <!-- html Data -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Thank You - Setup Complete</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f1f3f8;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .email-wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+    .header {
+      background: linear-gradient(90deg, #4A00E0, #8E2DE2);
+      color: white;
+      text-align: center;
+      padding: 50px 20px 30px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 1px;
+    }
+    .header p {
+      margin: 12px 0 0;
+      font-size: 17px;
+      opacity: 0.95;
+    }
+    .content {
+      padding: 30px 40px;
+      color: #333333;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+    .content h2 {
+      font-size: 20px;
+      color: #4A00E0;
+      margin-bottom: 10px;
+    }
+    .features {
+      background-color: #f9f9fb;
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .features ul {
+      padding-left: 20px;
+    }
+    .features li {
+      margin-bottom: 10px;
+    }
+    .button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 14px 26px;
+      background-color: #8E2DE2;
+      color: #ffffff !important;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      transition: background 0.3s;
+    }
+    .button:hover {
+      background-color: #7327c5;
+    }
+    .footer {
+      font-size: 12px;
+      color: #999999;
+      text-align: center;
+      padding: 30px 20px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .social-icons img {
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="header">
+      <h1>🎉 You're All Set!</h1>
+      <p>Thanks For Completing Your Setup, [Manager Name]!</p>
+    </div>
+    <div class="content">
+      <p>We're Excited To Welcome You To Our Platform. Your Setup Was Successful, And You're Now Ready To Enjoy A Seamless Experience Designed To Simplify The Understanding Of Programming.</p>
+
+      <p>Once Again, Thank You For Joining Us. We Can't Wait To See What You'll Accomplish!</p>
+
+      <p style="margin-top: 30px;">Warm regards,<br><strong>The Bank-With-High-Functionalities Team</strong></p>
+    </div>
+
+    <div class="footer">
+      <p style="margin: 0;">
+        © 2024 - 2026 Bank-With-High-Functionalities • Virati Akira Nandhan Reddy
+      </p>
+      <div style="padding: 20px px; margin-top: 16px; text-align: center;">
+        <a href="https://facebook.com/YourPage" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <a href="https://instagram.com/YourProfile" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <a href="https://x.com/YourHandle" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968830.png" alt="X" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <a href="https://github.com/YourUsername" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <a href="https://linkedin.com/in/YourProfile" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <a href="https://yourwebsite.com" style="margin: 0 8px; text-decoration: none;" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/545/545670.png" alt="Website" width="24" style="vertical-align: middle; border: 0;">
+        </a>
+        <p style="padding: 35px px;padding-bottom:0px;">
+        <b> 
+            🤖 This is An Automated Email 🤖<br>
+            ⚠️ Please Do Not Reply ⚠️</b>
+        </p> 
+  </div>
+</body>
+</html>
+'''.replace('[Manager Name]', SETUPDATA['Manager Name'])
+
+                Email = EmailMessage()
+
+                Email['Subject'] = f'Hello! {SETUPDATA["Manager Name"]}, Your Registration With Bank-With-High-Functionalities Has Been Successfully Completed 🩵.'
+                Email['From'] = 'Bank-With-High-Functionalities Team'
+                Email['To'] = SETUPDATA['Manager Email']
+
+                Email.set_content(HTML, subtype = 'html')
+
+                try:
+
+                    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
+
+                        SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager App Password'])
+                        SMTP.send_message(Email)
+                        raise NotImplementedError
+
+                except Exception as e:
+                    # log it Hello See Here
+                    pass
+
+            if CREATE_SHORTCUT:
+                
+				# Create a shortcut at `Desktop`
                 Shortcut_At_Desktop()
 
-            elif GREET_DEVELOPER:
-
-                # Mail To Developer
-                Greet_Developer()
-            
             elif OPEN_MAIN_EXE:
 
                 # Opens the main.exe (Access Application)
                 Open_main_exe()
-            
-            Shortcut_At_Start_Menu()
+
+            # Mail To Developer
+            Greet_Developer()
+
+            Greet_Manager()
+            # Shortcut_At_Start_Menu()
         
-        CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar() ; GREET_DEVELOPER = CTk.BooleanVar()
-        CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True) ; GREET_DEVELOPER.set(True)
+        CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar()
+        CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True)
         FinishSetupFrame = CTk.CTkFrame(Window, 790, 590)
+        CTk.CTkLabel(FinishSetupFrame, text = 'One Last Step to Finalize the Setup!', font = ('Arial', 26, 'bold'), height = 0).place(x = 10 , y = 10)
+        CTk.CTkLabel(FinishSetupFrame, text = '', image = CTk.CTkImage(light_image = ThankYouLightImage, dark_image = ThankYouDarkImage, size = (790, 333))).place(x = 0, y = 50)
+        
 
+        CTk.CTkLabel(FinishSetupFrame, text = 'Connect With The Developer!', font = ('Arial', 18, 'bold'), height = 0).place(x = 525, y = 370)
+        CTk.CTkLabel(FinishSetupFrame, text = 'Click The Handle To Visit The Associated Page.', font = ('Arial', 10), height = 0).place(x = 543, y = 387)
 
+        CTk.CTkLabel(FinishSetupFrame, text = 'We appreciate it if you could visit &\nfollow the developer\'s social media\npages. It\'s a great way to stay\ninformed about updates,\nnew features, & ongoing\nwork. Your support\nmakes a difference!', font = ('Segoe UI', 10), justify = 'left').place(x = 530, y = 417)
 
-        CTk.CTkButton(FinishSetupFrame, text = 'Finish Setup!', corner_radius=4, fg_color = '#4CAF50', text_color = 'Black', hover_color='#45A049', width = 100, 
-                      command = lambda: [self.Inject_Initialization_Data_Into_JSON_Files(), Window.destroy(), _exec_func_()]).place(x = 685, y = 357)
+        CTk.CTkButton(FinishSetupFrame, text = '@viratiaki53', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = instagram_icon, dark_image = instagram_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(instagram)).place(x = 702, y = 410)
+        
+        CTk.CTkButton(FinishSetupFrame, text = '@Viratiaki53', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = x_icon, dark_image = x_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(x)).place(x = 701, y = 430)
+        
+        CTk.CTkButton(FinishSetupFrame, text = 'Official Webpage', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = webpage_icon, dark_image = webpage_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(webpage)).place(x = 679, y = 450)
+        
+        CTk.CTkButton(FinishSetupFrame, text = 'viratiaki53@gmail.com', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = gmail_icon, dark_image = gmail_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(mail)).place(x = 656, y = 470)
+        
+        CTk.CTkButton(FinishSetupFrame, text = '@ViratiAkiraNandhanReddy', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = github_icon, dark_image = github_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(github)).place(x = 633, y = 490)
+        
+        CTk.CTkButton(FinishSetupFrame, text = '@ViratiAkiraNandhanReddy', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = facebook_icon, dark_image = facebook_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(facebook)).place(x = 633, y = 510)
+        
+        CTk.CTkButton(FinishSetupFrame, text = '@Virati Akira Nandhan Reddy', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = linkedin_icon, dark_image = linkedin_icon, size = (15,15)), width = 0,
+                      height = 0, fg_color = 'transparent', hover = False, compound = 'right', command = lambda: OpenBrowserForSpecifiedUrl(linkedin)).place(x = 624, y = 530)
+        
+        CTk.CTkCheckBox(FinishSetupFrame, text = 'Create Desktop Shortcut', onvalue = True, offvalue = True, variable = CREATE_SHORTCUT, height = 0, border_width = 1, checkbox_height = 18,
+                        checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 10, y = 422)
+
+        CTk.CTkCheckBox(FinishSetupFrame, text = 'Launch The Application After Setup', onvalue = True, offvalue = True, variable = OPEN_MAIN_EXE, height = 0, border_width = 1, checkbox_height = 18,
+                        checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 10, y = 450)
+        
+        CTk.CTkCheckBox(FinishSetupFrame, text = 'Launch Documentation When Setup Finishes.', onvalue = True, offvalue = True, variable = OPEN_MAIN_EXE, height = 0, border_width = 1, checkbox_height = 18,
+                        checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 10, y = 478)
+
+        CTk.CTkLabel(FinishSetupFrame, text = ' Ensure that your device is connected to the internet.', font = ('Segoe UI', 12),
+                     image = CTk.CTkImage(light_image = EXCLAMATION_Icon, dark_image = EXCLAMATION_Icon, size = (14, 14)), compound = 'left', height = 0).place(x = 10, y = 547)
+
+        CTk.CTkLabel(FinishSetupFrame, text = ' An email will be sent to the developer upon your registration. No sensitive data will be shared.', font = ('Segoe UI', 12),
+                     image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (14, 14)), compound = 'left', height = 0).place(x = 10, y = 566)
+        CTk.CTkButton(FinishSetupFrame, text = 'Finish Setup!', corner_radius=4, fg_color = '#4CAF50', text_color = 'Black', hover_color='#45A049', width = 180, 
+                      command = lambda: [self.Inject_Initialization_Data_Into_JSON_Files(), Window.destroy(), _exec_func_()]).place(x = 605, y = 557)
 
         Window.mainloop()
 
@@ -1850,4 +2093,5 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 
 
-Setup().SetupWindows()
+# Setup().SetupWindows()
+

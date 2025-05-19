@@ -13,3 +13,4 @@ Error Logs
 ---
 
 [ERROR]:[Setup.py][14/May/2025 @ 02:48:52 PM] - Failed To Connect To MySQL Server ; ErrorType: [ 1045 (28000): Access denied for user ''@'localhost' (using password: NO) ]
+[ERROR]:[Setup.py][19/May/2025 @ 10:58:33 AM] - Failed To Connect To MySQL Server ; ErrorType: [ 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES) ]
