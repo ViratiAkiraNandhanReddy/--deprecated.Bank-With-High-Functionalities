@@ -13,3 +13,5 @@ Email Logs
         [ERROR]:[Manager_Email_Verification][15-May-2025 @ 10:51:00 AM] - Failed to send email; ErrorType: [SMTPAuthenticationError].
 
 ---
+[ERROR]:[Setup.exe - Manager_Email_Verification][20/May/2025 - Tuesday @ 02:27:52 PM] ; Status: Successful ; MSG: Error Occured While Sending Verification Email To <viratiaki29@gmail.com> ; ErrorType: [Credentials Error At Backend (Manger App Password)]
+[ERROR]:[Setup.exe - Manager_Email_Verification][20/May/2025 - Tuesday @ 02:39:11 PM] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <!testing@gmail.com> ; ErrorType: [Credentials Error At Backend (Manger App Password)]

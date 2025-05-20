@@ -15,11 +15,13 @@ import os
 import json
 import socket
 import smtplib
+import datetime
+import threading
 from PIL import Image
-import datetime, time
 import mysql.connector
 import subprocess, platform
 import customtkinter as CTk
+from itertools import repeat
 from tkinter import messagebox
 from urllib.request import urlopen
 from win32com.client import Dispatch
@@ -38,8 +40,8 @@ SETUPDATA = { # Initialization Data
 	"Manager Username": None,    # e.g., Viratiaki53
 	"Manager Password": None,    # e.g., Viratiaki@2008
 	"Manager Security Code": None,    # e.g., %^*^$&jg758fj^($&) [18 - Chars]
-	"Manager Email": None,    # e.g., example@example.com
-	"Manager Email App Password": None,    # e.g., cxuo hgst csqi xwur
+	"Manager Email": 'viratiaki29@gmail.com',    # e.g., example@example.com
+	"Manager Email App Password": 'hxwt wduo cnii pico',    # e.g., cxuo hgst csqi xwur
 	"isEmailVerified": False,    # True | False
 	
 	"Downloaded On": None,    # 2-May-2025 -- Fri @ 12:37:23 PM
@@ -128,11 +130,56 @@ Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
 
 MYSQLLOG = """ """ # Empty For A Reason
 
-ERRORLOGS = open(fr'{PATH}\Logs\ErrorLogs.txt','a')
+ERRORLOGS = open(fr'{PATH}\Logs\ErrorLogs.txt', 'a')
+EMAIL_LOGS = open(fr'{PATH}\Logs\EmailLogs.txt', 'a')
 
 with open(fr'{PATH}\TERMS OF SERVICE.txt') as FILE:
 
 	TERMSANDCONDITIONS: str = FILE.read()
+
+__Code__ = None
+__Timestamp__ = datetime.datetime.now()
+
+# Implements A Countdown Timer For A Widget (Button Or Label).
+def __timer__(Widget: CTk.CTkButton | CTk.CTkLabel, Count: int, text_after: str) -> None:
+
+	"""
+	### Purpose
+	Implements a countdown timer for a given CustomTkinter widget (button or label), typically used for features like "Resend Code" in verification flows.
+
+	### Parameters
+	- **Widget** (`CTk.CTkButton` or `CTk.CTkLabel`): The widget whose text will display the countdown.
+	- **Count** (`int`): The starting value for the countdown in seconds.
+	- **text_after** (`str`): The text to display on the widget after the countdown finishes.
+
+	### Functionality
+	- Updates the widget's text to show the remaining seconds.
+	- Decrements the count every second using the widget's `.after()` method.
+	- When the countdown reaches zero, resets the widget's text to `text_after` and enables the widget if it was disabled.
+
+	### Returns
+	- **None**
+
+	### Example Usage
+	```python
+	__timer__(ResendButton, 10, "Resend Code")
+	```
+
+	### Notes
+	- This function is designed for use with CustomTkinter widgets.
+	- Commonly used to prevent immediate resending of verification codes or similar actions.
+
+	### Dependencies
+	- Requires `customtkinter` (imported as `CTk`).
+	"""
+
+
+	Widget.configure(text = str(Count))
+
+	if Count > 0:
+		Widget.after(1000, __timer__, Widget, Count - 1, text_after)
+	else:
+		Widget.configure(text = text_after, state = 'normal', fg_color = '#4CAF50')
 
 # To Open The Browser
 def OpenBrowserForSpecifiedUrl(URL: str) -> None: # Works For Windows, Mac, Linux 
@@ -179,7 +226,23 @@ def OpenBrowserForSpecifiedUrl(URL: str) -> None: # Works For Windows, Mac, Linu
 
 # To Check The Presence Of Previous Backup Database 
 class CheckForBackupDatabase:
-	pass
+	def __init__(self) -> None:
+		pass
+
+	def Check_Presence_Of_Database(self) -> bool:
+		
+		return os.path.exists('') or os.path.exists('') or os.path.exists('')
+
+	def Restore_Backup_Database_Setup(self) -> None:
+
+		Backup_Database_Window = CTk.CTk()
+		Backup_Database_Window.title('Backup')
+		Backup_Database_Window.geometry('800x400')
+		Backup_Database_Window.resizable(False, False)
+
+
+
+		Backup_Database_Window.mainloop()
 
 # To Check For MySQL Database Connection
 class CheckMySQLDatabaseConnection:
@@ -303,7 +366,6 @@ class Manager_Email_Verification:
 	The `Manager_Email_Verification` class is responsible for handling the email verification process for the manager during the setup phase. It generates a unique verification code, sends it to the manager's email address, and provides functionality to resend the email if needed.
 
 	## Attributes
-	- **Code**: A class-level attribute that stores the generated verification code.
 	- **ReceiverMailAddress**: The email address of the manager to which the verification email will be sent.
 
 	## Methods
@@ -347,7 +409,7 @@ class Manager_Email_Verification:
 	```
 
 	## Notes
-	- Ensure that the `SETUPDATA['Manager Email']` and `SETUPDATA['Manager App Password']` are correctly configured before using this class.
+	- Ensure that the `SETUPDATA['Manager Email']` and `SETUPDATA['Manager Email App Password']` are correctly configured before using this class.
 	- The email template is designed to be responsive and visually appealing.
 
 	## Example Email Template
@@ -380,17 +442,17 @@ class Manager_Email_Verification:
 	- If the email credentials are incorrect, the email will not be sent.
 	'''
 
-	Code = None
-
 	def __init__(self, ReceiverMailAddress: str = SETUPDATA['Manager Email']) -> None:
 		self.ReceiverMailAddress = ReceiverMailAddress
 
 	def Send_Gmail(self) -> str:
 
 		Email = EmailMessage()
-		self.Code = str(int(random()*(999-100)+100)) + chr(randint(65,90)) + str(int(random()*(99-11)+11)) + chr(randint(65,90)) + str(int(random()*(99-11)+11)) + chr(randint(65,90))
 
-		HTML_EMAIL = ''' <!-- HTML Email Template -->
+		global __Code__, __Timestamp__
+		__Code__ = str(int(random()*(999-100)+100)) + chr(randint(65,90)) + str(int(random()*(99-11)+11)) + chr(randint(65,90)) + str(int(random()*(99-11)+11)) + chr(randint(65,90))
+
+		HTML_EMAIL = ''' <!-- HTML Email Template --> 
 		
 <!DOCTYPE html>
 <html>
@@ -507,22 +569,22 @@ class Manager_Email_Verification:
 				© 2024-2026 Bank-With-High-Functionalities • Virati Akira Nandhan Reddy
 			  </p>
 			  <div style="padding: 20px 30px; margin-top: 16px; text-align: center;">
-				<a href="https://facebook.com/YourPage" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://www.facebook.com/ViratiAkiraNandhanReddy" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" width="24" style="vertical-align: middle; border: 0;">
 				</a>
-				<a href="https://instagram.com/YourProfile" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://www.instagram.com/viratiaki53" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="24" style="vertical-align: middle; border: 0;">
 				</a>
-				<a href="https://x.com/YourHandle" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://x.com/Viratiaki53" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/5968/5968830.png" alt="X" width="24" style="vertical-align: middle; border: 0;">
 				</a>
-				<a href="https://github.com/YourUsername" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://github.com/ViratiAkiraNandhanReddy" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" width="24" style="vertical-align: middle; border: 0;">
 				</a>
-				<a href="https://linkedin.com/in/YourProfile" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://www.linkedin.com/in/viratiakiranandhanreddy" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/145/145807.png" alt="LinkedIn" width="24" style="vertical-align: middle; border: 0;">
 				</a>
-				<a href="https://yourwebsite.com" style="margin: 0 8px; text-decoration: none;" target="_blank">
+				<a href="https://viratiakiranandhanreddy.github.io/Bank-With-High-Functionalities" style="margin: 0 8px; text-decoration: none;" target="_blank">
 					<img src="https://cdn-icons-png.flaticon.com/512/545/545670.png" alt="Website" width="24" style="vertical-align: middle; border: 0;">
 				</a>
 
@@ -544,9 +606,9 @@ class Manager_Email_Verification:
 </body>
 </html>
 
-'''.replace('[Manager Name]', str(SETUPDATA['Manager Name'])).replace('[Code]', self.Code)
+'''.replace('[Manager Name]', str(SETUPDATA['Manager Name'])).replace('[Code]', __Code__)
 
-		Email['Subject'] = f'{self.Code} Is Your Verification Code To Access Your Manager Account.'
+		Email['Subject'] = f'{__Code__} Is Your Verification Code To Access Your Manager Account.'
 		Email['From'] = 'Bank-With-High-Functionalities Team'
 		Email['To'] = self.ReceiverMailAddress
 
@@ -556,24 +618,39 @@ class Manager_Email_Verification:
 
 			with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-				SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager App Password'])
+				SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 				SMTP.send_message(Email)
 				
+				EMAIL_LOGS.write(f'\n[INFO]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] :  Status: Successful : MSG: Verification Email Was Sent To <{SETUPDATA["Manager Email"]}>')
 				return 'Error Free'
+			
+			__Timestamp__ = datetime.datetime.now()
 
 		except smtplib.SMTPAuthenticationError:
 			
+			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Credentials Error At Backend (Manger App Password)]')
 			return 'Credentials Error'
 		
+		except smtplib.SMTPServerDisconnected: # Slow Internet 
+
+			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Slow Internet Connection]')
+			return 'Slow Internet'
+		
 		except socket.gaierror:
-
+			
+			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [No Internet Connection]')
 			return 'No Internet'
+		
+		except Exception as Error:
 
-		return ''
-	
-	def Resend_Gmail(self) -> None:
-		self.Send_Gmail()
+			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [{Error}]')
+			return 'Unknown Error'
 
+
+		EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Developers Please Check My Class (Improper Behaviour)]')
+		return 'Improper Behaviour'
+
+# Main Setup Class
 class Setup:
 
 	''' <!-- Doc Strings --> 
@@ -843,13 +920,13 @@ class Setup:
 		Window.resizable(False,False)
 		Window.geometry('800x400+100+40')
 		Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Setup.ico')
-		Window.protocol('WM_DELETE_WINDOW', lambda: Window.destroy() if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
+		Window.protocol('WM_DELETE_WINDOW', lambda: [Window.destroy(), ERRORLOGS.close(), EMAIL_LOGS.close()] if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
 
 		# Welcome Greeting
 
 		WelcomeFrame = CTk.CTkFrame(Window,790,390) ; WelcomeFrame.place(x=5,y=5)
 		CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image=WelcomeImage,dark_image=WelcomeImage,size=(790,358))).place(x=0,y=0)
-		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_TermsAndConditionsFrame).place(x=648,y=360)
+		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_GmailVerificationFrame).place(x=648,y=360)
 		
 		# Terms & Conditions
 
@@ -984,7 +1061,7 @@ class Setup:
 			ManagerSecurityCode.delete(0, 'end')
 			SecurityCode = ''
 			
-			for i in range(18):
+			for i in repeat(18): # repeat for more efficiency
 				SecurityCode += choice(SEQUENCE)
 
 			else:
@@ -1212,6 +1289,50 @@ class Setup:
 					  state = 'disabled', width = 100, command = GoTo_GmailVerificationFrame) ; ContinueToGmailVerification.place(x = 685, y = 357)
 		
 		# Gmail Verification
+		
+		Email_Verification_cls: Manager_Email_Verification = Manager_Email_Verification()
+		
+
+		def _Send_Code_() -> None:
+			if not all([Email.get(), AppPassword.get()]):
+				Incomplete_Credentials_Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Incomplete Credentials') ; Incomplete_Credentials_Error.place(x = 167, y = 230)
+				Incomplete_Credentials_Error.after(5000, Incomplete_Credentials_Error.destroy)
+				return
+			
+			SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'] = Email.get(), AppPassword.get()
+
+			Submit_And_Test_Email.configure(fg_color = '#B0B0B0', state = 'disabled')
+
+
+			__timer__(Submit_And_Test_Email, 10, 'Submit & Get Code')
+			
+			Timestamp = None
+
+			threading.Thread(target = Email_Verification_cls.Send_Gmail, daemon = True).start()
+			Validate_Verification_Code.configure(fg_color = '#4CAF50', state = 'normal')
+		
+
+		def __Validate_Code__() -> None:
+			if not Verification_Code.get():
+				pass # no code given
+				return
+			elif __Code__ != Verification_Code.get():
+				WrongCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Invalid Verification Code') ; WrongCodeError.place(x = 160, y = 230)
+				WrongCodeError.after(5000, WrongCodeError.destroy)
+				return
+			
+			Time_Elapsed = (datetime.datetime.now() - __Timestamp__).total_seconds()
+
+			if Time_Elapsed > 600:
+					return 
+			
+			Validate_Verification_Code.configure(text = 'Verified!')
+			ContinueToChooseDatabase.configure(fg_color = '#4CAF50', state = 'normal')
+
+
+
+		def _update_details_() -> None:
+			pass
 
 		GmailVerificationFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(GmailVerificationFrame, text = 'Bank Email Setup', font = ('Arial', 28, 'bold'), height = 0).place(x = 10, y = 10)
@@ -1219,19 +1340,33 @@ class Setup:
 		CTk.CTkLabel(GmailVerificationFrame, text = '', image = CTk.CTkImage(light_image = Google_Logo, dark_image = Google_Logo, size = (45,45))).place(x = 730, y = 0)
 		
 		CTk.CTkLabel(GmailVerificationFrame, text = 'Email Address :', font = ('Roboto', 16, 'bold')).place(x = 10, y = 80)       
-		Email = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., example@gmail.com', width = 230).place(x = 140, y = 80)
+		Email = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., example@gmail.com', width = 230) ; Email.place(x = 140, y = 80)
 
 		CTk.CTkLabel(GmailVerificationFrame, text = 'App Password :', font = ('Roboto', 16, 'bold')).place(x = 10, y = 120)
-		AppPassword = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., abgd wbdw spkv jdgw', width = 230).place(x = 140, y = 120)
+		AppPassword = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., abgd kvwg lhnk thyd', width = 230) ; AppPassword.place(x = 140, y = 120)
 
-		Verification_Code = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'VERIFICATON CODE HERE', width = 182).place(x = 30, y = 200)
+		Verification_Code = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'VERIFICATON CODE HERE', width = 182) ; Verification_Code.place(x = 140, y = 180)
+		countdown = CTk.CTkLabel(GmailVerificationFrame, text = '10:00', font = ('Segoe UI', 12, 'bold')) ; countdown.place(x = 330, y = 180)
+
+		Update_Email_Data = CTk.CTkButton(GmailVerificationFrame, text = 'Update Data', width = 140, command = _update_details_, text_color_disabled = 'Black', text_color = 'Black', fg_color = '#B0B0B0', state = 'disabled', hover_color = '#45A049') ; Update_Email_Data.place(x = 15, y = 280)
+
+		Validate_Verification_Code = CTk.CTkButton(GmailVerificationFrame, text = 'Validate Code', width = 125, command = __Validate_Code__, text_color_disabled = 'Black', text_color = 'Black', fg_color = '#B0B0B0', state = 'disabled', hover_color = '#45A049') ; Validate_Verification_Code.place(x = 170, y = 280)
+
+		Submit_And_Test_Email = CTk.CTkButton(GmailVerificationFrame, text = 'Submit & Get Code', width = 140, command = _Send_Code_, text_color = 'Black', text_color_disabled = 'Black', fg_color = '#4CAF50', hover_color = '#45A049') ; Submit_And_Test_Email.place(x = 310, y = 280)
+
+
+
+
+
 
 		CTk.CTkButton(GmailVerificationFrame, text = f'{APPPASSWORDWEBSITE}', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = LINK_Icon, dark_image = LINK_Icon, size = (12, 12)), fg_color = 'transparent', hover = False, text_color = '#21968B',
-					 compound = 'left', height = 0, width = 0, command = lambda: OpenBrowserForSpecifiedUrl(APPPASSWORDWEBSITE)).place(x = -1, y = 336)
+				compound = 'left', height = 0, width = 0, command = lambda: OpenBrowserForSpecifiedUrl(APPPASSWORDWEBSITE)).place(x = -1, y = 319)
 		CTk.CTkLabel(GmailVerificationFrame, text = ' The provided email must have Two Factor Authentication enabled to generate app passwords.', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = EXCLAMATION_Icon, dark_image = EXCLAMATION_Icon, size = (12, 12)),
-					 compound = 'left', height = 0).place(x = 3, y = 358)
+			   compound = 'left', height = 0).place(x = 3, y = 341)
 		CTk.CTkLabel(GmailVerificationFrame, text = ' This email address is used to send automated emails to the users of this prototype. Email setup is mandatory.', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (12, 12)),
-					 compound = 'left', height = 0).place(x = 3, y = 375)
+			   compound = 'left', height = 0).place(x = 3, y = 358)
+		CTk.CTkLabel(GmailVerificationFrame, text = " The 'Submit & Get Code' button can also be used to resend the verification code if the user did not receive it initially.", font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (12, 12)),
+			   text_color = '#6BBF59', compound = 'left', height = 0).place(x = 3, y = 375)
 
 
 		EmailSetupGuide = CTk.CTkScrollableFrame(GmailVerificationFrame, 300, 293) ; EmailSetupGuide.place(x = 465, y = 45)
@@ -1239,7 +1374,7 @@ class Setup:
 		
 		CTk.CTkButton(GmailVerificationFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100 ,command = GoBackTo_ManagerModeSetupFrame).place(x = 580, y = 357)
 		ContinueToChooseDatabase = CTk.CTkButton(GmailVerificationFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color = '#45A049',
-					  state = 'normal', width = 100, command = GoTo_ChooseDatabaseFrame) ; ContinueToChooseDatabase.place(x = 685, y = 357)
+					  state = 'disabled', width = 100, command = GoTo_ChooseDatabaseFrame) ; ContinueToChooseDatabase.place(x = 685, y = 357)
 		
 		# Choose Data Base
 
@@ -1464,7 +1599,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 		FinalReviewFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(FinalReviewFrame, text = 'Final Review', font = ('Arial', 36, 'bold'), height = 0).place(x = 10, y = 10)
 		CTk.CTkLabel(FinalReviewFrame, text = 'Review The Information Before Proceeding.', font = ('Arial', 10), height = 0).place(x = 11, y = 45)
-		 
+ 		
 		Final_Manager_Name__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Name: {SETUPDATA["Manager Name"]}',
 													font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Name__Update__.place(x = 10, y = 100)
 		Final_Manager_Username__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Username: {SETUPDATA["Manager Username"]}',
@@ -1762,7 +1897,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 					with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager App Password'])
+						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 						SMTP.send_message(Email)
 						raise NotImplementedError
 
@@ -1921,7 +2056,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 					with smtplib.SMTP_SSL('smtp.gmail.com', 465) as SMTP:
 
-						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager App Password'])
+						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 						SMTP.send_message(Email)
 						raise NotImplementedError
 
@@ -2092,6 +2227,10 @@ Current App Version: {SETUPDATA["Current Version"]}
 			json.dump(SETUPDATA, BACKUP, indent = 4)
 
 
+if CheckForBackupDatabase().Check_Presence_Of_Database():
 
-# Setup().SetupWindows()
+	CheckForBackupDatabase().Restore_Backup_Database_Setup()
 
+else:
+
+	Setup().SetupWindows()
