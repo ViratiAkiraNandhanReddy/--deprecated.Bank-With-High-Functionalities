@@ -6,6 +6,7 @@ body {
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    backdrop-filter: blur(2px);
     color: #f5f5f5;
     margin: 0;
     padding: 0;
@@ -200,40 +201,6 @@ section {
 section.visible {
     opacity: 1;
     transform: translateY(0);
-}
-
-/* Section-specific background images with scrolling effect */
-section#about {
-    background-image: url('../assets/about-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: scroll;
-    color: #fff;
-    padding: 4rem 2rem;
-    position: relative;
-    z-index: 1;
-}
-
-section#services {
-    background-image: url('../assets/services-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: scroll;
-    color: #fff;
-    padding: 4rem 2rem;
-    position: relative;
-    z-index: 1;
-}
-
-section#contact {
-    background-image: url('../assets/contact-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: scroll;
-    color: #fff;
-    padding: 4rem 2rem;
-    position: relative;
-    z-index: 1;
 }
 
 /* Responsive Styles: Ensure compatibility with mobile and PC */

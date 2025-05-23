@@ -178,7 +178,7 @@ except:
 
 try:
 
-    with open(fr'{Path}\Bank Initialization.json','r') as load:
+    with open(fr'{Path}\DATABASE\JSON\ADMINISTRATIVE FILES\Initialization.json','r') as load:
         Initialization_Data: dict = json.load(load)
 
 except FileNotFoundError:
@@ -191,7 +191,7 @@ except json.JSONDecodeError:
 
 try:
 
-    with open(fr'{Path}\User Data Bridge.json','r') as Bridge:
+    with open(fr'{Path}\DATABASE\JSON\ADMINISTRATIVE FILES\json.database.connector.json','r') as Bridge:
         BridgeData: dict = json.load(Bridge)
 
 except FileNotFoundError:
@@ -206,7 +206,7 @@ def AccessUserData(Username: str) -> dict:
 
     try:
         
-        with open(fr'{Path}\User Data\{Username}.json','r') as json_Data:
+        with open(fr'{Path}\DATABASE\JSON\USERDATA\{Username}.json','r') as json_Data:
             User_Data = json.load(json_Data)
 
         #Returns The The Data To The Module

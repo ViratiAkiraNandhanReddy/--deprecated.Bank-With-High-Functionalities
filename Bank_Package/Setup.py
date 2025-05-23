@@ -226,12 +226,19 @@ def OpenBrowserForSpecifiedUrl(URL: str) -> None: # Works For Windows, Mac, Linu
 
 # To Check The Presence Of Previous Backup Database 
 class CheckForBackupDatabase:
+
+	isDatabase_01_Corrupted = False
+	isDatabase_02_Corrupted = False
+	isDatabase_03_Corrupted = False
+
+
 	def __init__(self) -> None:
 		pass
 
 	def Check_Presence_Of_Database(self) -> bool:
 		
-		return os.path.exists('') or os.path.exists('') or os.path.exists('')
+		# Checking Multiple Times Because User May Accidentally Delete A Particular Database Folder
+		return os.path.exists(fr'{PATH}\BACKUP - DATABASE 01') or os.path.exists(fr'{PATH}\BACKUP - DATABASE 02') or os.path.exists(fr'{PATH}\BACKUP - DATABASE 03')
 
 	def Restore_Backup_Database_Setup(self) -> None:
 
@@ -1289,50 +1296,93 @@ class Setup:
 					  state = 'disabled', width = 100, command = GoTo_GmailVerificationFrame) ; ContinueToGmailVerification.place(x = 685, y = 357)
 		
 		# Gmail Verification
-		
+
+		self.isCountdownStarted = False
 		Email_Verification_cls: Manager_Email_Verification = Manager_Email_Verification()
 		
 
 		def _Send_Code_() -> None:
+
 			if not all([Email.get(), AppPassword.get()]):
 				Incomplete_Credentials_Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Incomplete Credentials') ; Incomplete_Credentials_Error.place(x = 167, y = 230)
 				Incomplete_Credentials_Error.after(5000, Incomplete_Credentials_Error.destroy)
 				return
 			
+			countdown.place(x = 330, y = 180) ; countdown.configure(text_color = '#4CAF50')
+			if self.isCountdownStarted:
+				countdown.after_cancel(CountdownRefresher)
+				countdown.configure(text = '10:00')
+
 			SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'] = Email.get(), AppPassword.get()
 
 			Submit_And_Test_Email.configure(fg_color = '#B0B0B0', state = 'disabled')
 
 
 			__timer__(Submit_And_Test_Email, 10, 'Submit & Get Code')
-			
-			Timestamp = None
 
 			threading.Thread(target = Email_Verification_cls.Send_Gmail, daemon = True).start()
+
 			Validate_Verification_Code.configure(fg_color = '#4CAF50', state = 'normal')
-		
+
+			self.isCountdownStarted = True
+			def Create_A_Countdown(total_sec = 600) -> None:
+				global CountdownRefresher
+				Mins = total_sec // 60
+				Secs = total_sec % 60
+				countdown.configure(text = f'{Mins:02d}:{Secs:02d}')
+
+				if total_sec <= 420 and total_sec > 120:
+					countdown.configure(text_color = 'Orange')
+
+				elif total_sec <= 120:
+					countdown.configure(text_color = 'Red')
+				
+				if total_sec > 0:
+
+					# Recursion For Simplicity (asynchronously)
+					CountdownRefresher = countdown.after(1000, Create_A_Countdown, total_sec - 1)
+				
+				else:
+
+					CodeResent_info = CTk.CTkLabel(GmailVerificationFrame, text = 'Time Limit Exceeded, A New Verification Mail Was Sent!') ; CodeResent_info.place(x = 70 , y = 230)
+					CodeResent_info.after(5000, CodeResent_info.destroy)
+					_Send_Code_()
+
+			Create_A_Countdown()
 
 		def __Validate_Code__() -> None:
+			
+			Time_Elapsed = (datetime.datetime.now() - __Timestamp__).total_seconds()
+			
 			if not Verification_Code.get():
-				pass # no code given
+				IncompleteCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Verification Code Field Is Incomplete') ; IncompleteCodeError.place(x = 100, y = 200)
+				IncompleteCodeError.after(5000, IncompleteCodeError.destroy)
 				return
-			elif __Code__ != Verification_Code.get():
+			
+			elif __Code__ != Verification_Code.get() or Time_Elapsed > 600:
 				WrongCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Invalid Verification Code') ; WrongCodeError.place(x = 160, y = 230)
 				WrongCodeError.after(5000, WrongCodeError.destroy)
 				return
 			
-			Time_Elapsed = (datetime.datetime.now() - __Timestamp__).total_seconds()
-
-			if Time_Elapsed > 600:
-					return 
-			
-			Validate_Verification_Code.configure(text = 'Verified!')
+			countdown.place_forget() ; countdown.after_cancel(CountdownRefresher)
+			Email.configure(state = 'readonly') ; AppPassword.configure(state = 'readonly')
+			Validate_Verification_Code.configure(text = 'Validated!', state = 'disabled')
 			ContinueToChooseDatabase.configure(fg_color = '#4CAF50', state = 'normal')
-
-
+			Submit_And_Test_Email.configure(state = 'disabled', fg_color = '#B0B0B0')
+			Update_Email_Data.configure(state = 'normal', fg_color = '#4CAF50')
 
 		def _update_details_() -> None:
-			pass
+
+			Email.configure(state = 'normal') ; AppPassword.configure(state = 'normal')
+
+			Validate_Verification_Code.configure(text = 'Validate Code', state = 'disabled', fg_color = '#B0B0B0')
+			ContinueToChooseDatabase.configure(state = 'disabled', fg_color = '#B0B0B0')
+			Submit_And_Test_Email.configure(state = 'normal', fg_color = '#4CAF50')
+
+		def __force_stop_email_countdown__() -> None:
+			countdown.after_cancel(CountdownRefresher)
+			countdown.configure(text = 'Error!', text_color = 'Red')
+
 
 		GmailVerificationFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(GmailVerificationFrame, text = 'Bank Email Setup', font = ('Arial', 28, 'bold'), height = 0).place(x = 10, y = 10)
@@ -1345,8 +1395,8 @@ class Setup:
 		CTk.CTkLabel(GmailVerificationFrame, text = 'App Password :', font = ('Roboto', 16, 'bold')).place(x = 10, y = 120)
 		AppPassword = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'E.g., abgd kvwg lhnk thyd', width = 230) ; AppPassword.place(x = 140, y = 120)
 
-		Verification_Code = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'VERIFICATON CODE HERE', width = 182) ; Verification_Code.place(x = 140, y = 180)
-		countdown = CTk.CTkLabel(GmailVerificationFrame, text = '10:00', font = ('Segoe UI', 12, 'bold')) ; countdown.place(x = 330, y = 180)
+		Verification_Code = CTk.CTkEntry(GmailVerificationFrame, font=('Consolas', 14), placeholder_text = 'VERIFICATON CODE HERE', width = 182, justify = 'center') ; Verification_Code.place(x = 140, y = 180)
+		countdown = CTk.CTkLabel(GmailVerificationFrame, text = '10:00', font = ('Segoe UI', 12, 'bold')) # ; countdown.place(x = 330, y = 180)
 
 		Update_Email_Data = CTk.CTkButton(GmailVerificationFrame, text = 'Update Data', width = 140, command = _update_details_, text_color_disabled = 'Black', text_color = 'Black', fg_color = '#B0B0B0', state = 'disabled', hover_color = '#45A049') ; Update_Email_Data.place(x = 15, y = 280)
 
