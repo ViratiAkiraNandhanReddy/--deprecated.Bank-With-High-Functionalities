@@ -41,7 +41,7 @@ SETUPDATA = { # Initialization Data
 	"Manager Password": None,    # e.g., Viratiaki@2008
 	"Manager Security Code": None,    # e.g., %^*^$&jg758fj^($&) [18 - Chars]
 	"Manager Email": 'viratiaki29@gmail.com',    # e.g., example@example.com
-	"Manager Email App Password": 'hxwt wduo cnii pico',    # e.g., cxuo hgst csqi xwur
+	"Manager Email App Password": '',    # e.g., cxuo hgst csqi xwur
 	"isEmailVerified": False,    # True | False
 	
 	"Downloaded On": None,    # 2-May-2025 -- Fri @ 12:37:23 PM
