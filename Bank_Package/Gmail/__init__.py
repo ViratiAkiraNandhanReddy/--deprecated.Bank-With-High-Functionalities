@@ -51,7 +51,7 @@ import json
 from random import random, randint
 from abc import ABC, abstractmethod
 
-HISTORY = open(r'Bank_Package\Gmail\Gmail History.txt', 'a')
+HISTORY = open(r'Logs\EmailLogs.txt', 'a')
 
 #Reads The Important Login Credentials Which Are Used For Sending The Mail's
 with open(r'Bank_Package\Gmail\Login Credentials.json', 'r') as LOGIN:

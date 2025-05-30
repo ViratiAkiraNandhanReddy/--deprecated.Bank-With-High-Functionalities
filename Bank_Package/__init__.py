@@ -107,6 +107,7 @@ The Purpose Of This Package Is To Provide A High Functional Bank Program To The 
 ##### 2. I Learnt How To Send Gmail To The People From The Python
 ##### 3. I Wrote My First 1000 lines Program For a Module `Setup.py` \\[ 13-May-2025 @ 2:12 PM\\]
 ##### 4. I Wrote My First 2000 lines Program For a Module `Setup.py` \\[ 19-May-2025 @ 1:59 PM\\]
+##### 5. I Wrote My First 3000 lines Program For a Module `Setup.py` \\[ 30-May-2025 @ 2:08 AM\\]
 
 
 
@@ -114,20 +115,17 @@ The Purpose Of This Package Is To Provide A High Functional Bank Program To The 
 '''
 
 
-#Importing The Required Modules/Packages
 import os
-import tkinter as tk
-from time import sleep
-from . import Repair_Product
-import customtkinter as CTk
-import PIL
 import json
+import tkinter as tk
+import customtkinter as CTk
+from . import Repair_Product
 
 __Version__ = '0.0.1 - Beta'
 __Author__ = 'Virati Akira Nandhan Reddy'
 __License__ = 'MIT License ( Restructured )'
 __Python_Version__ = '3.13.0 (64-Bit)'
-__Code_Editer__ = 'Microsoft\'s Visual Studio Code'
+__Code_Editer__ = "Microsoft's Visual Studio Code"
 
 #Knowing The Path Of The Package
 Check_Location=os.getcwd()
@@ -142,39 +140,16 @@ else:
 try:
     File = Path.removesuffix(r'\Bank_Package') + r'\LICENSE' 
     with open(File) as File_check:
-        Licence_Data_Check = File_check.read()
+        Detailed_Licence = File_check.read()
 
-    #To View The License
-    Detailed_Licence = Licence_Data_Check
-
-    if 'Virati Akira Nandhan Reddy' in Licence_Data_Check and \
+    if 'Virati Akira Nandhan Reddy' in Detailed_Licence and \
         'Akki@Google#Ai&Software_Engineer@Google//$10T|2030%Successful!"Owner"2008+^AKKI~Copyright.(c)<2026>Virati-Akira*Nandhan:Reddy'\
-        in Licence_Data_Check:
+        in Detailed_Licence:
         License_Check = True
     else:
         License_Check = False
 except FileNotFoundError:
     License_Check = False
-
-#Grabing Data From Data_Of_User.txt File
-'''try:
-    with open(fr'{Path}Data_Of_User.txt') as Data:
-        Is_Product_Activated:bool = eval(Data.readline())
-
-        #User Details
-        Available_Accounts:list[str] = eval(Data.readline())
-        User_PinCodes:list[str] = eval(Data.readline())
-        User_Security_Codes:list[str] = eval(Data.readline())
-        User_Balance:list[str] = eval(Data.readline())
-
-        #Details Of Loan Lenders
-        Loan_Available_For_User:list[float|int] = eval(Data.readline())
-        Loan_Taken_Per_User:list[float|int] = eval(Data.readline())
-        Loan_Interest_Amount_Per_User:list[float|int] = eval(Data.readline())
-        Rate_Of_Interest_Per_User:list[float] = eval(Data.readline())
-except:
-    Repair_Product.User_Data_Lost()
-    print('Error While Reading User Data')'''
 
 try:
 
@@ -218,52 +193,40 @@ def AccessUserData(Username: str) -> dict:
 
     except json.JSONDecodeError:
 
-        return {'JSONDecodeError': True , 'FileNotFoundError': False}
-    
-
-'''#Key Finder
-def User_func(User=None)->int:
-    ''This Function Returns The Index Value Of The Account ; if The Account is Not Present Then Gives The Error''
-    User_index = Available_Accounts.index(User)
-    return User_index'''
-
+        return {'JSONDecodeError': True , 'FileNotFoundError': False}   
 
 #File is Locked
-def Corrupted()->None:
+def Corrupted() -> None:
     '''This Function Will Show A Tab That File Is Locked And Some Basic Information'''
 
     #Setting Up The Tab
-    War = tk.Tk()
-    War.title('Software Locked')
-    War.resizable(False,False)
-    War.geometry('400x400')
-    War.config(bg='#FFBDBD')
+    Window = CTk.CTk()
+    Window.title('Unauthorised Modification')
+    Window.resizable(False, False)
+    Window.geometry('400x400')
 
     #Information
-    tk.Label(War,text='File Locked By The Owner :(',font=('Roboto 22'),fg='red',bg='#FFBDBD').pack()
-    tk.Label(War,text=' Summary',fg='Blue',font=('Roboto 14'),bg='#FFBDBD').pack(anchor='nw',pady=7)
-    tk.Label(War,text='If You Are Seeing This Page Then You Might Had \nModified The License File Or \
-You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Roboto 12')).pack()
+    CTk.CTkLabel(Window, text = 'Unauthorised Modification Detected :(', font = ('Segoe UI', 16)).place(x = 10, y = 10)
+    CTk.CTkLabel(Window, text = ' Summary',fg='Blue',font = ('Segoe UI', 12),bg='#FFBDBD').pack(anchor='nw',pady=7)
+    CTk.CTkLabel(Window, text = 'If You Are Seeing This Page Then You Might Had \nModified The License File Or \
+You Might Modified The \nRestricted Zone in License File',bg='#FFBDBD',font=('Roboto', 12)).pack()
     
     #What Next
-    tk.Label(War,text='You Are Restricted To Use This Software!',fg='#8D00FF',bg='#FFBDBD',font=('Roboto 14')).pack(pady=18)
-    tk.Label(War,text='What You Can Do Now?',bg='#FFBDBD',font=('Roboto 14'),fg='#194A00').pack(anchor='nw',pady=15)
-    tk.Label(War,text='1.Contact The Owner Through GitHub/Mail\nOr',bg='#FFBDBD',font=('Roboto 12')).pack(anchor='nw')
-    tk.Label(War,text='2.Reinstall The Software From GitHub',bg='#FFBDBD',font=('Roboto 12')).pack(anchor='nw')
+    CTk.CTkLabel(Window, text = 'You Are Restricted To Use This Software!',fg='#8D00FF',bg='#FFBDBD',font = ('Segoe UI', 12)).pack(pady=18)
+    CTk.CTkLabel(Window, text = 'What You Can Do Now?',bg='#FFBDBD',font = ('Segoe UI', 12),fg='#194A00').pack(anchor='nw',pady=15)
+    CTk.CTkLabel(Window, text = '1.Contact The Owner Through GitHub/Mail\nOr',bg='#FFBDBD',font=('Roboto', 12)).pack(anchor='nw')
+    CTk.CTkLabel(Window, text = '2.Reinstall The Software From GitHub',bg='#FFBDBD',font=('Roboto', 12)).pack(anchor='nw')
     
     #Copyright Note
-    tk.Label(War,text='Copyright (c) 2026 Virati Akira Nandhan Reddy',fg='Black',bg='#FFBDBD',font=('Calibri 8')).place(x=178,y=380)
+    CTk.CTkLabel(Window, text = 'Copyright (c) 2026 Virati Akira Nandhan Reddy',fg='Black',bg='#FFBDBD',font=('Calibri', 8)).place(x=178,y=380)
     
     #Data Will Be Saved
-    tk.Label(War,text='The User Data Will be Saved Safely!',fg='Green',bg='#FFBDBD',font=('Roboto 17')).pack(pady=10)
+    CTk.CTkLabel(Window, text = 'The User Data Will be Saved Safely!',fg='Green',bg='#FFBDBD',font=('Roboto', 17)).pack(pady=10)
 
-    War.mainloop() 
+    Window.mainloop() 
 
 
 print('Hello From __init__')
-# print(User_PinCodes)
-# License()
-# Corrupted()
 
 #Satisfied Code Completion: 65%
 '''                                                         End Of Program                                                                    '''

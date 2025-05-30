@@ -11,14 +11,14 @@
 
 '''
 
-import os
 import json
-import socket
-import smtplib
+import winreg
 import datetime
-import threading
+import shutil, os
 from PIL import Image
 import mysql.connector
+import smtplib, socket
+import threading, atexit
 import subprocess, platform
 import customtkinter as CTk
 from itertools import repeat
@@ -28,9 +28,12 @@ from win32com.client import Dispatch
 from email.message import EmailMessage
 from random import choice, randint, random
 
-PATH = r'D:\GitHub\Bank-With-High-Functionalities' # str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
+# PATH = r'D:\GitHub\Bank-With-High-Functionalities' # str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
+PATH = str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
 
-SETUPDATA = { # Initialization Data
+DateTime = lambda: datetime.datetime.now().strftime('%d-%B-%Y -- %a @ %I:%M:%S %p')
+
+SETUPDATA = { # Initialization Data 
 
 	"isActivated": False,    # True | False
 	"License Verification": None,    # Passed | Failed
@@ -42,15 +45,25 @@ SETUPDATA = { # Initialization Data
 	"Manager Security Code": None,    # e.g., %^*^$&jg758fj^($&) [18 - Chars]
 	"Manager Email": 'viratiaki29@gmail.com',    # e.g., example@example.com
 	"Manager Email App Password": '',    # e.g., cxuo hgst csqi xwur
+	"Lastly Verified On": None,	   # 2-May-2025 -- Friday @ 12:37:23 PM
 	"isEmailVerified": False,    # True | False
 	
-	"Downloaded On": None,    # 2-May-2025 -- Fri @ 12:37:23 PM
-	"Recently Used On": None,    # 2-May-2025 -- Fri @ 12:57:23 PM
+	"Downloaded On": None,    # 2-May-2025 -- Friday @ 12:37:23 PM
+	"Deleted On": None,    # 2-May-2025 -- Friday @ 12:37:23 PM
+	"Recently Used On": None,    # 2-May-2025 -- Friday @ 12:57:23 PM
 	
 	"DATABASE TYPE": 'SQLite3',    # JSON | SQLite3 (Default) | MySQL
-	"DATABASE PATH": fr'{PATH}\Bank_Package\DATABASE\SQLite3\database_main.sqlite3',    # %LOCALAPPDATA%\Bank-With-High-Functionalities\Bank_Package\DATABASE\SQLite3\database_main.sqlite3
-	"BACKUP DATABASE PATH": fr'{PATH}\BACKUP - DATABASE\SQLite3\database_backup.sqlite3',    # %LOCALAPPDATA%\Bank-With-High-Functionalities\BACKUP - DATABASE\SQLite3\database_backup.sqlite3
+	"DATABASE PATH": fr'{PATH}\Bank_Package\DATABASE\SQLite3\database.sqlite3',    # %LOCALAPPDATA%\Bank-With-High-Functionalities\Bank_Package\DATABASE\SQLite3\database.sqlite3
+	"BACKUP DATABASE PATH": fr'{PATH}\BACKUP - DATABASE\SQLite3\database.sqlite3',    # %LOCALAPPDATA%\Bank-With-High-Functionalities\BACKUP - DATABASE\SQLite3\database.sqlite3
 	
+	"User Records": { # Specially Used For Backup Purposes
+
+		"Total Users Recorded": 0,
+		"Total Active Users": 0,
+		"Total Inactive Users": 0
+
+	},
+
 	"MySQL Credentials": {
 
 		"Host": None,    # e.g., localhost
@@ -103,39 +116,66 @@ MYSQL_ON_WINDOWS_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+
 MYSQL_ON_LINUX_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+linux'
 MYSQL_ON_MAC_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+mac'
 
-WelcomeImage = Image.open(r'Bank_Package\Visual Data\WelcomeImageAtSetup.jpg')
+try:
 
-DatabaseComparisonDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Dark.png')
-DatabaseComparisonLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
-AppPasswordLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
-AppPasswordDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
-ThankYouDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Dark.png')
-ThankYouLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Light.png')
+	BannerLightImage = Image.open(r'Bank_Package\Visual Data\Representation Images\Banner Light.jpg')
+	BannerDarkImage = Image.open(r'Bank_Package\Visual Data\Representation Images\Banner Dark.jpg')
 
-INFO_Icon = Image.open(r'Bank_Package\Visual Data\info.png')
-LINK_Icon = Image.open(r'Bank_Package\Visual Data\link.png')
-EXCLAMATION_Icon = Image.open(r'Bank_Package\Visual Data\Exclamation.png')
-DatabaseIcon = Image.open(r'Bank_Package\Visual Data\Database -- icon.png')
+	DatabaseComparisonDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Dark.png')
+	DatabaseComparisonLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
+	AppPasswordLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
+	AppPasswordDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
+	ThankYouDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Dark.png')
+	ThankYouLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Light.png')
 
-instagram_icon = Image.open(r'Bank_Package\Visual Data\icons\instagram.png')
-x_icon = Image.open(r'Bank_Package\Visual Data\icons\x.png')
-facebook_icon = Image.open(r'Bank_Package\Visual Data\icons\facebook.png')
-github_icon = Image.open(r'Bank_Package\Visual Data\icons\github.png')
-linkedin_icon = Image.open(r'Bank_Package\Visual Data\icons\linkedin.png')
-webpage_icon = Image.open(r'Bank_Package\Visual Data\icons\webpage.png')
-gmail_icon = Image.open(r'Bank_Package\Visual Data\icons\gmail.png')
+	INFO_Icon = Image.open(r'Bank_Package\Visual Data\info.png')
+	LINK_Icon = Image.open(r'Bank_Package\Visual Data\link.png')
+	EXCLAMATION_Icon = Image.open(r'Bank_Package\Visual Data\Exclamation.png')
+	Database_Config_icon = Image.open(r'Bank_Package\Visual Data\Database -- icon.png')
 
-MySQL_Logo = Image.open(r'Bank_Package\Visual Data\MySQL -- Logo.png')
-Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
+	Delete_Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Delete Database.png')
+	Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Database.png')
+	User_Config_icon = Image.open(r'Bank_Package\Visual Data\UI\User Config.png')
+	People_icon = Image.open(r'Bank_Package\Visual Data\User Badges\People.png')
+	Next_Navigation_icon = Image.open(r'Bank_Package\Visual Data\Navigation Icons\Next.png')
+	Password_icon = Image.open(r'Bank_Package\Visual Data\UI\Password.png')
+	Mail_icon = Image.open(r'Bank_Package\Visual Data\UI\Mail.png')
+	Password_Show_icon = Image.open(r'Bank_Package\Visual Data\UI\Show.png')
+	Password_Hide_icon = Image.open(r'Bank_Package\Visual Data\UI\Hide.png')
+	Security_icon = Image.open(r'Bank_Package\Visual Data\UI\Security.png')
+	Download_icon = Image.open(r'Bank_Package\Visual Data\UI\Download.png')
+	Upload_icon = Image.open(r'Bank_Package\Visual Data\UI\Upload.png')
+	Username_icon = Image.open(r'Bank_Package\Visual Data\UI\Username.png')
+	Restore_Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Restore Database.png')
+
+	instagram_icon = Image.open(r'Bank_Package\Visual Data\icons\instagram.png')
+	x_icon = Image.open(r'Bank_Package\Visual Data\icons\x.png')
+	facebook_icon = Image.open(r'Bank_Package\Visual Data\icons\facebook.png')
+	github_icon = Image.open(r'Bank_Package\Visual Data\icons\github.png')
+	linkedin_icon = Image.open(r'Bank_Package\Visual Data\icons\linkedin.png')
+	webpage_icon = Image.open(r'Bank_Package\Visual Data\icons\webpage.png')
+	gmail_icon = Image.open(r'Bank_Package\Visual Data\icons\gmail.png')
+
+	MySQL_Logo = Image.open(r'Bank_Package\Visual Data\MySQL -- Logo.png')
+	Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
+
+
+	ERROR_LOGS = open(fr'{PATH}\Logs\ErrorLogs.txt', 'a')
+	EMAIL_LOGS = open(fr'{PATH}\Logs\EmailLogs.txt', 'a')
+	SETUP_LOGS = open(fr'{PATH}\Logs\SetupLogs.txt', 'a')
+
+	with open(fr'{PATH}\TERMS OF SERVICE.txt') as FILE:
+
+		TERMSANDCONDITIONS: str = FILE.read()
+
+except Exception:
+
+	messagebox.showerror(title = 'Missing System Files', message='Some required system files are missing or could not be loaded.\n\nPlease try restarting the setup. If the problem persists, consider reinstalling the ' \
+	'application or contact support.\n\nTIP : You can uninstall this software by running the installer')
+
+	quit()
 
 MYSQLLOG = """ """ # Empty For A Reason
-
-ERRORLOGS = open(fr'{PATH}\Logs\ErrorLogs.txt', 'a')
-EMAIL_LOGS = open(fr'{PATH}\Logs\EmailLogs.txt', 'a')
-
-with open(fr'{PATH}\TERMS OF SERVICE.txt') as FILE:
-
-	TERMSANDCONDITIONS: str = FILE.read()
 
 __Code__ = None
 __Timestamp__ = datetime.datetime.now()
@@ -222,34 +262,993 @@ def OpenBrowserForSpecifiedUrl(URL: str) -> None: # Works For Windows, Mac, Linu
 
 	except Exception as Error: # Logging and fallback
 
-		ERRORLOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Open {URL} ; ErrorType: [ {Error} ]')
+		ERROR_LOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Open {URL} ; ErrorType: [ {Error} ]')
+
+# Returns the size of folder in bytes
+def Folder_Size(_Path: str) -> int:
+
+	'''
+    ### Purpose
+    Calculates the total size (in bytes) of all files within a specified folder, including all subdirectories.
+
+    ### Parameters
+    - **_Path** (`str`): The path to the folder whose size is to be calculated.
+
+    ### Returns
+    - **int**: The total size of all files in the folder and its subfolders, in bytes.
+
+    ### Functionality
+    - Recursively traverses the directory tree starting from `_Path`.
+    - Sums the sizes of all files found in the directory and its subdirectories.
+
+    ### Example Usage
+    ```python
+    size = Folder_Size(r'C:\\Users\\User\\Documents')
+    print(f"Total size: {size} bytes")
+    ```
+
+    ### Notes
+    - Symbolic links are not followed.
+    - The function does not count the size of directories themselves, only the files within.
+
+    ### Dependencies
+    - Requires the `os` module for file and directory operations.
+	'''
+
+	Total_Size = 0
+
+	for root, dir, files in os.walk(_Path):
+
+		for fps in files:
+			file_path = os.path.join(root, fps)
+			Total_Size += os.path.getsize(file_path)
+
+	return Total_Size
+
+# Releases memory by closing loaded icon (*Backup_Database_Window*)
+def rm_backupbatabasememory() -> None:
+
+	'''
+    ### Purpose
+    Releases memory and resources used by backup database icon images by closing all loaded image objects.
+
+    ### Functionality
+    - Iterates through a predefined list of icon image objects used in the backup database UI.
+    - Calls the `.close()` method on each image object to free up system resources and memory.
+
+    ### Parameters
+    - **None**: This function does not take any parameters.
+
+    ### Returns
+    - **None**
+
+    ### Example Usage
+    ```python
+    rm_backupbatabasememory()
+    ```
+
+    ### Notes
+    - This function should be called when backup database icons are no longer needed, such as after closing the backup database window or before application shutdown.
+    - Helps prevent memory leaks by ensuring all image resources are properly released.
+
+    ### Dependencies
+    - Requires that all icon image objects (e.g., `Mail_icon`, `People_icon`, etc.) are defined and loaded using PIL's `Image.open()`.
+
+    ### Security
+    - No sensitive data is handled by this function.
+
+    ### Limitations
+    - If any icon object is not defined or already closed, an exception may occur unless handled elsewhere.
+	'''
+
+	for icon in [
+
+		Mail_icon,
+		People_icon,
+		Upload_icon,
+		Security_icon,
+		Download_icon,
+		Username_icon,
+		Database_icon,
+		Password_icon,
+		User_Config_icon,
+		Password_Show_icon,
+		Password_Hide_icon,
+		Next_Navigation_icon,
+		Delete_Database_icon,
+		Restore_Database_icon,
+		
+	]: icon.close()
+
+def register_uninstall_entry_user_scope() -> None:
+
+	uninstall_key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Bank-With-High-Functionalities"
+
+	try:
+
+		key = winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, uninstall_key_path, 0, winreg.KEY_WRITE)
+
+		winreg.SetValueEx(key, "DisplayName", 0, winreg.REG_SZ, 'Bank-With-High-Functionalities')
+		winreg.SetValueEx(key, "DisplayVersion", 0, winreg.REG_SZ, SETUPDATA['Current Version'])
+		winreg.SetValueEx(key, "Publisher", 0, winreg.REG_SZ, 'Virati Akira Nandhan Reddy')
+		winreg.SetValueEx(key, "InstallLocation", 0, winreg.REG_SZ, PATH)
+		winreg.SetValueEx(key, "UninstallString", 0, winreg.REG_SZ, fr'{PATH}uninstall.exe')
+		winreg.SetValueEx(key, "DisplayIcon", 0, winreg.REG_SZ, fr'{PATH}\Bank_Package\Visual Data\ICO Files\Bank Image.ico')
+		winreg.SetValueEx(key, "ModifyPath", 0, winreg.REG_SZ, fr'{PATH}\repair.exe')
+		winreg.SetValueEx(key, "URLInfoAbout", 0, winreg.REG_SZ, webpage)
+		winreg.SetValueEx(key, "HelpLink", 0, winreg.REG_SZ, github)
+
+		winreg.SetValueEx(key, "NoModify", 0, winreg.REG_DWORD, 0)
+		winreg.SetValueEx(key, "NoRepair", 0, winreg.REG_DWORD, 0)
+
+		winreg.CloseKey(key)
+		SETUP_LOGS.write('\n[INFO] : Registered For Uninstall.')
+
+	except Exception as Error:
+		SETUP_LOGS.write(f'[ERROR]: Error While Registering For Uninstall ; ErrorType : {Error}')
 
 # To Check The Presence Of Previous Backup Database 
 class CheckForBackupDatabase:
 
-	isDatabase_01_Corrupted = False
-	isDatabase_02_Corrupted = False
-	isDatabase_03_Corrupted = False
-
+	isNewDatabaseRequested = False
 
 	def __init__(self) -> None:
-		pass
+		self.Total_DBs: list[bool] = []
+
+		self.Database_01_init_Data: dict = {}
+		self.Database_02_init_Data: dict = {}
+		self.Database_03_init_Data: dict = {}
+
+		self.isDatabase_01_Corrupted = False
+		self.isDatabase_02_Corrupted = False
+		self.isDatabase_03_Corrupted = False
+
+		self.isDatabase_01_Available = True
+		self.isDatabase_02_Available = True
+		self.isDatabase_03_Available = True
+
+		self.DB_01_SIZE = 0
+		self.DB_02_SIZE = 0
+		self.DB_03_SIZE = 0
+
+		self.showpassword_DB_01 = False
+		self.showpassword_DB_02 = False
+		self.showpassword_DB_03 = False
 
 	def Check_Presence_Of_Database(self) -> bool:
-		
+
+		self.isDatabase_01_Available = os.path.exists(fr'{PATH}\BACKUP - DATABASE 01')
+		self.isDatabase_02_Available = os.path.exists(fr'{PATH}\BACKUP - DATABASE 02')
+		self.isDatabase_03_Available = os.path.exists(fr'{PATH}\BACKUP - DATABASE 03')
+
 		# Checking Multiple Times Because User May Accidentally Delete A Particular Database Folder
-		return os.path.exists(fr'{PATH}\BACKUP - DATABASE 01') or os.path.exists(fr'{PATH}\BACKUP - DATABASE 02') or os.path.exists(fr'{PATH}\BACKUP - DATABASE 03')
+		return self.isDatabase_01_Available or self.isDatabase_02_Available or self.isDatabase_03_Available
+
+	def Check_For_Corrupted_Databases_And_Retrieve_Data(self) -> None:
+		
+		'''
+		### Purpose
+		Checks each backup database (1, 2, and 3) for corruption by attempting to load their initialization JSON files. If a database is not corrupted, retrieves and stores its initialization data and calculates its size.
+
+		### Functionality
+		- Attempts to open and load the `Initialization.json` file for each backup database.
+		- If successful, loads the initialization data into the corresponding attribute and calculates the database size in kilobytes.
+		- If loading fails (e.g., file missing or corrupted), marks the database as corrupted and logs the error.
+		- Designed to prevent application breakdown by validating the presence and integrity of essential fields in the JSON data.
+
+		### Parameters
+		- **self**: The instance of the `CheckForBackupDatabase` class.
+
+		### Returns
+		- **None**
+
+		### Example Usage
+		```python
+		backup_checker = CheckForBackupDatabase()
+		backup_checker.Check_For_Corrupted_Databases_And_Retrieve_Data()
+		```
+
+		### Notes
+		- This function should be called before displaying or restoring backup databases to ensure only valid data is used.
+		- The function updates internal state flags (`isDatabase_01_Corrupted`, etc.) for use in the UI and logic.
+		- Errors are logged to the `ERROR_LOGS` file for troubleshooting.
+
+		### Error Handling
+		- If a database's initialization file is missing or unreadable, the corresponding `isDatabase_X_Corrupted` flag is set to `True`.
+		- Errors are written to the error log file.
+
+		### Dependencies
+		- Requires the `os`, `json`, and `Folder_Size` utility for file operations and size calculation.
+		'''
+
+		try:
+
+			with open(fr'{PATH}\BACKUP - DATABASE 01\JSON\ADMINISTRATIVE FILES\Initialization.json') as DB_01:
+				self.Database_01_init_Data = json.load(DB_01)
+				self.DB_01_SIZE = (Folder_Size(fr'{PATH}\BACKUP - DATABASE 01')/(1024))
+
+				for i in [self.Database_01_init_Data["Manager Name"], ...]: # Checking the json to avoid the breakdown
+					temp = i
+					...
+
+
+
+		except Exception as Error:
+
+			self.isDatabase_01_Corrupted = True
+			ERROR_LOGS.write('\n')
+
+		try:
+
+			with open(fr'{PATH}\BACKUP - DATABASE 02\JSON\ADMINISTRATIVE FILES\Initialization.json') as DB_02:
+				self.Database_02_init_Data = json.load(DB_02)
+				self.DB_02_SIZE = (Folder_Size(fr'{PATH}\BACKUP - DATABASE 02')/(1024))
+
+				for i in [self.Database_02_init_Data["Manager Name"], ...]: # Checking the json to avoid the breakdown
+					temp = i
+					...
+
+
+		except Exception as Error:
+
+			self.isDatabase_02_Corrupted = True
+			ERROR_LOGS.write('\n')
+		try:
+
+			with open(fr'{PATH}\BACKUP - DATABASE 03\JSON\ADMINISTRATIVE FILES\Initialization.json') as DB_03:
+				self.Database_03_init_Data = json.load(DB_03)
+				self.DB_03_SIZE = (Folder_Size(fr'{PATH}\BACKUP - DATABASE 03')/(1024))
+
+				for i in [self.Database_03_init_Data["Manager Name"], ...]: # Checking the json to avoid the breakdown
+					temp = i
+					...
+
+
+		except Exception as Error:
+
+			self.isDatabase_03_Corrupted = True
+			ERROR_LOGS.write('\n')
+
+	def Restore_Database(self, Database_Number: int) -> None:
+		
+		'''
+		### Purpose
+		Restores the selected backup database (1, 2, or 3) to the application's main database directory, replacing any existing database. This is used when a user chooses to recover a previous backup.
+
+		### Parameters
+		- **Database_Number** (`int`): The backup database number to restore (1, 2, or 3).
+
+		### Functionality
+		- Removes the current main database and backup database directories.
+		- Copies the selected backup database folder to both a rollback location and the main database directory.
+		- Renames the backup folder to the standard backup directory name.
+		- Notifies the user upon successful restoration.
+		- Runs the restoration process in a separate thread for each database to keep the UI responsive.
+		- Shows a progress/info message during the restoration process.
+
+		### Example Usage
+		```python
+		self.Restore_Database(1)  # Restores Backup Database 1
+		self.Restore_Database(2)  # Restores Backup Database 2
+		self.Restore_Database(3)  # Restores Backup Database 3
+		```
+
+		### Notes
+		- This function is intended to be called from the backup database restore setup window.
+		- The restoration process is performed asynchronously using threads.
+		- A rollback copy of the backup is saved in the user's local app data for safety.
+
+		### GUI Integration
+		- Hides the backup database window during restoration.
+		- Displays message boxes to inform the user about the restoration status and warnings.
+
+		### Security
+		- Overwrites existing database files and directories. Use with caution.
+		- Always creates a rollback copy before replacing the main database.
+
+		### Limitations
+		- Only works if the backup folders exist and are accessible.
+		- User should not exit or force stop the application during restoration to avoid data corruption.
+		'''
+
+		def _restore_db_01_() -> None:
+			
+			Backup_Database_Window.withdraw()
+
+			shutil.rmtree(fr'{PATH}\Bank_Package\DATABASE')
+			shutil.rmtree(fr'{PATH}\BACKUP - DATABASE')
+
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 01', str(os.environ.get('LOCALAPPDATA')) + fr'\Bank-With-High-Functionalities - ROLLBACKS\BACKUP - DATABASE 01 - {datetime.datetime.now().strftime('%d-%b-%Y -- %A @ %I.%M.%S %p')}')
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 01', fr'{PATH}\Bank_Package\DATABASE')
+
+			os.rename(fr'{PATH}\BACKUP - DATABASE 01', fr'{PATH}\BACKUP - DATABASE')
+			
+			messagebox.showinfo(title = 'Database Restored', message = 'Database Restored Successfully!\n\nYour database has been successfully restored and everything should be running smoothly.\n\nIf you experience ' \
+			'any issues such as the app crashing or not opening, please try using the built-in Repair Tool.\nIt usually fixes most common problems automatically.\n\nAlso, don\'t panic — your data is safe!\nWe always have a ' \
+			'plan in place to protect your database. A rollback copy is safely stored in your device.\n"Thanks to the developer for this thoughtful decision — it\'s our safety net for your data.\n\nStill need help? ' \
+			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
+		
+			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
+			rm_backupbatabasememory()
+
+		def _restore_db_02_() -> None:
+			
+			Backup_Database_Window.withdraw()
+
+			shutil.rmtree(fr'{PATH}\Bank_Package\DATABASE')
+			shutil.rmtree(fr'{PATH}\BACKUP - DATABASE')
+
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 02', str(os.environ.get('LOCALAPPDATA')) + fr'\Bank-With-High-Functionalities - ROLLBACKS\BACKUP - DATABASE 02 - {datetime.datetime.now().strftime('%d-%b-%Y -- %A @ %I.%M.%S %p')}')
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 02', fr'{PATH}\Bank_Package\DATABASE')
+
+			os.rename(fr'{PATH}\BACKUP - DATABASE 02', fr'{PATH}\BACKUP - DATABASE')
+			
+			messagebox.showinfo(title = 'Database Restored', message = 'Database Restored Successfully!\n\nYour database has been successfully restored and everything should be running smoothly.\n\nIf you experience ' \
+			'any issues such as the app crashing or not opening, please try using the built-in Repair Tool.\nIt usually fixes most common problems automatically.\n\nAlso, don\'t panic — your data is safe!\nWe always have a ' \
+			'plan in place to protect your database. A rollback copy is safely stored in your device.\n"Thanks to the developer for this thoughtful decision — it\'s our safety net for your data.\n\nStill need help? ' \
+			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
+
+			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
+			rm_backupbatabasememory()
+
+		def _restore_db_03_() -> None:
+			
+			Backup_Database_Window.withdraw()
+
+			shutil.rmtree(fr'{PATH}\Bank_Package\DATABASE')
+			shutil.rmtree(fr'{PATH}\BACKUP - DATABASE')
+
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 03', str(os.environ.get('LOCALAPPDATA')) + fr'\Bank-With-High-Functionalities - ROLLBACKS\BACKUP - DATABASE 03 - {datetime.datetime.now().strftime('%d-%b-%Y -- %A @ %I.%M.%S %p')}')
+			shutil.copytree(fr'{PATH}\BACKUP - DATABASE 03', fr'{PATH}\Bank_Package\DATABASE')
+
+			os.rename(fr'{PATH}\BACKUP - DATABASE 03', fr'{PATH}\BACKUP - DATABASE')
+			
+			messagebox.showinfo(title = 'Database Restored', message = 'Database Restored Successfully!\n\nYour database has been successfully restored and everything should be running smoothly.\n\nIf you experience ' \
+			'any issues such as the app crashing or not opening, please try using the built-in Repair Tool.\nIt usually fixes most common problems automatically.\n\nAlso, don\'t panic — your data is safe!\nWe always have a ' \
+			'plan in place to protect your database. A rollback copy is safely stored in your device.\n"Thanks to the developer for this thoughtful decision — it\'s our safety net for your data.\n\nStill need help? ' \
+			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
+			
+			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
+			rm_backupbatabasememory()
+				
+		match Database_Number:
+
+			case 1:
+				threading.Thread(target = _restore_db_01_, daemon = True).start()
+			case 2:
+				threading.Thread(target = _restore_db_02_, daemon = True).start()
+			case 3:
+				threading.Thread(target = _restore_db_03_, daemon = True).start()
+			case _:
+				...
+
+		messagebox.showinfo(title = 'Database Restoration In Progress', message = 'The database restoration process is currently in progress.\nYou will be notified once the restoration is ' \
+		'successfully completed.\n\nPlease feel free to continue with other tasks during this time.\n\nIMPORTANT: Do not exit or force stop the application while the restoration is in progress. ' \
+		'Doing so may cause malfunction or data corruption within the software.\n\nThank you for your patience and cooperation')
 
 	def Restore_Backup_Database_Setup(self) -> None:
 
+		def Show_Hide_Manager_Password(DB_Number: int) -> None:
+
+			'''
+			### Purpose
+			Toggles the visibility of the manager's password field for a specific backup database in the restore backup database setup window.
+
+			### Parameters
+			- **DB_Number** (`int`): The database number (1, 2, or 3) indicating which manager password field to show or hide.
+
+			### Functionality
+			- If the password is currently hidden (masked), it will be shown in plain text and the eye icon will change to a "hide" icon.
+			- If the password is currently visible, it will be masked again and the eye icon will change to a "show" icon.
+			- Updates the corresponding state variable (`showpassword_DB_01`, `showpassword_DB_02`, or `showpassword_DB_03`) for each database.
+
+			### Example Usage
+			```python
+			Show_Hide_Manager_Password(1)  # Toggles visibility for Database 1 password
+			Show_Hide_Manager_Password(2)  # Toggles visibility for Database 2 password
+			Show_Hide_Manager_Password(3)  # Toggles visibility for Database 3 password
+			```
+
+			### Notes
+			- This function is intended for use within the Restore_Backup_Database_Setup method.
+			- The function relies on the existence of password entry widgets and eye button widgets for each database.
+
+			### GUI Integration
+			- Changes the `show` property of the password entry widget.
+			- Changes the image of the eye button to indicate the current state (show/hide).
+			'''
+
+			match DB_Number:
+
+				case 1:
+
+					if not self.showpassword_DB_01:
+						self.showpassword_DB_01 = True
+
+						Password_1.configure(show = '')
+						Password_eye_1.configure(image = CTk.CTkImage(light_image = Password_Show_icon, dark_image = Password_Show_icon, size = (22, 22)))
+
+					else:
+						self.showpassword_DB_01 = False
+
+						Password_1.configure(show = '●')
+						Password_eye_1.configure(image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)))
+				
+				case 2:
+
+					if not self.showpassword_DB_02:
+						self.showpassword_DB_02 = True
+
+						Password_2.configure(show = '')
+						Password_eye_2.configure(image = CTk.CTkImage(light_image = Password_Show_icon, dark_image = Password_Show_icon, size = (22, 22)))
+
+					else:
+						self.showpassword_DB_02 = False
+
+						Password_2.configure(show = '●')
+						Password_eye_2.configure(image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)))
+				
+				case 3:
+
+					if not self.showpassword_DB_03:
+						self.showpassword_DB_03 = True
+
+						Password_3.configure(show = '')
+						Password_eye_3.configure(image = CTk.CTkImage(light_image = Password_Show_icon, dark_image = Password_Show_icon, size = (22, 22)))
+
+					else:
+						self.showpassword_DB_03 = False
+
+						Password_3.configure(show = '●')
+						Password_eye_3.configure(image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)))
+				
+				case _:
+					pass
+
+		def Delete_Backup_Database(DB_Number: int) -> None:
+
+			''' <!-- Doc Strings -->
+			### Purpose
+			Handles the deletion of a selected backup database from the restore backup database setup window.
+
+			### Parameters
+			- **DB_Number** (`int`): The database number (1, 2, or 3) indicating which backup database to delete.
+
+			### Functionality
+			- Removes the corresponding database frames from the GUI.
+			- Updates the internal state to mark the selected database as unavailable.
+			- Deletes the backup database folder from disk using `shutil.rmtree`.
+			- Hides the preview frame for the deleted database.
+			- Calls `Orderly_Place_Backup_Databases_Selection()` to refresh the GUI layout after deletion.
+
+			### Example Usage
+			```python
+			Delete_Backup_Database(1)  # Deletes Backup Database 1
+			Delete_Backup_Database(2)  # Deletes Backup Database 2
+			Delete_Backup_Database(3)  # Deletes Backup Database 3
+			```
+
+			### Notes
+			- The function is intended for use within the `Restore_Backup_Database_Setup` method.
+			- The function ensures the GUI remains consistent after a database is deleted.
+
+			### GUI Integration
+			- Removes the relevant frames and preview widgets from the interface.
+			- Updates the display order of remaining databases.
+
+			### Security
+			- Deleting a backup database is irreversible.
+			'''
+			
+			Last_DB_Frame = len(self.Total_DBs)
+			
+			match Last_DB_Frame:
+				
+				case 1:
+					
+					DB_01_DownFrame.place_forget()
+					DB_01_UpFrame.place_forget()
+
+				case 2:
+					
+					DB_02_DownFrame.place_forget()
+					DB_02_UpFrame.place_forget()
+
+				case 3:
+					
+					DB_03_DownFrame.place_forget()
+					DB_03_UpFrame.place_forget()
+
+			match DB_Number:
+
+				case 1:
+					self.isDatabase_01_Available = False
+					threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 01',)).start()
+					DB_01_Preview.place_forget() ; DB_Guide.place(x = 5, y = 5)
+					
+				case 2:
+					self.isDatabase_02_Available = False
+					threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 02',)).start()
+					DB_02_Preview.place_forget() ; DB_Guide.place(x = 5, y = 5)
+				case 3:
+					self.isDatabase_03_Available = False
+					threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 03',)).start()
+					DB_03_Preview.place_forget() ; DB_Guide.place(x = 5, y = 5)
+				case _:
+					pass
+			
+			Orderly_Place_Backup_Databases_Selection()
+					
+		self.Check_For_Corrupted_Databases_And_Retrieve_Data()
+
+		def Orderly_Place_Backup_Databases_Selection() ->  None:
+
+			def Remove_Widgets() -> None:
+
+				''' <!-- Doc Strings -->
+				### Purpose
+				Destroys (removes) all child widgets from the backup database frames in the restore backup database setup window. This is typically used to clear the UI before updating or reordering the displayed backup databases.
+
+				### Functionality
+				- Iterates through all child widgets of the up and down frames for each backup database (DB_01, DB_02, DB_03).
+				- Calls `.destroy()` on each widget to remove it from the GUI.
+
+				### Parameters
+				- **None**: This function does not take any parameters.
+
+				### Returns
+				- **None**
+
+				### Example Usage
+				```python
+				Remove_Widgets()  # Clears all widgets from the backup database frames before refreshing the layout
+				```
+
+				### Notes
+				- Intended for internal use within the `Orderly_Place_Backup_Databases_Selection` function.
+				- Helps ensure that the frames are empty before repopulating them with updated content.
+				- Prevents widget duplication and layout issues when the backup database selection UI is refreshed.
+
+				### GUI Integration
+				- Directly affects the visual state of the backup database frames in the restore backup database setup window.
+				'''
+
+				for Widget in DB_01_UpFrame.winfo_children():
+					Widget.destroy()
+				for Widget in DB_01_DownFrame.winfo_children():
+					Widget.destroy()
+
+				for Widget in DB_02_UpFrame.winfo_children():
+					Widget.destroy()
+				for Widget in DB_02_DownFrame.winfo_children():
+					Widget.destroy()	
+
+				for Widget in DB_03_UpFrame.winfo_children():
+					Widget.destroy()
+				for Widget in DB_03_DownFrame.winfo_children():
+					Widget.destroy()
+				
+			self.Total_DBs = [x for x in [self.isDatabase_01_Available, self.isDatabase_02_Available, self.isDatabase_03_Available] if x == True]
+			
+			# Placing Frames In order
+			for Order in range(len(self.Total_DBs)):
+
+				match Order:
+
+					case 0:
+
+						DB_01_DownFrame.place(x = 8, y = 106)
+						DB_01_UpFrame.place(x = 5, y = 80)
+
+					case 1:
+
+						DB_02_DownFrame.place(x = 8, y = 192)
+						DB_02_UpFrame.place(x = 5, y = 166)
+
+					case 2:
+
+						DB_03_DownFrame.place(x = 8, y = 278)
+						DB_03_UpFrame.place(x = 5, y = 252)
+			
+			if self.isDatabase_01_Available:
+
+				if not self.isDatabase_01_Corrupted:
+					DB_01_1_UpFrame_TimeDelta = CTk.CTkLabel(DB_01_UpFrame, text = f'{self.Database_01_init_Data["Downloaded On"]}  --->  {self.Database_01_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_01_1_UpFrame_TimeDelta.place(x = 7, y = 2)
+					DB_01_1_DownFrame_Manager = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.Database_01_init_Data["Manager Name"][:32] + ('...' if len(self.Database_01_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_01_1_DownFrame_Manager.place(x = 5, y = 6)
+					DB_01_1_DownFrame_Users = CTk.CTkLabel(DB_01_DownFrame, text = f'   {self.Database_01_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_01_1_DownFrame_Users.place(x = 250, y = 6)
+					DB_01_1_DownFrame_db_Size = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.DB_01_SIZE:.2f} KB' if self.DB_01_SIZE < 1024 else f'  {(self.DB_01_SIZE/(1024)):.2f} MB' if self.DB_01_SIZE < (1024**2) else f'  {(self.DB_01_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_01_1_DownFrame_db_Size.place(x = 350, y = 6)
+					DB_01_1_DownFrame_Next_Nav = CTk.CTkButton(DB_01_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_01_Preview.place(x = 5, y = 5), DB_02_Preview.place_forget(), DB_03_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_01_1_DownFrame_Next_Nav.place(x = 442, y = 6)
+				else:
+					DB_01_1_CORRUPTED = CTk.CTkLabel(DB_01_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_01_1_CORRUPTED.place(x = 131, y = 0)
+				
+				Delete_DB_01_1 = CTk.CTkButton(DB_01_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(1)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_01_1.place(x = 462, y = 2)
+
+				pass # Place 1 in 1
+
+			if self.isDatabase_02_Available:
+
+				if not self.isDatabase_01_Available:
+
+					if not self.isDatabase_02_Corrupted:
+						DB_02_1_UpFrame_TimeDelta = CTk.CTkLabel(DB_01_UpFrame, text = f'{self.Database_02_init_Data["Downloaded On"]}  --->  {self.Database_02_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_02_1_UpFrame_TimeDelta.place(x = 7, y = 2)
+						DB_02_1_DownFrame_Manager = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.Database_02_init_Data["Manager Name"][:32] + ('...' if len(self.Database_02_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_1_DownFrame_Manager.place(x = 5, y = 6)
+						DB_02_1_DownFrame_Users = CTk.CTkLabel(DB_01_DownFrame, text = f'   {self.Database_02_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_1_DownFrame_Users.place(x = 250, y = 6)
+						DB_02_1_DownFrame_db_Size = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.DB_02_SIZE:.2f} KB' if self.DB_02_SIZE < 1024 else f'  {(self.DB_02_SIZE/(1024)):.2f} MB' if self.DB_02_SIZE < (1024**2) else f'  {(self.DB_02_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_1_DownFrame_db_Size.place(x = 350, y = 6)
+						DB_02_1_DownFrame_Next_Nav = CTk.CTkButton(DB_01_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_02_Preview.place(x = 5, y = 5), DB_01_Preview.place_forget(), DB_03_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_02_1_DownFrame_Next_Nav.place(x = 442, y = 6)
+
+						
+					else:
+						DB_02_1_CORRUPTED = CTk.CTkLabel(DB_01_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_02_1_CORRUPTED.place(x = 131, y = 0)
+					
+					Delete_DB_02_1 = CTk.CTkButton(DB_01_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(2)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_02_1.place(x = 462, y = 2)
+
+					pass # Place 2 in 1
+				else:
+
+					if not self.isDatabase_02_Corrupted:
+						DB_02_2_UpFrame_TimeDelta = CTk.CTkLabel(DB_02_UpFrame, text = f'{self.Database_02_init_Data["Downloaded On"]}  --->  {self.Database_02_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_02_2_UpFrame_TimeDelta.place(x = 7, y = 2)
+						DB_02_2_DownFrame_Manager = CTk.CTkLabel(DB_02_DownFrame, text = f'  {self.Database_02_init_Data["Manager Name"][:32] + ('...' if len(self.Database_02_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_2_DownFrame_Manager.place(x = 5, y = 6)
+						DB_02_2_DownFrame_Users = CTk.CTkLabel(DB_02_DownFrame, text = f'   {self.Database_02_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_2_DownFrame_Users.place(x = 250, y = 6)
+						DB_02_2_DownFrame_db_Size = CTk.CTkLabel(DB_02_DownFrame, text = f'  {self.DB_02_SIZE:.2f} KB' if self.DB_02_SIZE < 1024 else f'  {(self.DB_02_SIZE/(1024)):.2f} MB' if self.DB_02_SIZE < (1024**2) else f'  {(self.DB_02_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_02_2_DownFrame_db_Size.place(x = 350, y = 6)
+						DB_02_2_DownFrame_Next_Nav = CTk.CTkButton(DB_02_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_02_Preview.place(x = 5, y = 5), DB_01_Preview.place_forget(), DB_03_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_02_2_DownFrame_Next_Nav.place(x = 442, y = 6)
+
+					else:
+						DB_02_2_CORRUPTED = CTk.CTkLabel(DB_02_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_02_2_CORRUPTED.place(x = 131, y = 0)
+
+					Delete_DB_02_2 = CTk.CTkButton(DB_02_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(2)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_02_2.place(x = 462, y = 2)
+					
+					pass # Place 2 in 2
+
+			if self.isDatabase_03_Available:
+
+				if not self.isDatabase_01_Available and not self.isDatabase_02_Available:
+
+					if not self.isDatabase_03_Corrupted:
+						DB_03_1_UpFrame_TimeDelta = CTk.CTkLabel(DB_01_UpFrame, text = f'{self.Database_03_init_Data["Downloaded On"]}  --->  {self.Database_03_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_03_1_UpFrame_TimeDelta.place(x = 7, y = 2)
+						DB_03_1_DownFrame_Manager = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.Database_03_init_Data["Manager Name"][:32] + ('...' if len(self.Database_03_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_1_DownFrame_Manager.place(x = 5, y = 6)
+						DB_03_1_DownFrame_Users = CTk.CTkLabel(DB_01_DownFrame, text = f'   {self.Database_03_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_1_DownFrame_Users.place(x = 250, y = 6)
+						DB_03_1_DownFrame_db_Size = CTk.CTkLabel(DB_01_DownFrame, text = f'  {self.DB_03_SIZE:.2f} KB' if self.DB_03_SIZE < 1024 else f'  {(self.DB_03_SIZE/(1024)):.2f} MB' if self.DB_03_SIZE < (1024**2) else f'  {(self.DB_03_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_1_DownFrame_db_Size.place(x = 350, y = 6)
+						DB_03_1_DownFrame_Next_Nav = CTk.CTkButton(DB_01_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_03_Preview.place(x = 5, y = 5), DB_01_Preview.place_forget(), DB_02_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_03_1_DownFrame_Next_Nav.place(x = 442, y = 6)
+
+					else:
+						DB_03_1_CORRUPTED = CTk.CTkLabel(DB_01_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_03_1_CORRUPTED.place(x = 131, y = 0)
+					
+					Delete_DB_03_1 = CTk.CTkButton(DB_01_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(3)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_03_1.place(x = 462, y = 2)
+					
+					pass # Place 3 in 1
+
+				elif not self.isDatabase_01_Available or not self.isDatabase_02_Available:
+
+					if not self.isDatabase_03_Corrupted:
+						DB_03_2_UpFrame_TimeDelta = CTk.CTkLabel(DB_02_UpFrame, text = f'{self.Database_03_init_Data["Downloaded On"]}  --->  {self.Database_03_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_03_2_UpFrame_TimeDelta.place(x = 7, y = 2)
+						DB_03_2_DownFrame_Manager = CTk.CTkLabel(DB_02_DownFrame, text = f'  {self.Database_03_init_Data["Manager Name"][:32] + ('...' if len(self.Database_03_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_2_DownFrame_Manager.place(x = 5, y = 6)
+						DB_03_2_DownFrame_Users = CTk.CTkLabel(DB_02_DownFrame, text = f'   {self.Database_03_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_2_DownFrame_Users.place(x = 250, y = 6)
+						DB_03_2_DownFrame_db_Size = CTk.CTkLabel(DB_02_DownFrame, text = f'  {self.DB_03_SIZE:.2f} KB' if self.DB_03_SIZE < 1024 else f'  {(self.DB_03_SIZE/(1024)):.2f} MB' if self.DB_03_SIZE < (1024**2) else f'  {(self.DB_03_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_2_DownFrame_db_Size.place(x = 350, y = 6)
+						DB_03_2_DownFrame_Next_Nav = CTk.CTkButton(DB_02_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_03_Preview.place(x = 5, y = 5), DB_01_Preview.place_forget(), DB_02_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_03_2_DownFrame_Next_Nav.place(x = 442, y = 6)
+
+					else:
+
+						DB_03_2_CORRUPTED = CTk.CTkLabel(DB_02_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_03_2_CORRUPTED.place(x = 131, y = 0)
+
+					Delete_DB_03_2 = CTk.CTkButton(DB_02_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(3)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_03_2.place(x = 462, y = 2)
+					
+					pass # Place 3 in 2
+
+				else:
+
+					if not self.isDatabase_03_Corrupted:
+						DB_03_3_UpFrame_TimeDelta = CTk.CTkLabel(DB_03_UpFrame, text = f'{self.Database_03_init_Data["Downloaded On"]}  --->  {self.Database_03_init_Data["Deleted On"]}', font = ('Consolas', 10), height = 26) ; DB_03_3_UpFrame_TimeDelta.place(x = 7, y = 2)
+						DB_03_3_DownFrame_Manager = CTk.CTkLabel(DB_03_DownFrame, text = f'  {self.Database_03_init_Data["Manager Name"][:32] + ('...' if len(self.Database_03_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_3_DownFrame_Manager.place(x = 5, y = 6)
+						DB_03_3_DownFrame_Users = CTk.CTkLabel(DB_03_DownFrame, text = f'   {self.Database_03_init_Data["User Records"]["Total Active Users"]:,}', image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_3_DownFrame_Users.place(x = 250, y = 6)
+						DB_03_3_DownFrame_db_Size = CTk.CTkLabel(DB_03_DownFrame, text = f'  {self.DB_03_SIZE:.2f} KB' if self.DB_03_SIZE < 1024 else f'  {(self.DB_03_SIZE/(1024)):.2f} MB' if self.DB_03_SIZE < (1024**2) else f'  {(self.DB_03_SIZE/(1024**2)):.2f} GB', image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (25, 25)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 42) ; DB_03_3_DownFrame_db_Size.place(x = 350, y = 6)
+						DB_03_3_DownFrame_Next_Nav = CTk.CTkButton(DB_03_DownFrame, text = '', image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (25, 25)), height = 42, width = 0, hover = False, fg_color = 'transparent', command = lambda: [DB_03_Preview.place(x = 5, y = 5), DB_01_Preview.place_forget(), DB_02_Preview.place_forget(), DB_Guide.place_forget()]) ; DB_03_3_DownFrame_Next_Nav.place(x = 442, y = 6)
+
+					else:
+
+						DB_03_3_CORRUPTED = CTk.CTkLabel(DB_03_UpFrame, text = 'Corrupted', text_color = "#CE4641", width = 200, height = 30) ; DB_03_3_CORRUPTED.place(x = 131, y = 0)
+					
+					Delete_DB_03_3 = CTk.CTkButton(DB_03_UpFrame, text = '', image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (18, 18)), height = 0, width = 0, fg_color = 'transparent', hover = False, command = lambda: [Remove_Widgets(), Delete_Backup_Database(3)] if messagebox.askyesno(title = 'Confirm Deletion', message = 'WARNING: You are about to delete the Backup-Database.\nThis action CANNOT be undone.\n\nDo you want to continue?', icon = 'warning') else None) ; Delete_DB_03_3.place(x = 462, y = 2)
+					
+					pass # Place 3 in 3
+		
+		global Backup_Database_Window
 		Backup_Database_Window = CTk.CTk()
-		Backup_Database_Window.title('Backup')
-		Backup_Database_Window.geometry('800x400')
+		Backup_Database_Window.title('Backup Detected')
+		Backup_Database_Window.geometry('800x400+100+40')
 		Backup_Database_Window.resizable(False, False)
+		Backup_Database_Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Restore Backup Database.ico')
 
+		CTk.CTkLabel(Backup_Database_Window, text = 'A Backup Has Been Detected On Your Device', font = ('Segoe UI', 17, 'bold'), height = 0).place(x = 9, y = 5)
+		CTk.CTkLabel(Backup_Database_Window, text = 'Pick a backup and get back to work in seconds.', font = ('Segoe UI', 12, 'italic'), height = 0).place(x = 9, y = 26)
 
+		Backup_Database_ExpandFrame = CTk.CTkFrame(Backup_Database_Window, 295, 390) ; Backup_Database_ExpandFrame.place(x = 500, y = 5)
 
+		DB_01_DownFrame = CTk.CTkFrame(Backup_Database_Window, 484, 50, fg_color = ("#D6D6D6", "#292929")) # ; DB_01_DownFrame.place(x = 8, y = 106)
+		DB_01_UpFrame = CTk.CTkFrame(Backup_Database_Window, 490, 30, fg_color = ("#CACACA", "#353535")) # ; DB_01_UpFrame.place(x = 5, y = 80)
+
+		DB_02_DownFrame = CTk.CTkFrame(Backup_Database_Window, 484, 50, fg_color = ("#D6D6D6", "#292929")) # ; DB_02_DownFrame.place(x = 8, y = 192)
+		DB_02_UpFrame = CTk.CTkFrame(Backup_Database_Window, 490, 30, fg_color = ("#CACACA", "#353535")) # ; DB_02_UpFrame.place(x = 5, y = 166)
+
+		DB_03_DownFrame = CTk.CTkFrame(Backup_Database_Window, 484, 50, fg_color = ("#D6D6D6", "#292929")) # ; DB_03_DownFrame.place(x = 8, y = 278)
+		DB_03_UpFrame = CTk.CTkFrame(Backup_Database_Window, 490, 30, fg_color = ("#CACACA", "#353535")) # ; DB_03_UpFrame.place(x = 5, y = 252)
+
+		DB_01_Preview = CTk.CTkFrame(Backup_Database_ExpandFrame, 285, 380)
+		DB_02_Preview = CTk.CTkFrame(Backup_Database_ExpandFrame, 285, 380)
+		DB_03_Preview = CTk.CTkFrame(Backup_Database_ExpandFrame, 285, 380)
+
+		DB_Guide = CTk.CTkFrame(Backup_Database_ExpandFrame, 285, 380) ; DB_Guide.place(x = 5, y = 5)
+		CTk.CTkLabel(DB_Guide, text = 'Below Instructions Might Help You Proceed', font = ('Segoe UI', 13, 'bold'), height = 0, width = 285).place(x = 0, y = 6)
+
+		CTk.CTkLabel(DB_Guide, text = 'TIP: If you\'re experiencing issues like app crashes or the app not opening,\nyou can use the software installer. It also works as a troubleshooting\nworkbench and helps fix common problems.', font = ('Segoe UI', 9, 'italic'), justify = 'left').place(x = 5, y = 35)
+		CTk.CTkLabel(DB_Guide, text = 'It is recommended that you delete the corrupted backup\ndatabase to ensure optimal performance and prevent\npotential issues.', font = ('Segoe UI', 11, 'italic'), justify = 'left').place(x = 5, y = 75)
+		CTk.CTkLabel(DB_Guide, text = '  Represents the manager name', font = ('Segoe UI', 12, 'italic'), image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (20, 20)), compound = 'left').place(x = 5, y = 120)
+		CTk.CTkLabel(DB_Guide, text = '  Represents the total active users', font = ('Segoe UI', 12, 'italic'), image = CTk.CTkImage(light_image = People_icon, dark_image = People_icon, size = (20, 20)), compound = 'left').place(x = 5, y = 150)
+		CTk.CTkLabel(DB_Guide, text = '  Used to view the preview and take action', font = ('Segoe UI', 12, 'italic'), image = CTk.CTkImage(light_image = Next_Navigation_icon, dark_image = Next_Navigation_icon, size = (20, 20)), compound = 'left').place(x = 5, y = 180)
+		CTk.CTkLabel(DB_Guide, text = '  Represents the storage of backup database', font = ('Segoe UI', 12, 'italic'), image = CTk.CTkImage(light_image = Database_icon, dark_image = Database_icon, size = (20, 20)), compound = 'left').place(x = 5, y = 210)
+		CTk.CTkLabel(DB_Guide, text = '  Used to delete the specified backup database', font = ('Segoe UI', 12, 'italic'), image = CTk.CTkImage(light_image = Delete_Database_icon, dark_image = Delete_Database_icon, size = (20, 20)), compound = 'left').place(x = 5, y = 240)
+		CTk.CTkLabel(DB_Guide, text = '-'*142, font = ('Roboto', 8), height = 0).place(x = 0, y = 270)
+		CTk.CTkLabel(DB_Guide, text = 'NOTE : A maximum of three backup databases are allowed.\nIf you click "Proceed By Creating A New Database", the\ndatabase with the fewest users or the database which is\ncorrupted will be automatically deleted to make space. To\navoid this, you can manually delete an existing backup\ndatabase before proceeding.',
+			   font = ('Segoe UI', 11, 'italic'), width = 275, justify = 'left').place(x = 4, y = 289)
+
+		if self.isDatabase_01_Available and not self.isDatabase_01_Corrupted:
+			CTk.CTkLabel(DB_01_Preview, text = 'Restore Backup', font = ('Segoe UI', 18, 'bold'), width = 285, height = 40).place(x = 0, y = 0)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Name"][:38] + ('...' if len(self.Database_01_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 50)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Username"][:38] + ('...' if len(self.Database_01_init_Data["Manager Username"]) > 32 else '')}', image = CTk.CTkImage(light_image = Username_icon, dark_image = Username_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 90)
+			
+			CTk.CTkLabel(DB_01_Preview, text = '', image = CTk.CTkImage(light_image = Password_icon, dark_image = Password_icon, size = (30, 30)), height = 0, compound = 'left').place(x = 10, y = 130)
+			Password_1 = CTk.CTkEntry(DB_01_Preview, border_width = 0, fg_color = 'transparent', width = 200, height = 30, show = '●', font = ('Segoe UI', 11, 'bold')) ; Password_1.place(x = 41, y = 130)
+			Password_1.insert(0, self.Database_01_init_Data["Manager Password"]) ; Password_1.configure(state = 'readonly')
+			Password_eye_1 = CTk.CTkButton(DB_01_Preview, text = '', image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)), height = 0, width = 0, hover = False, fg_color = 'transparent', command = lambda: Show_Hide_Manager_Password(1)) ; Password_eye_1.place(x = 247, y = 130)
+
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Security Code"]}', image = CTk.CTkImage(light_image = Security_icon, dark_image = Security_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 170)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Email"][:38] + ('...' if len(self.Database_01_init_Data["Manager Email"]) > 32 else '')}', image = CTk.CTkImage(light_image = Mail_icon, dark_image = Mail_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 210)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Downloaded On"]}', image = CTk.CTkImage(light_image = Download_icon, dark_image = Download_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 250)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Deleted On"]}', image = CTk.CTkImage(light_image = Upload_icon, dark_image = Upload_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 290)
+			
+			Restore_Db_01 = CTk.CTkButton(DB_01_Preview, text = 'Restore Database', hover = False, border_width = 1, fg_color = 'transparent', image = CTk.CTkImage(light_image = Restore_Database_icon, dark_image = Restore_Database_icon, size = (22, 22)), height = 30, width = 265, font = ('Segoe UI', 11, 'bold'), command = lambda: self.Restore_Database(1)) ; Restore_Db_01.place(x = 10, y = 340)
+			
+			# CTk.CTkLabel(DB_01_Preview, text = f'{self.Database_01_init_Data["Downloaded On"]}  --->  {self.Database_03_init_Data["Deleted On"]}', font = ('Consolas', 9), height = 26).place(x = 7, y = 2)
+
+		if self.isDatabase_02_Available and not self.isDatabase_02_Corrupted:
+			CTk.CTkLabel(DB_02_Preview, text = 'Restore Backup', font = ('Segoe UI', 18, 'bold'), width = 285, height = 40).place(x = 0, y = 0)
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Manager Name"][:38] + ('...' if len(self.Database_02_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 50)
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Manager Username"][:38] + ('...' if len(self.Database_02_init_Data["Manager Username"]) > 32 else '')}', image = CTk.CTkImage(light_image = Username_icon, dark_image = Username_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 90)
+			
+			CTk.CTkLabel(DB_02_Preview, text = '', image = CTk.CTkImage(light_image = Password_icon, dark_image = Password_icon, size = (30, 30)), height = 0, compound = 'left').place(x = 10, y = 130)
+			Password_2 = CTk.CTkEntry(DB_02_Preview, border_width = 0, fg_color = 'transparent', width = 200, height = 30, show = '●', font = ('Segoe UI', 11, 'bold')) ; Password_2.place(x = 41, y = 130)
+			Password_2.insert(0, self.Database_02_init_Data["Manager Password"]) ; Password_2.configure(state = 'readonly')
+			Password_eye_2 = CTk.CTkButton(DB_02_Preview, text = '', image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)), height = 0, width = 0, hover = False, fg_color = 'transparent', command = lambda: Show_Hide_Manager_Password(2)) ; Password_eye_2.place(x = 247, y = 130)
+
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Manager Security Code"]}', image = CTk.CTkImage(light_image = Security_icon, dark_image = Security_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 170)
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Manager Email"][:38] + ('...' if len(self.Database_02_init_Data["Manager Email"]) > 32 else '')}', image = CTk.CTkImage(light_image = Mail_icon, dark_image = Mail_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 210)
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Downloaded On"]}', image = CTk.CTkImage(light_image = Download_icon, dark_image = Download_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 250)
+			CTk.CTkLabel(DB_02_Preview, text = f'  {self.Database_02_init_Data["Deleted On"]}', image = CTk.CTkImage(light_image = Upload_icon, dark_image = Upload_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 290)
+			
+			Restore_Db_02 = CTk.CTkButton(DB_02_Preview, text = 'Restore Database', hover = False, border_width = 1, fg_color = 'transparent', image = CTk.CTkImage(light_image = Restore_Database_icon, dark_image = Restore_Database_icon, size = (22, 22)), height = 30, width = 265, font = ('Segoe UI', 11, 'bold'), command = lambda: self.Restore_Database(2)) ; Restore_Db_02.place(x = 10, y = 340)
+
+		if self.isDatabase_03_Available and not self.isDatabase_03_Corrupted:
+			CTk.CTkLabel(DB_03_Preview, text = 'Restore Backup', font = ('Segoe UI', 18, 'bold'), width = 285, height = 40).place(x = 0, y = 0)
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Manager Name"][:38] + ('...' if len(self.Database_03_init_Data["Manager Name"]) > 32 else '')}', image = CTk.CTkImage(light_image = User_Config_icon, dark_image = User_Config_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 50)
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Manager Username"][:38] + ('...' if len(self.Database_03_init_Data["Manager Username"]) > 32 else '')}', image = CTk.CTkImage(light_image = Username_icon, dark_image = Username_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 90)
+			
+			CTk.CTkLabel(DB_03_Preview, text = '', image = CTk.CTkImage(light_image = Password_icon, dark_image = Password_icon, size = (30, 30)), height = 0, compound = 'left').place(x = 10, y = 130)
+			Password_3 = CTk.CTkEntry(DB_03_Preview, border_width = 0, fg_color = 'transparent', width = 200, height = 30, show = '●', font = ('Segoe UI', 11, 'bold')) ; Password_3.place(x = 41, y = 130)
+			Password_3.insert(0, self.Database_03_init_Data["Manager Password"]) ; Password_3.configure(state = 'readonly')
+			Password_eye_3 = CTk.CTkButton(DB_03_Preview, text = '', image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)), height = 0, width = 0, hover = False, fg_color = 'transparent', command = lambda: Show_Hide_Manager_Password(3)) ; Password_eye_3.place(x = 247, y = 130)
+
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Manager Security Code"]}', image = CTk.CTkImage(light_image = Security_icon, dark_image = Security_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 170)
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Manager Email"][:38] + ('...' if len(self.Database_03_init_Data["Manager Email"]) > 32 else '')}', image = CTk.CTkImage(light_image = Mail_icon, dark_image = Mail_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 210)
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Downloaded On"]}', image = CTk.CTkImage(light_image = Download_icon, dark_image = Download_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 250)
+			CTk.CTkLabel(DB_03_Preview, text = f'  {self.Database_03_init_Data["Deleted On"]}', image = CTk.CTkImage(light_image = Upload_icon, dark_image = Upload_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 290)
+			
+			Restore_Db_03 = CTk.CTkButton(DB_03_Preview, text = 'Restore Database', hover = False, border_width = 1, fg_color = 'transparent', image = CTk.CTkImage(light_image = Restore_Database_icon, dark_image = Restore_Database_icon, size = (22, 22)), height = 30, width = 265, font = ('Segoe UI', 11, 'bold'), command = lambda: self.Restore_Database(3)) ; Restore_Db_03.place(x = 10, y = 340)
+
+		def NewDatabaseRequested() -> None: self.isNewDatabaseRequested = True
+
+		CTk.CTkButton(Backup_Database_Window, text = 'Proceed By Creating A New Database', font = ('Segoe UI', 12, 'bold'), hover_color = '#218838', fg_color = '#28a745', text_color = 'Black', width = 350, command = lambda: [Backup_Database_Window.destroy(), NewDatabaseRequested()]).place(x = 75 , y = 367)
+
+		Orderly_Place_Backup_Databases_Selection()
 		Backup_Database_Window.mainloop()
+	
+	def Auto_Delete_Database_With_min_Users(self) -> None:
+
+		'''
+		### Purpose
+		Automatically deletes the backup database with the minimum number of active users among all available and non-corrupted backup databases.
+
+		### Functionality
+		- Checks if all three backup databases are available.
+		- Determines which backup database (1, 2, or 3) has the lowest number of active users.
+		- Deletes the backup database folder with the minimum users using a background thread.
+		- If a database is corrupted, it is deleted immediately in a separate thread.
+
+		### Parameters
+		- **self**: The instance of the `CheckForBackupDatabase` class.
+
+		### Returns
+		- **None**
+
+		### Example Usage
+		```python
+		backup_checker = CheckForBackupDatabase()
+		backup_checker.Auto_Delete_Database_With_min_Users()
+		```
+
+		### Notes
+		- This method is intended to be used for automatic cleanup when storage or backup management is required.
+		- The deletion is performed asynchronously to avoid blocking the main application thread.
+		- Only operates if all three backup databases are present.
+
+		### Error Handling
+		- If a database is corrupted, it is deleted without considering the user count.
+		- If no eligible database is found, the method exits without action.
+
+		### Dependencies
+		- Requires the `shutil` and `threading` modules for file operations and background processing.
+
+		### Security
+		- Deletion is irreversible. Use with caution to avoid accidental data loss.
+		'''
+		
+		if not all([self.isDatabase_01_Available, self.isDatabase_02_Available, self.isDatabase_03_Available]):
+			return
+		
+		min_users = float('inf')
+		db = None    # 1 | 2 | 3
+
+		if not self.isDatabase_01_Corrupted:
+			if self.Database_01_init_Data["User Records"]["Total Active Users"] < min_users:
+				min_users = self.Database_01_init_Data["User Records"]["Total Active Users"]
+				db = 1
+		else:
+			threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 01',)).start()
+
+		if not self.isDatabase_02_Corrupted:
+			if self.Database_02_init_Data["User Records"]["Total Active Users"] < min_users:
+				min_users = self.Database_02_init_Data["User Records"]["Total Active Users"]
+				db = 2
+		else:
+			threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 02',)).start()
+		
+		if not self.isDatabase_03_Corrupted:
+			if self.Database_03_init_Data["User Records"]["Total Active Users"] < min_users:
+				min_users = self.Database_03_init_Data["User Records"]["Total Active Users"]
+				db = 3
+		else:
+			threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 03',)).start()
+
+		match db:
+
+			case 1:
+				threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 01',)).start()
+			case 2:
+				threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 02',)).start()
+			case 3:
+				threading.Thread(target = shutil.rmtree, daemon = True, args = (fr'{PATH}\BACKUP - DATABASE 03',)).start()
+			case _:
+				pass
+	
+	def Rename_Folders(self) -> None:
+
+		''' <!-- Doc Strings --> 
+        ### Purpose
+        Renames backup database folders to maintain a consistent and sequential naming convention after a database restore or deletion.
+
+        ### Functionality
+        - Checks if the database restoration process has completed.
+        - Verifies the presence of backup database folders.
+        - Renames backup folders so that the available databases are always named in order (e.g., BACKUP - DATABASE 01, BACKUP - DATABASE 02, etc.).
+        - Ensures there are no gaps in the backup database numbering after deletion or restoration.
+
+        ### Parameters
+        - **self**: The instance of the `CheckForBackupDatabase` class.
+
+        ### Returns
+        - **None**
+
+        ### Example Usage
+        ```python
+        backup_checker = CheckForBackupDatabase()
+        backup_checker.Rename_Folders()
+        ```
+
+        ### Notes
+        - This method should be called after any operation that may change the number or order of backup database folders.
+        - The method only performs renaming if the restoration/deletion process has been completed).
+
+        ### Error Handling
+        - If the restoration process has not been completed, the method exits without making changes.
+        - Assumes that the folders exist and are accessible; errors during renaming are not explicitly handled.
+
+        ### Dependencies
+        - Requires the `os` module for file and directory operations.
+
+        ### Security
+        - Renaming folders may affect backup management. Use with caution to avoid confusion or data loss.
+		'''
+		
+		self.Check_Presence_Of_Database()
+
+		if not self.isDatabase_01_Available and self.isDatabase_02_Available:
+			os.rename(fr'{PATH}\BACKUP - DATABASE 02', fr'{PATH}\BACKUP - DATABASE 01')
+
+		if (self.isDatabase_01_Available and not self.isDatabase_02_Available) and self.isDatabase_03_Available:
+			os.rename(fr'{PATH}\BACKUP - DATABASE 03', fr'{PATH}\BACKUP - DATABASE 02')
+
+		if (not self.isDatabase_01_Available and not self.isDatabase_02_Available) and self.isDatabase_03_Available:
+			os.rename(fr'{PATH}\BACKUP - DATABASE 03', fr'{PATH}\BACKUP - DATABASE 01')
+    
+	def _exec_func_(self) -> None:
+
+		Shell = Dispatch('WScript.Shell')
+
+		def Shortcut_At_Start_Menu() -> None:
+
+			''' <!-- Doc Strings -->
+			### Purpose
+			Creates a shortcut for the Bank-With-High-Functionalities application in the Windows Start Menu's Programs folder.
+
+			### Functionality
+			- Uses the Windows Scripting Host (via `win32com.client.Dispatch`) to create a `.lnk` shortcut.
+			- Sets the shortcut's target to the application's `main.exe`.
+			- Configures the working directory, description, and icon for the shortcut.
+			- Saves the shortcut in the Start Menu Programs directory for the current user.
+
+			### Notes
+			- The shortcut is created at: `%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Bank-With-High-Functionalities.lnk`
+			- The function assumes the global `PATH` variable points to the application's root directory.
+			- This function is intended for Windows environments only.
+
+			### Dependencies
+			- Requires the `os` module for path operations.
+			- Requires `win32com.client.Dispatch` for shortcut creation.
+
+			### Security
+			- Ensure the `PATH` variable is trusted to avoid creating shortcuts to unintended executables.
+			'''
+
+			Start = Shell.CreateShortcut(os.path.join(os.environ["APPDATA"], "Microsoft", "Windows", "Start Menu", "Programs", "Bank-With-High-Functionalities.lnk"))
+			Start.TargetPath = fr'{PATH}\main.exe'
+			Start.WorkingDirectory = os.path.dirname(fr'{PATH}\main.exe')
+			Start.Description = 'Python Based GUI Banking System Prototype.'
+			Start.IconLocation = fr'{PATH}\Bank_Package\Visual Data\ICO Files\Bank Image.ico'
+			Start.save()
+
+		def Shortcut_At_Desktop() -> None:
+
+			''' <!-- Doc Strings -->
+			### Purpose
+			Creates a shortcut for the Bank-With-High-Functionalities application on the user's Desktop.
+
+			### Functionality
+			- Uses the Windows Scripting Host (via `win32com.client.Dispatch`) to create a `.lnk` shortcut.
+			- Sets the shortcut's target to the application's `main.exe`.
+			- Configures the working directory, description, and icon for the shortcut.
+			- Saves the shortcut on the Desktop for the current user.
+
+			### Notes
+			- The shortcut is created at: `%USERPROFILE%\\Desktop\\Bank-With-High-Functionalities.lnk`
+			- The function assumes the global `PATH` variable points to the application's root directory.
+			- This function is intended for Windows environments only.
+
+			### Dependencies
+			- Requires the `os` module for path operations.
+			- Requires `win32com.client.Dispatch` for shortcut creation.
+
+			### Security
+			- Ensure the `PATH` variable is trusted to avoid creating shortcuts to unintended executables.
+			'''
+
+			Desktop = Shell.CreateShortcut(os.path.join(os.environ["USERPROFILE"], "Desktop", "Bank-With-High-Functionalities.lnk"))
+			Desktop.TargetPath = fr'{PATH}\main.exe'
+			Desktop.WorkingDirectory = os.path.dirname(fr'{PATH}\main.exe')
+			Desktop.Description = 'Python Based GUI Banking System Prototype.'
+			Desktop.IconLocation = fr'{PATH}\Bank_Package\Visual Data\ICO Files\Bank Image.ico'
+			Desktop.save()
+	
+		register_uninstall_entry_user_scope()
+		Shortcut_At_Start_Menu()
+		Shortcut_At_Desktop()
 
 # To Check For MySQL Database Connection
 class CheckMySQLDatabaseConnection:
@@ -357,7 +1356,7 @@ class CheckMySQLDatabaseConnection:
 			# Log the error
 			Error_Information = Error
 
-			ERRORLOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]')
+			ERROR_LOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]')
 			DatabaseConnectionStatus.after(5000, lambda: DatabaseConnectionStatus.configure(text = 'Failed', text_color = 'Red'))
 			DatabaseConnectionStatus.after(5000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = f'Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]', wraplength = 340, justify = 'left').pack())
 			
@@ -822,7 +1821,7 @@ class Setup:
 		def GoBackTo_WelcomeFrame() -> None: # WelcomeFrame <- TermsAndConditionsFrame -- 2
 			TermsAndConditionsFrame.place_forget()
 			Window.geometry('800x400')
-			WelcomeFrame.place(x = 5, y = 5)
+			WelcomeFrame.place(x = 0, y = 0)
 
 		def GoTo_SoftwareActivationFrame() -> None: # TermsAndConditionsFrame -> SoftwareActivationFrame -- 3
 			TermsAndConditionsFrame.place_forget()
@@ -927,13 +1926,13 @@ class Setup:
 		Window.resizable(False,False)
 		Window.geometry('800x400+100+40')
 		Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Setup.ico')
-		Window.protocol('WM_DELETE_WINDOW', lambda: [Window.destroy(), ERRORLOGS.close(), EMAIL_LOGS.close()] if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
+		Window.protocol('WM_DELETE_WINDOW', lambda: Window.destroy() if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
 
 		# Welcome Greeting
 
-		WelcomeFrame = CTk.CTkFrame(Window,790,390) ; WelcomeFrame.place(x=5,y=5)
-		CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image=WelcomeImage,dark_image=WelcomeImage,size=(790,358))).place(x=0,y=0)
-		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!',corner_radius=4,fg_color='#4CAF50', hover_color='#45A049', text_color = 'Black', command = GoTo_GmailVerificationFrame).place(x=648,y=360)
+		WelcomeFrame = CTk.CTkFrame(Window,800,400) ; WelcomeFrame.place(x=0,y=0)
+		CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image = BannerLightImage, dark_image = BannerDarkImage, size=(800,400))).place(x=0,y=0)
+		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!', font = ('Segoe UI', 14, 'italic'), corner_radius=4, fg_color = '#4CAF50', hover_color = '#45A049', text_color = 'Black', width = 160, height = 30, command = GoTo_ChooseDatabaseFrame).place(x=630,y=360)
 		
 		# Terms & Conditions
 
@@ -953,7 +1952,7 @@ class Setup:
 		
 		TermsAndConditionsTextFrame = CTk.CTkFrame(TermsAndConditionsScrollableFrame,764,4600) ; TermsAndConditionsTextFrame.grid(row = 0, column = 0)
 		CTk.CTkLabel(TermsAndConditionsTextFrame, text="TERMS OF SERVICE", font=("Arial", 22,'bold'),width=764).place(x=0,y=10)
-		CTk.CTkLabel(TermsAndConditionsTextFrame, text='Copyright (c) 2026 Virati Akira Nandhan Reddy', font=("Roboto", 22,'bold'),width=764).place(x=0,y=50)
+		CTk.CTkLabel(TermsAndConditionsTextFrame, text='Copyright (c) 2024 - 2026 Virati Akira Nandhan Reddy', font=("Roboto", 22,'bold'),width=764).place(x=0,y=50)
 		CTk.CTkLabel(TermsAndConditionsTextFrame, text=f"{TERMSANDCONDITIONS[18:]}", font=("Roboto", 14), width=764, justify='left').place(x=5, y=90)
 
 		CTk.CTkCheckBox(TermsAndConditionsFrame,text = 'I Agree To The License Terms & Conditions', variable = ACCEPTED, offvalue = False, onvalue = True, command = isTermsAndConditionsAccepted ,border_width = 1,
@@ -968,7 +1967,7 @@ class Setup:
 
 			if ProductKeyToBeVerified.get() in PRODUCTKEYS:
 
-				ACTIVATEBUTTON.configure(fg_color = '#A9C5E8', state = 'disabled', text_color_disabled = 'Black')
+				ACTIVATEBUTTON.configure(fg_color = '#A9C5E8', state = 'disabled', text = 'ACTIVATED!')
 				ProductKeyToBeVerified.configure(state = 'disabled')
 				Status.configure(text = 'STATUS : ACTIVATED', text_color = 'lime')
 				ContinueToManagerMode.configure(fg_color = '#4CAF50', state = 'normal')
@@ -977,9 +1976,11 @@ class Setup:
 
 			else: # Error Message 
 
+				ACTIVATEBUTTON.configure(text = 'ACTIVATE')
 				ProductKeyError = CTk.CTkLabel(SoftwareActivationFrame, text = 'The Product Key That You Entered Didn\'t Work. Check The Product Key &\nTry Again, Or Enter A Different One.',
 											   text_color = 'Orange') ; ProductKeyError.place(x = 20, y = 245)
 				ProductKeyError.after(8000,ProductKeyError.destroy)
+
 
 		SoftwareActivationFrame = CTk.CTkFrame(Window,790,390)
 		CTk.CTkLabel(SoftwareActivationFrame, text = 'Enter a Product Key', font=('Arial', 28), text_color='#378F9C', justify = 'left').place(x=20,y=17)
@@ -992,7 +1993,7 @@ class Setup:
 		CTk.CTkButton(SoftwareActivationFrame, text = '> Visit The GitHub Repository By Clicking Here <', fg_color='transparent', hover = False, text_color = '#21968B',command = lambda: OpenBrowserForSpecifiedUrl(GITHUBREPOWEBSITE)).place(x = 5, y = 357)
 		
 		Status = CTk.CTkLabel(SoftwareActivationFrame, text = 'STATUS : NOT ACTIVATED', text_color = 'Red' ,font = ('Roboto', 18, 'bold')) ; Status.place(x = 505 , y = 240 )
-		ACTIVATEBUTTON = CTk.CTkButton(SoftwareActivationFrame, text = 'ACTIVATE', text_color = 'Black', corner_radius=4, width=100, fg_color = '#007ACC', hover_color = '#3399FF', command = isProductkeyMatching) ; ACTIVATEBUTTON.place(x = 156, y = 290)
+		ACTIVATEBUTTON = CTk.CTkButton(SoftwareActivationFrame, text = 'ACTIVATE', text_color = 'Black', text_color_disabled = 'Black', corner_radius=4, width=125, fg_color = '#007ACC', hover_color = '#3399FF', command = lambda: [ACTIVATEBUTTON.configure(text = 'PROCESSING...'), ACTIVATEBUTTON.after(5000, isProductkeyMatching)]) ; ACTIVATEBUTTON.place(x = 146, y = 290)
 		CTk.CTkButton(SoftwareActivationFrame, text = 'Back', corner_radius=4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100 ,command = GoBackTo_TermsAndConditionsFrame).place(x = 580, y = 357)
 		ContinueToManagerMode = CTk.CTkButton(SoftwareActivationFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color='#45A049',
 					  state = 'disabled', width = 100, command = GoTo_ManagerModeSetupFrame) ; ContinueToManagerMode.place(x = 685, y = 357)
@@ -1017,7 +2018,6 @@ class Setup:
 			- Uppercase letters
 			- Lowercase letters
 			- Numbers
-			- Special characters
 			- Updates the `ManagerSecurityCode` entry field in the GUI with the generated code.
 			- Ensures that the security code is refreshed each time the function is called.
 
@@ -1068,7 +2068,7 @@ class Setup:
 			ManagerSecurityCode.delete(0, 'end')
 			SecurityCode = ''
 			
-			for i in repeat(18): # repeat for more efficiency
+			for i in repeat(None, 18): # repeat for more efficiency
 				SecurityCode += choice(SEQUENCE)
 
 			else:
@@ -1154,19 +2154,19 @@ class Setup:
 
 			if not all([Name, Username, Password, SecurityCode]):
 
-				EntryBlankError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'Some Required Fields Above Are Empty') ; EntryBlankError.place(x = 10, y = 300)
+				EntryBlankError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'Some of the required credential fields\nabove have not been filled in.', text_color = 'Orange') ; EntryBlankError.place(x = 110, y = 250)
 				EntryBlankError.after(4000, EntryBlankError.destroy)
 				return
 			
 			elif not self.SecurityCodeRefreshed:
 				
-				SecurityCodeNotRefreshedError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'Error At Security Code') ; SecurityCodeNotRefreshedError.place(x = 10, y = 300)
+				SecurityCodeNotRefreshedError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'Kindly refresh the security code\nin order to proceed.', text_color = 'Orange') ; SecurityCodeNotRefreshedError.place(x = 120, y = 250)
 				SecurityCodeNotRefreshedError.after(4000, SecurityCodeNotRefreshedError.destroy)
 				return
 			
 			elif not all([self.isNameConditionSatisfied, self.isUsernameConditionSatisfied, self.isPasswordConditionSatisfied]):
 				
-				CriteriaNotSatisfiedError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'Criteria Not Followed') ; CriteriaNotSatisfiedError.place(x = 10, y = 300)
+				CriteriaNotSatisfiedError = CTk.CTkLabel(ManagerModeSetupFrame, text = 'One or more required criteria have not been satisfied.\nPlease review and try again.', text_color = 'Orange') ; CriteriaNotSatisfiedError.place(x = 100, y = 250)
 				CriteriaNotSatisfiedError.after(4000, CriteriaNotSatisfiedError.destroy)
 				return
 
@@ -1188,8 +2188,6 @@ class Setup:
 			UpdateManagerData.configure(state = 'normal', fg_color = '#4CAF50')
 			SubmitManagerData.configure(state = 'disabled', fg_color = '#B0B0B0')
 			ContinueToGmailVerification.configure(fg_color = '#4CAF50', state = 'normal')
-
-			print(SETUPDATA)
 				
 		def _UpdateManagerData_() -> None: # Update Manager Data
 			ContinueToGmailVerification.configure(fg_color = '#B0B0B0', state = 'disabled')
@@ -1288,7 +2286,11 @@ class Setup:
 
 		
 		ManagerModeinfoFrame = CTk.CTkFrame(ManagerModeSetupFrame, 285, 342) ; ManagerModeinfoFrame.place(x = 500, y = 5)
-		CTk.CTkLabel(ManagerModeinfoFrame, )
+		CTk.CTkLabel(ManagerModeinfoFrame, text = f'NOTE: Greetings and official emails will be sent and\nreceived using the Manager Name provided. Please\nensure it is accurate and authentic, as it will represent\nyour identity in all communications. The Username you\nchoose will be used to log in ' \
+		'to your Manager Profile\nwithin the application. Make sure it is unique.\n\n\nThe credentials provided here are used to log in to the\nManager Profile within the application. It is essential\nthat you enter accurate and legitimate information to\nensure a secure and seamless ' \
+		'experience.\n\nIn case you need to reset your password, a security code\nis required. Normally, a verification code will be sent to\nyour registered email address for this process. However,\nin situations where internet connectivity is lost and\nemail delivery is not possible, the security ' \
+		'code serves as\na fallback method to help you regain access.\n\nTo maintain the integrity of your profile and security of\nthe system, please use authentic details and a legitimate\nidentity at all times. This ensures that you receive proper\nsupport and a better, more secure experience while ' \
+		'using\nthe application.', font = ('Segoe UI', 11, 'italic'), justify = 'left').place(x = 10, y = 10)
 
 
 		CTk.CTkButton(ManagerModeSetupFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100, command = GoBackTo_SoftwareActivationFrame).place(x = 580, y = 357)
@@ -1309,7 +2311,9 @@ class Setup:
 				return
 			
 			countdown.place(x = 330, y = 180) ; countdown.configure(text_color = '#4CAF50')
+
 			if self.isCountdownStarted:
+
 				countdown.after_cancel(CountdownRefresher)
 				countdown.configure(text = '10:00')
 
@@ -1325,7 +2329,9 @@ class Setup:
 			Validate_Verification_Code.configure(fg_color = '#4CAF50', state = 'normal')
 
 			self.isCountdownStarted = True
+
 			def Create_A_Countdown(total_sec = 600) -> None:
+
 				global CountdownRefresher
 				Mins = total_sec // 60
 				Secs = total_sec % 60
@@ -1346,6 +2352,7 @@ class Setup:
 
 					CodeResent_info = CTk.CTkLabel(GmailVerificationFrame, text = 'Time Limit Exceeded, A New Verification Mail Was Sent!') ; CodeResent_info.place(x = 70 , y = 230)
 					CodeResent_info.after(5000, CodeResent_info.destroy)
+
 					_Send_Code_()
 
 			Create_A_Countdown()
@@ -1378,11 +2385,12 @@ class Setup:
 			Validate_Verification_Code.configure(text = 'Validate Code', state = 'disabled', fg_color = '#B0B0B0')
 			ContinueToChooseDatabase.configure(state = 'disabled', fg_color = '#B0B0B0')
 			Submit_And_Test_Email.configure(state = 'normal', fg_color = '#4CAF50')
+			Update_Email_Data.configure(state = 'disabled', fg_color = '#B0B0B0')
 
 		def __force_stop_email_countdown__() -> None:
+
 			countdown.after_cancel(CountdownRefresher)
 			countdown.configure(text = 'Error!', text_color = 'Red')
-
 
 		GmailVerificationFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(GmailVerificationFrame, text = 'Bank Email Setup', font = ('Arial', 28, 'bold'), height = 0).place(x = 10, y = 10)
@@ -1445,8 +2453,8 @@ class Setup:
 			# if Database is SQLite3
 			if Database.get() == 'SQLite3':
 				SETUPDATA['DATABASE TYPE'] = 'SQLite3'
-				SETUPDATA['DATABASE PATH'] = fr'{PATH}\Bank_Package\DATABASE\SQLite3\database_main.sqlite3'
-				SETUPDATA['BACKUP DATABASE PATH'] = fr'{PATH}\BACKUP - DATABASE\SQLite3\database_backup.sqlite3'
+				SETUPDATA['DATABASE PATH'] = fr'{PATH}\Bank_Package\DATABASE\SQLite3\database.sqlite3'
+				SETUPDATA['BACKUP DATABASE PATH'] = fr'{PATH}\BACKUP - DATABASE\SQLite3\database.sqlite3'
 			
 			# if Database is MySQL
 			elif Database.get() == 'MySQL':
@@ -1559,7 +2567,7 @@ class Setup:
 		
 		
 
-		DatabaseConnectionStatus = CTk.CTkLabel(GetMySQLDataFrame, text = 'Not Connected', compound = 'top', height = 0, width = 425, image = CTk.CTkImage(light_image = DatabaseIcon, dark_image = DatabaseIcon, size = (75, 75)),
+		DatabaseConnectionStatus = CTk.CTkLabel(GetMySQLDataFrame, text = 'Not Connected', compound = 'top', height = 0, width = 425, image = CTk.CTkImage(light_image = Database_Config_icon, dark_image = Database_Config_icon, size = (75, 75)),
 					 text_color = 'Orange') ; DatabaseConnectionStatus.place(x =  0, y = 320)
 		
 		MySQLGuideFrame = CTk.CTkScrollableFrame(GetMySQLDataFrame, 340, 265) ; MySQLGuideFrame.place(x = 425, y = 60)
@@ -2113,6 +3121,8 @@ Current App Version: {SETUPDATA["Current Version"]}
 				except Exception as e:
 					# log it Hello See Here
 					pass
+			
+			register_uninstall_entry_user_scope()
 
 			if CREATE_SHORTCUT:
 				
@@ -2128,7 +3138,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 			Greet_Developer()
 
 			Greet_Manager()
-			# Shortcut_At_Start_Menu()
+			Shortcut_At_Start_Menu()
 		
 		CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar()
 		CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True)
@@ -2235,8 +3245,8 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 			"Downloaded On": "15-May-2025 -- Thursday @ 10:30:00 AM",
 			"DATABASE TYPE": "SQLite3",
-			"DATABASE PATH": "path/to/database_main.sqlite3",
-			"BACKUP DATABASE PATH": "path/to/database_backup.sqlite3",
+			"DATABASE PATH": "path/to/database.sqlite3",
+			"BACKUP DATABASE PATH": "path/to/database.sqlite3",
 			
 			"MySQL Credentials": {
 
@@ -2276,11 +3286,39 @@ Current App Version: {SETUPDATA["Current Version"]}
 			# Dump into Initialization.json (Backup)
 			json.dump(SETUPDATA, BACKUP, indent = 4)
 
+Backup_Database_cls = CheckForBackupDatabase()
+isDatabasesAvailable = Backup_Database_cls.Check_Presence_Of_Database()
 
-if CheckForBackupDatabase().Check_Presence_Of_Database():
+if not isDatabasesAvailable:
 
-	CheckForBackupDatabase().Restore_Backup_Database_Setup()
+	Backup_Database_cls.Restore_Backup_Database_Setup()
+
+	if Backup_Database_cls.isNewDatabaseRequested:
+		Backup_Database_cls.Auto_Delete_Database_With_min_Users()
+		rm_backupbatabasememory()
+		Setup().SetupWindows()
+
+	else:
+
+		# Backup_Database_cls._exec_func_()
+		...
+
+	Backup_Database_cls.Rename_Folders()
 
 else:
 
+	rm_backupbatabasememory()
 	Setup().SetupWindows()
+
+
+def __atexit__() -> None:
+
+	ERROR_LOGS.close()
+	EMAIL_LOGS.close()
+	SETUP_LOGS.close()
+
+	print('things going well')
+
+atexit.register(__atexit__)
+
+print('program came here')

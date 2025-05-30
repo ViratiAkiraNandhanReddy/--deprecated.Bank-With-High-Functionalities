@@ -8,14 +8,15 @@ Doc
 '''
 
 #Importing Required Modules/Packages
-import customtkinter as CTk  #Customized Tkinter Module
-import PIL.Image  #Pillow Module To Open The Image
-from random import randint  #Random Module To Generate Random Wallpaper
-from datetime import datetime  #DateTime Module To Show The Date
-from .Create_Account import Create_Account  #Create Account Module
-from .Dashboard import User_Requirements  #User Requirements Module
-from . import Detailed_Licence, BridgeData, AccessUserData, Gmail
+from PIL import Image
 from time import sleep
+from random import randint
+import customtkinter as CTk
+from datetime import datetime
+from tkinter import messagebox
+from .Dashboard import User_Requirements
+from .Create_Account import Create_Account
+from . import Detailed_Licence, BridgeData, AccessUserData, Gmail
 
 
 '''                                                         Time And Background                                                               '''
@@ -27,17 +28,17 @@ Date_Day = Raw_Time.strftime('%d/%b/%Y - %A') #Shows As 02/Feb/2025 - Sunday
 
 #Background Image At Login Screen
 Random_Background = randint(0,30)
-Login_Background = PIL.Image.open(fr'Bank_Package\Visual Data\Login Wallpapers\{Random_Background}.jpg') #Random Wallpaper
+Login_Background = Image.open(fr'Bank_Package\Visual Data\Login Wallpapers\{Random_Background}.jpg') #Random Wallpaper
 
 
 '''                                                             Required Images                                                               '''
 
 
 #Required Icon For The Details
-User_Icon = PIL.Image.open(r'Bank_Package\Visual Data\User Icon-Multi.png')
-Password_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Locked.png')
-Security_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Secured.png')
-Developer_Icon = PIL.Image.open(r'Bank_Package\Visual Data\Developer.png')
+User_Icon = Image.open(r'Bank_Package\Visual Data\User Icon-Multi.png')
+Password_Icon = Image.open(r'Bank_Package\Visual Data\Locked.png')
+Security_Icon = Image.open(r'Bank_Package\Visual Data\Secured.png')
+Developer_Icon = Image.open(r'Bank_Package\Visual Data\Developer.png')
 
 #Deny The User To Close The Window
 def Disable_Exit():
