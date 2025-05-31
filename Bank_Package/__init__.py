@@ -105,9 +105,11 @@ The Purpose Of This Package Is To Provide A High Functional Bank Program To The 
 ## <ins>*Achievements*</ins>
 ##### 1. My First Package Based Biggest Project
 ##### 2. I Learnt How To Send Gmail To The People From The Python
-##### 3. I Wrote My First 1000 lines Program For a Module `Setup.py` \\[ 13-May-2025 @ 2:12 PM\\]
-##### 4. I Wrote My First 2000 lines Program For a Module `Setup.py` \\[ 19-May-2025 @ 1:59 PM\\]
-##### 5. I Wrote My First 3000 lines Program For a Module `Setup.py` \\[ 30-May-2025 @ 2:08 AM\\]
+##### 3. I Wrote My First 1000 lines Program For a Module `setup.py` \\[ 13-May-2025 @ 2:12 PM\\]
+##### 4. I Wrote My First 2000 lines Program For a Module `setup.py` \\[ 19-May-2025 @ 1:59 PM\\]
+##### 5. I Wrote My First 3000 lines Program For a Module `setup.py` \\[ 30-May-2025 @ 2:08 AM\\]
+##### 6. I Wrote My First 4000 lines Program For a Module `setup.py` \\[ 31-May-2025 @ 8:08 PM\\]
+
 
 
 
@@ -119,7 +121,8 @@ import os
 import json
 import tkinter as tk
 import customtkinter as CTk
-from . import Repair_Product
+import setup
+
 
 __Version__ = '0.0.1 - Beta'
 __Author__ = 'Virati Akira Nandhan Reddy'

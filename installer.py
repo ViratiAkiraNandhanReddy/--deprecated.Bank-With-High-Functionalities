@@ -35,7 +35,7 @@ try:
         if json.load(CONDITION)["Manager Name"] == None:
             
             # Redirects To Setup
-            subprocess.run(fr'{_LocalAppDataDirectory_}\Bank_Package\Setup.exe')
+            subprocess.run(fr'{_LocalAppDataDirectory_}\Bank_Package\setup.exe')
         
         else:
             

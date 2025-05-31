@@ -1,23 +1,392 @@
 ''' <!-- Doc Strings -->
 
+# Copyright (c) 2024 - 2026 Virati Akira Nandhan Reddy
 
+---
+## Overview
 
+This module is the **main setup and backup management script** for the Bank-With-High-Functionalities application. It is designed to be packaged as a standalone executable (EXE) using PyInstaller and provides a comprehensive, interactive, and robust setup experience for end users and administrators. The module is responsible for:
 
+- **First-time installation and configuration**
+- **Backup database detection, preview, restoration, and deletion**
+- **Manager credential and security setup**
+- **Product key validation and activation**
+- **Email verification with secure code delivery**
+- **Database selection and MySQL connection testing**
+- **Shortcut and uninstall entry creation**
+- **Automated developer and manager notifications**
+- **Persistent configuration storage**
+- **Resource and log management**
 
+---
 
+## Global Variables and Constants
 
+- **PATH**: The root directory for all application data, typically under `%LOCALAPPDATA%`.
+- **SETUPDATA**: A dictionary holding all persistent configuration and setup data, including activation status, manager credentials, database paths, and MySQL credentials.
+- **PRODUCTKEYS**: List of valid product keys for software activation.
+- **SEQUENCE**: Character set for generating secure codes.
+- **Various URLs**: For documentation, support, and developer contact.
+- **Preloaded Images/Icons**: Used for GUI elements and branding.
+- **Log Files**: `ERROR_LOGS`, `EMAIL_LOGS`, `SETUP_LOGS` for error, email, and setup event logging.
+- **Other**: Global variables for GUI state, countdowns, and verification codes.
 
+---
 
+## Utility Functions
 
+### `__timer__(Widget, Count, text_after)`
+Implements a countdown timer for a CustomTkinter widget, commonly used for "Resend Code" features.
+
+### `OpenBrowserForSpecifiedUrl(URL)`
+Opens a specified URL in the default web browser, supporting Windows, Mac, and Linux.
+
+### `Folder_Size(_Path)`
+Recursively calculates the total size (in bytes) of all files within a folder.
+
+### `rm_backupbatabasememory()`
+Closes all loaded icon images to release memory, especially after backup database operations.
+
+### `register_uninstall_entry_user_scope()`
+Registers an uninstall entry for the application in the Windows registry under the current user scope, enabling standard uninstallation via Windows settings.
+
+---
+
+## Backup Management (`CheckForBackupDatabase`)
+
+### Purpose
+
+Handles the detection, validation, restoration, deletion, and organization of up to three backup database folders. Provides a CustomTkinter-based GUI for users to interact with backups, ensuring data integrity and smooth recovery.
+
+### Key Features
+
+- **Detection**: Identifies up to three backup database folders.
+- **Corruption Check**: Validates each backup by loading its initialization JSON file.
+- **Data Retrieval**: Extracts initialization data and calculates backup size.
+- **Graphical Management UI**: Allows preview, restore, and delete actions.
+- **Restoration**: Replaces the current database with a selected backup, saving a rollback copy.
+- **Deletion**: Removes corrupted or least-used backups.
+- **Automatic Cleanup**: Deletes the backup with the fewest users or any corrupted backup when creating a new database.
+- **Folder Renaming**: Maintains sequential naming after changes.
+- **Integration**: Called at startup to manage backup state before setup or normal operation.
+
+### Main Methods
+
+- `Check_Presence_Of_Database()`: Checks for backup folders.
+- `Check_For_Corrupted_Databases_And_Retrieve_Data()`: Loads and validates backup data.
+- `Restore_Database(Database_Number)`: Restores a selected backup.
+- `Restore_Backup_Database_Setup()`: Opens the backup management GUI.
+- `Auto_Delete_Database_With_min_Users()`: Deletes the least-used or corrupted backup.
+- `Rename_Folders()`: Renames backup folders for sequential order.
+- `_exec_func_()`: Handles post-restore/setup actions (shortcuts, uninstall entry).
+
+### Example Usage
+
+```python
+backup_checker = CheckForBackupDatabase()
+if backup_checker.Check_Presence_Of_Database():
+    backup_checker.Restore_Backup_Database_Setup()
+```
+
+### Security
+
+- Deletion and restoration are irreversible and require user confirmation.
+- Passwords are masked by default in the UI.
+- Sensitive data is not exposed in logs or UI unless explicitly requested.
+
+---
+
+## MySQL Connection Testing (`CheckMySQLDatabaseConnection`)
+
+### Purpose
+
+Utility class to verify MySQL server connectivity using credentials provided in `SETUPDATA`. Handles connection attempts and logs errors.
+
+### Main Method
+
+- `DoesServerExists()`: Attempts to connect to the MySQL server and create the required database if it does not exist.
+
+### Example Usage
+
+```python
+db_checker = CheckMySQLDatabaseConnection()
+if db_checker.DoesServerExists():
+    print("MySQL server is accessible.")
+else:
+    print("Failed to connect to the MySQL server.")
+```
+
+### Limitations
+
+- Does not handle advanced MySQL configurations (SSL, plugins).
+- Only returns a boolean for success/failure.
+
+---
+
+## Email Verification (`Manager_Email_Verification`)
+
+### Purpose
+
+Handles the manager's email verification process during setup. Generates a unique verification code, sends it via email, and provides resend functionality.
+
+### Key Features
+
+- **Verification Code Generation**: Secure, random code with expiration.
+- **HTML Email Template**: Responsive and branded.
+- **SMTP Sending**: Uses app password for secure authentication.
+- **Resend Support**: Allows resending the code if needed.
+- **GUI Integration**: Displays status and errors in the setup wizard.
+
+### Main Methods
+
+- `__init__(ReceiverMailAddress)`: Initializes with the manager's email.
+- `Send_Gmail()`: Sends the verification email.
+- `Resend_Gmail()`: Resends the verification email.
+
+### Example Usage
+
+```python
+email_verification = Manager_Email_Verification(ReceiverMailAddress="manager@example.com")
+result = email_verification.Send_Gmail()
+print(result)
+email_verification.Resend_Gmail()
+```
+
+### Security
+
+- App password is used only for SMTP authentication and not stored in plaintext.
+- Verification code expires after 10 minutes.
+
+---
+
+## Setup Wizard (`Setup`)
+
+### Purpose
+
+Implements the main setup wizard as a multi-step GUI using CustomTkinter. Guides the user through all required steps for installation and configuration.
+
+### Key Features
+
+- **Welcome Screen**: Greeting and start button.
+- **Terms and Conditions**: License agreement acceptance.
+- **Software Activation**: Product key validation.
+- **Manager Mode Setup**: Collects and validates manager credentials.
+- **Email Verification**: Sends and validates verification code.
+- **Database Selection**: SQLite3, MySQL, or JSON.
+- **MySQL Setup**: Collects and tests MySQL credentials.
+- **Final Review**: Displays all collected data for confirmation.
+- **Finish Setup**: Handles post-setup actions (shortcuts, notifications).
+
+### Main Methods
+
+- `__init__()`: Initializes the setup class.
+- `__str__()`: Returns contribution and repository info.
+- `SetupWindows()`: Manages the entire setup process and GUI navigation.
+- `Inject_Initialization_Data_Into_JSON_Files()`: Saves setup data to JSON files.
+
+### Example Usage
+
+```python
+setup = Setup()
+setup.SetupWindows()
+```
+
+### Security
+
+- Sensitive data is stored only in local JSON files.
+- All registry and file operations are performed under the current user scope.
+- Email credentials are not exposed in logs or messages.
+
+---
+
+## Cleanup Handler (`__atexit__`)
+
+### Purpose
+
+Ensures all open log files are properly closed when the program exits, preventing data loss or file corruption.
+
+### Example Usage
+
+```python
+import atexit
+atexit.register(__atexit__)
+```
+
+---
+
+## Main Entry Point
+
+The module is intended to be run as the main entry point of the application (typically as a PyInstaller EXE). On launch, it will:
+
+1. Check for existing backup databases and prompt the user to restore or delete them if found.
+2. If no backups are present or after restoration, launch the setup wizard for new installations.
+3. Guide the user through all required steps, saving configuration and creating necessary system entries.
+4. Handle all errors gracefully and log them for troubleshooting.
+
+### Example
+
+```python
+Backup_Database_cls = CheckForBackupDatabase()
+isDatabasesAvailable = Backup_Database_cls.Check_Presence_Of_Database()
+
+if isDatabasesAvailable:
+    Backup_Database_cls.Restore_Backup_Database_Setup()
+    if Backup_Database_cls.isNewDatabaseRequested:
+        Backup_Database_cls.Auto_Delete_Database_With_min_Users()
+        rm_backupbatabasememory()
+        Setup().SetupWindows()
+    else:
+        Backup_Database_cls._exec_func_()
+    Backup_Database_cls.Rename_Folders()
+else:
+    rm_backupbatabasememory()
+    Setup().SetupWindows()
+```
+
+---
+
+## Security Considerations
+
+- All sensitive data (passwords, security codes) is stored only locally and never transmitted except for email verification.
+- Registry and file operations are performed under the current user scope.
+- Deletion and restoration of backups are irreversible and require user confirmation.
+- Email credentials are used only for SMTP authentication and are not exposed in logs or messages.
+
+---
+
+## Error Handling
+
+- All critical operations (file, network, registry) are wrapped in try/except blocks.
+- Errors are logged to dedicated log files (`ErrorLogs.txt`, `EmailLogs.txt`, `SetupLogs.txt`).
+- The application provides user-friendly error messages and guidance in the GUI.
+
+---
+
+## Platform Support
+
+- **Windows**: Full support, including registry and shortcut creation.
+- **Other OS**: Some features (shortcuts, registry) may not be available or will be skipped.
+
+---
+
+## Dependencies
+
+- `customtkinter`, `PIL`, `mysql.connector`, `smtplib`, `win32com.client`, `tkinter`, `atexit`, `subprocess`, `platform`, `threading`, `json`, `os`, `shutil`, `datetime`, `random`, `urllib.request`, `winreg`.
+
+---
+
+## Limitations
+
+- Only three backup databases are supported at a time.
+- Designed primarily for Windows environments.
+- Assumes all required resource files (images, icons, templates) are present in the packaged EXE.
+- Some features (e.g., registry, shortcut creation) are Windows-specific.
+
+---
+
+## Authors & Support
+
+- **Developer:** Virati Akira Nandhan Reddy  
+- **GitHub:** [ViratiAkiraNandhanReddy](https://github.com/ViratiAkiraNandhanReddy)  
+- **Website:** [Project Homepage](https://viratiakiranandhanreddy.github.io/Bank-With-High-Functionalities)
+- **Gmail:** Viratiaki29@gmail.com 
+- **LinkedIn:** [viratiakiranandhanreddy](https://linkedin.com/in/viratiakiranandhanreddy/)
+- **X(Twitter):** [Viratiaki53](https://x.com/Viratiaki53)
+- **Instagram:** [Viratiaki53](https://instagram.com/viratiaki53/)
+- **Support:** Please use the GitHub repository for issues and contributions.
+
+---
+
+## License
+
+- See `LICENSE` included with the application for licensing details.
+
+---
+
+## Detailed Flow
+
+### 1. **Startup and Backup Detection**
+   - On launch, the script checks for up to three backup database folders.
+   - If backups are found, a GUI is presented for preview, restoration, or deletion.
+   - Corrupted backups are detected and flagged; only valid backups can be restored.
+
+### 2. **Backup Restoration or New Setup**
+   - If a backup is restored, the main database is replaced and a rollback copy is saved.
+   - If the user opts for a new setup, the least-used or corrupted backup is deleted if all slots are full.
+
+### 3. **Setup Wizard**
+   - The user is guided through a multi-step GUI:
+     - Welcome
+     - Terms and Conditions
+     - Product Key Activation
+     - Manager Credential Setup
+     - Email Verification (with code delivery and countdown)
+     - Database Selection (SQLite3, MySQL, JSON)
+     - MySQL Credential Collection and Connection Test
+     - Final Review and Confirmation
+     - Finish Setup (shortcuts, notifications, uninstall entry)
+
+### 4. **Post-Setup Actions**
+   - Shortcuts are created on the Desktop and Start Menu.
+   - An uninstall entry is registered in the Windows registry.
+   - Automated emails are sent to the developer and manager.
+   - All setup data is saved to JSON files for persistence.
+
+### 5. **Cleanup**
+   - On exit, all log files are closed to prevent data loss.
+
+---
+
+## Example Data Structures
+
+### `SETUPDATA` Example
+
+```python
+{
+    "isActivated": True,
+    "License Verification": "Passed",
+    "Current Version": "0.0.1 - Alpha",
+    "Manager Name": "John Doe",
+    "Manager Username": "johndoe123",
+    "Manager Password": "********",
+    "Manager Security Code": "%^*^$&jg758fj^($&)",
+    "Manager Email": "johndoe@example.com",
+    "Manager Email App Password": "********",
+    "isEmailVerified": True,
+    "Downloaded On": "15-May-2025 -- Thursday @ 10:30:00 AM",
+    "DATABASE TYPE": "SQLite3",
+    "DATABASE PATH": "path/to/database.sqlite3",
+    "BACKUP DATABASE PATH": "path/to/database.sqlite3",
+    "MySQL Credentials": {
+        "Host": "localhost",
+        "Port": 3306,
+        "Username": "root",
+        "Password": "********",
+        "Database": "Bank-With-High-Functionalities",
+        "Charset": "utf8mb4"
+    }
+}
+```
+
+---
+
+## Advanced Notes
+
+- **Threading** is used for long-running file operations (e.g., backup restoration, deletion) to keep the GUI responsive.
+- **CustomTkinter** is used for all GUI elements, providing a modern look and feel.
+- **Resource Management**: All loaded images are closed after use to prevent memory leaks.
+- **Rollback Safety**: Every backup restoration saves a rollback copy in a dedicated folder.
+- **Extensibility**: The setup process is modular, allowing for future enhancements (e.g., more database types, advanced backup management).
+- **Logging**: All significant actions and errors are logged for troubleshooting and audit purposes.
 '''
 
 import json
 import winreg
 import datetime
-import shutil, os
 from PIL import Image
 import mysql.connector
 import smtplib, socket
+import shutil, os, sys
 import threading, atexit
 import subprocess, platform
 import customtkinter as CTk
@@ -28,23 +397,26 @@ from win32com.client import Dispatch
 from email.message import EmailMessage
 from random import choice, randint, random
 
-# PATH = r'D:\GitHub\Bank-With-High-Functionalities' # str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
-PATH = str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
+'''
+pyinstaller --noconfirm --onefile --windowed --icon="Bank_Package\\Visual Data\\ICO Files\\setup_icon.ico" --version-file="Bank_Package\\Build Metadata\\setup.exe - v0.0.1.txt" "Bank_Package\\setup.py"
+'''
 
-DateTime = lambda: datetime.datetime.now().strftime('%d-%B-%Y -- %a @ %I:%M:%S %p')
+# < TESTING > PATH = r'D:\GitHub\Bank-With-High-Functionalities'
+
+PATH = str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
 
 SETUPDATA = { # Initialization Data 
 
 	"isActivated": False,    # True | False
 	"License Verification": None,    # Passed | Failed
-	"Current Version": '0.0.1 - Alpha',    # 0.0.1 - Alpha | 0.0.2 - Beta | 0.1.0 - Stable
+	"Current Version": 'vNext',    # 0.0.1 - Alpha | 0.0.2 - Beta | 0.1.0 - Stable
 	
 	"Manager Name": None,    # e.g., Virati Akira Nandhan Reddy
 	"Manager Username": None,    # e.g., Viratiaki53
 	"Manager Password": None,    # e.g., Viratiaki@2008
 	"Manager Security Code": None,    # e.g., %^*^$&jg758fj^($&) [18 - Chars]
-	"Manager Email": 'viratiaki29@gmail.com',    # e.g., example@example.com
-	"Manager Email App Password": '',    # e.g., cxuo hgst csqi xwur
+	"Manager Email": None,    # e.g., example@example.com
+	"Manager Email App Password": None,    # e.g., cxuo hgst csqi xwur
 	"Lastly Verified On": None,	   # 2-May-2025 -- Friday @ 12:37:23 PM
 	"isEmailVerified": False,    # True | False
 	
@@ -102,7 +474,8 @@ SEQUENCE = [ # For Security Code Generation
 
 APPPASSWORDWEBSITE = 'https://myaccount.google.com/apppasswords'
 GITHUBREPOWEBSITE = 'https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities'
-DATABASEINFOWEBSITE = ''
+DATABASEINFOWEBSITE = 'https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/docs/Detailed%20Overviews/DatabaseComparison.md'
+
 x = 'https://x.com/Viratiaki53'
 mail = 'mailto:viratiaki53@gmail.com'
 github = 'https://github.com/ViratiAkiraNandhanReddy'
@@ -112,52 +485,65 @@ linkedin = 'https://www.linkedin.com/in/viratiakiranandhanreddy'
 instagram = 'https://www.instagram.com/viratiaki53'
 
 
-MYSQL_ON_WINDOWS_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+windows'
-MYSQL_ON_LINUX_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+linux'
-MYSQL_ON_MAC_SEARCH = 'https://www.google.com/search?q=how+to+install+mysql+on+mac'
+MYSQL_ON_DOWNLOAD_SETUP = 'https://www.google.com/search?q=how+to+install+and+setup+mysql'
+MYSQL_SERVER_DETAILS = 'https://www.google.com/search?q=where+to+know+mysql+server+connection+credentials+with+workbench+and+without+workbench'
+HOW_TO_SETUP_APPPASSWORD = 'https://www.google.com/search?q=how+to+setup+app+password+for+my+google+account'
+APPPASSWORD_ERROR = 'https://www.google.com/search?q=Why+app+passwords+is+disabled+on+my+google+account'
 
 try:
 
-	BannerLightImage = Image.open(r'Bank_Package\Visual Data\Representation Images\Banner Light.jpg')
-	BannerDarkImage = Image.open(r'Bank_Package\Visual Data\Representation Images\Banner Dark.jpg')
+	'''
+	# Functionality
+	- Loads images for banners, database icons, UI icons, and social media icons.
+	- Opens log files for error, email, and setup events.
+	- Reads the terms and conditions from a text file.
 
-	DatabaseComparisonDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Dark.png')
-	DatabaseComparisonLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
-	AppPasswordLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
-	AppPasswordDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
-	ThankYouDarkImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Dark.png')
-	ThankYouLightImage = Image.open(r'Bank_Package\Visual Data\Markdown Resources\Thank You Message Light.png')
+	# Error Handling
+	If any file is missing or cannot be loaded, shows an error message and exits the application.
+	'''
 
-	INFO_Icon = Image.open(r'Bank_Package\Visual Data\info.png')
-	LINK_Icon = Image.open(r'Bank_Package\Visual Data\link.png')
-	EXCLAMATION_Icon = Image.open(r'Bank_Package\Visual Data\Exclamation.png')
-	Database_Config_icon = Image.open(r'Bank_Package\Visual Data\Database -- icon.png')
+	BannerLightImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Representation Images\Banner Light.jpg')
+	BannerDarkImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Representation Images\Banner Dark.jpg')
 
-	Delete_Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Delete Database.png')
-	Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Database.png')
-	User_Config_icon = Image.open(r'Bank_Package\Visual Data\UI\User Config.png')
-	People_icon = Image.open(r'Bank_Package\Visual Data\User Badges\People.png')
-	Next_Navigation_icon = Image.open(r'Bank_Package\Visual Data\Navigation Icons\Next.png')
-	Password_icon = Image.open(r'Bank_Package\Visual Data\UI\Password.png')
-	Mail_icon = Image.open(r'Bank_Package\Visual Data\UI\Mail.png')
-	Password_Show_icon = Image.open(r'Bank_Package\Visual Data\UI\Show.png')
-	Password_Hide_icon = Image.open(r'Bank_Package\Visual Data\UI\Hide.png')
-	Security_icon = Image.open(r'Bank_Package\Visual Data\UI\Security.png')
-	Download_icon = Image.open(r'Bank_Package\Visual Data\UI\Download.png')
-	Upload_icon = Image.open(r'Bank_Package\Visual Data\UI\Upload.png')
-	Username_icon = Image.open(r'Bank_Package\Visual Data\UI\Username.png')
-	Restore_Database_icon = Image.open(r'Bank_Package\Visual Data\Database\Restore Database.png')
+	DatabaseComparisonDarkImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\Database Comparison Dark.png')
+	DatabaseComparisonLightImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\Database Comparison Light.png')
+	AppPasswordLightImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\App Password Light.png')
+	AppPasswordDarkImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\App Password Dark.png')
+	ThankYouDarkImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\Thank You Message Dark.png')
+	ThankYouLightImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\Thank You Message Light.png')
+	MySQLSetupLightImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\MySQL Setup Light.png')
+	MySQLSetupDarkImage = Image.open(fr'{PATH}\Bank_Package\Visual Data\Markdown Resources\MySQL Setup Dark.png')
 
-	instagram_icon = Image.open(r'Bank_Package\Visual Data\icons\instagram.png')
-	x_icon = Image.open(r'Bank_Package\Visual Data\icons\x.png')
-	facebook_icon = Image.open(r'Bank_Package\Visual Data\icons\facebook.png')
-	github_icon = Image.open(r'Bank_Package\Visual Data\icons\github.png')
-	linkedin_icon = Image.open(r'Bank_Package\Visual Data\icons\linkedin.png')
-	webpage_icon = Image.open(r'Bank_Package\Visual Data\icons\webpage.png')
-	gmail_icon = Image.open(r'Bank_Package\Visual Data\icons\gmail.png')
+	INFO_Icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\info.png')
+	LINK_Icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\link.png')
+	EXCLAMATION_Icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Exclamation.png')
+	Database_Config_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Database -- icon.png')
 
-	MySQL_Logo = Image.open(r'Bank_Package\Visual Data\MySQL -- Logo.png')
-	Google_Logo = Image.open(r'Bank_Package\Visual Data\Google.png')
+	Delete_Database_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Database\Delete Database.png')
+	Database_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Database\Database.png')
+	User_Config_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\User Config.png')
+	People_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\User Badges\People.png')
+	Next_Navigation_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Navigation Icons\Next.png')
+	Password_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Password.png')
+	Mail_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Mail.png')
+	Password_Show_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Show.png')
+	Password_Hide_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Hide.png')
+	Security_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Security.png')
+	Download_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Download.png')
+	Upload_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Upload.png')
+	Username_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\UI\Username.png')
+	Restore_Database_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\Database\Restore Database.png')
+
+	instagram_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\instagram.png')
+	x_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\x.png')
+	facebook_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\facebook.png')
+	github_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\github.png')
+	linkedin_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\linkedin.png')
+	webpage_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\webpage.png')
+	gmail_icon = Image.open(fr'{PATH}\Bank_Package\Visual Data\icons\gmail.png')
+
+	MySQL_Logo = Image.open(fr'{PATH}\Bank_Package\Visual Data\MySQL -- Logo.png')
+	Google_Logo = Image.open(fr'{PATH}\Bank_Package\Visual Data\Google.png')
 
 
 	ERROR_LOGS = open(fr'{PATH}\Logs\ErrorLogs.txt', 'a')
@@ -171,9 +557,9 @@ try:
 except Exception:
 
 	messagebox.showerror(title = 'Missing System Files', message='Some required system files are missing or could not be loaded.\n\nPlease try restarting the setup. If the problem persists, consider reinstalling the ' \
-	'application or contact support.\n\nTIP : You can uninstall this software by running the installer')
+	'application or contact support.')
 
-	quit()
+	sys.exit()
 
 MYSQLLOG = """ """ # Empty For A Reason
 
@@ -262,7 +648,7 @@ def OpenBrowserForSpecifiedUrl(URL: str) -> None: # Works For Windows, Mac, Linu
 
 	except Exception as Error: # Logging and fallback
 
-		ERROR_LOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Open {URL} ; ErrorType: [ {Error} ]')
+		ERROR_LOGS.write(f'\n[ERROR]:[setup.exe][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Open {URL} ; ErrorType: [ {Error} ]')
 
 # Returns the size of folder in bytes
 def Folder_Size(_Path: str) -> int:
@@ -360,7 +746,63 @@ def rm_backupbatabasememory() -> None:
 		
 	]: icon.close()
 
+# Registers the uninstaller in windows registry
 def register_uninstall_entry_user_scope() -> None:
+
+	''' <!-- Doc Strings -->
+    ### Purpose
+    Registers an uninstall entry for the "Bank-With-High-Functionalities" application in the Windows registry under the current user scope.
+	This enables the application to appear in the "Add or Remove Programs" list for the current user, allowing for standard uninstallation via Windows settings.
+
+    ### Functionality
+    - Creates or updates a registry key at:
+    > `HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Bank-With-High-Functionalities`
+    - Sets multiple registry values to provide Windows with all necessary information for displaying and uninstalling the application:
+        - **DisplayName**: The name shown in the uninstall list.
+        - **DisplayVersion**: The current version of the application.
+        - **Publisher**: The application's publisher (developer).
+        - **InstallLocation**: The directory where the application is installed.
+        - **UninstallString**: The command to execute for uninstalling the application.
+        - **DisplayIcon**: The icon shown in the uninstall list.
+        - **ModifyPath**: The path to the repair executable.
+        - **URLInfoAbout**: A URL for more information about the application.
+        - **HelpLink**: A URL for help or support.
+        - **NoModify** and **NoRepair**: Flags to control whether the user can modify or repair the installation from the uninstall UI.
+
+    ### Parameters
+    - **None**: This function does not take any parameters.
+
+    ### Returns
+    - **None**
+
+    ### Example Usage
+    ```python
+    register_uninstall_entry_user_scope()
+    ```
+
+    ### Notes
+    - This function should be called during the installation or setup process to ensure the application can be uninstalled via Windows settings.
+    - The uninstall entry is created only for the current user (not system-wide).
+    - Uses the `winreg` module for registry operations and relies on global variables such as `SETUPDATA`, `PATH`, `webpage`, and `github` for registry values.
+    - The uninstall string typically points to an `uninstall.exe` in the application directory.
+
+    ### Error Handling
+    - If any error occurs during registry operations (e.g., permission issues, missing values), the error is caught and logged to the setup log file (`SETUP_LOGS`).
+    - The function does not raise exceptions to the caller; all errors are handled internally.
+
+    ### Security
+    - Modifies the Windows registry only for the current user, so no administrator privileges are required.
+    - Does not affect other users on the system.
+
+    ### Limitations
+    - Only works on Windows operating systems.
+    - Does not create a system-wide uninstall entry (for all users).
+    - If the registry cannot be written (e.g., due to permissions), the uninstall entry will not be created.
+
+    ### Dependencies
+    - Requires the `winreg` module for registry access.
+    - Relies on global variables for application metadata and paths.
+	'''
 
 	uninstall_key_path = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Bank-With-High-Functionalities"
 
@@ -390,7 +832,89 @@ def register_uninstall_entry_user_scope() -> None:
 # To Check The Presence Of Previous Backup Database 
 class CheckForBackupDatabase:
 
+	''' <!-- Doc Strings -->
+    ## Purpose
+    The `CheckForBackupDatabase` class manages the detection, validation, restoration, deletion, and organization of backup database folders for the "Bank-With-High-Functionalities" application. It provides both backend logic and a graphical interface for users to interact with available backups, ensuring data integrity and smooth recovery or migration processes.
+
+    ## Features
+    - **Detection**: Identifies the presence of up to three backup database folders on the user's system.
+    - **Corruption Check**: Validates each backup by attempting to load its initialization JSON file, marking corrupted backups and logging errors.
+    - **Data Retrieval**: Extracts and stores initialization data and calculates the size of each backup for display and management.
+    - **Graphical Management UI**: Presents a CustomTkinter-based window for users to preview, restore, or delete backups, and to toggle password visibility.
+    - **Restoration**: Allows users to restore any valid backup, replacing the current database and saving a rollback copy for safety.
+    - **Deletion**: Enables deletion of any backup (especially corrupted or least-used ones) to free up space or resolve issues.
+    - **Automatic Cleanup**: Provides logic to automatically delete the backup with the fewest users or any corrupted backup when creating a new database.
+    - **Folder Renaming**: Maintains a consistent and sequential naming convention for backup folders after any change.
+    - **Integration**: Designed to be called at application startup to manage backup state before proceeding with setup or normal operation.
+
+    ## Attributes
+    - `isNewDatabaseRequested` (bool): Indicates if the user has requested to create a new database, triggering automatic cleanup if needed.
+    - `Total_DBs` (list[bool]): Tracks the availability of each backup database.
+    - `Database_01_init_Data`, `Database_02_init_Data`, `Database_03_init_Data` (dict): Store initialization data for each backup.
+    - `isDatabase_01_Corrupted`, `isDatabase_02_Corrupted`, `isDatabase_03_Corrupted` (bool): Flags indicating if a backup is corrupted.
+    - `isDatabase_01_Available`, `isDatabase_02_Available`, `isDatabase_03_Available` (bool): Flags indicating if a backup is available.
+    - `DB_01_SIZE`, `DB_02_SIZE`, `DB_03_SIZE` (float): Sizes of each backup database in kilobytes.
+    - `showpassword_DB_01`, `showpassword_DB_02`, `showpassword_DB_03` (bool): Flags for password visibility in the UI.
+
+    ## Main Methods
+
+    ### 1. `Check_Presence_Of_Database() -> bool`
+    Checks if any backup database folders exist and updates availability flags. Returns `True` if at least one backup is present.
+
+    ### 2. `Check_For_Corrupted_Databases_And_Retrieve_Data() -> None`
+    Attempts to load initialization data from each backup and marks corrupted backups. Updates internal state for UI and logic.
+
+    ### 3. `Restore_Database(Database_Number: int) -> None`
+    Restores the selected backup database (1, 2, or 3), replacing the current database and saving a rollback copy. Runs in a separate thread for UI responsiveness.
+
+    ### 4. `Restore_Backup_Database_Setup() -> None`
+    Opens a GUI for users to preview, restore, or delete backups, and to proceed with creating a new database if needed. Handles all user interactions for backup management.
+
+    ### 5. `Auto_Delete_Database_With_min_Users() -> None`
+    Automatically deletes the backup with the fewest users or any corrupted backup to free up space when all slots are full.
+
+    ### 6. `Rename_Folders() -> None`
+    Renames backup folders to maintain sequential naming (e.g., BACKUP - DATABASE 01, 02, 03) after deletion or restoration.
+
+    ### 7. `_exec_func_() -> None`
+    Handles post-restore/setup actions such as creating shortcuts and registering uninstall entries.
+
+    ## Example Usage
+    ```python
+    backup_checker = CheckForBackupDatabase()
+    if backup_checker.Check_Presence_Of_Database():
+        backup_checker.Restore_Backup_Database_Setup()
+    ```
+
+    ## Notes
+    - Designed for use at application startup to manage backup databases before proceeding with setup or normal operation.
+    - Integrates with CustomTkinter for GUI operations and uses threading for non-blocking file operations.
+    - Handles up to three backup databases, maintaining their order and integrity.
+    - Relies on global variables for paths, icons, and logs.
+
+    ## Error Handling
+    - Corrupted backups are detected and flagged; errors are logged to the error log file.
+    - All file operations are wrapped in try/except blocks to prevent crashes and ensure smooth user experience.
+
+    ## Security
+    - Deletion and restoration actions are irreversible; users are prompted for confirmation.
+    - Passwords are masked in the UI by default and can only be revealed on user action.
+    - Sensitive data is not exposed in logs or UI unless explicitly requested by the user.
+
+    ## Limitations
+    - Only supports up to three backup databases.
+    - Assumes required directories and resources exist and are accessible.
+    - Designed for Windows file system conventions and may require adaptation for other OSes.
+
+    ## Dependencies
+    - Requires `os`, `shutil`, `json`, `threading`, and `customtkinter`.
+    - Relies on global variables for resource paths, icons, and logs.
+    - Uses `tkinter.messagebox` for user prompts and notifications.
+	'''
+
 	isNewDatabaseRequested = False
+
+	isBackupDatabaseRestored = False
 
 	def __init__(self) -> None:
 		self.Total_DBs: list[bool] = []
@@ -569,7 +1093,7 @@ class CheckForBackupDatabase:
 			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
 		
 			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
-			rm_backupbatabasememory()
+			rm_backupbatabasememory() ; self.isBackupDatabaseRestored = True
 
 		def _restore_db_02_() -> None:
 			
@@ -589,7 +1113,7 @@ class CheckForBackupDatabase:
 			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
 
 			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
-			rm_backupbatabasememory()
+			rm_backupbatabasememory() ; self.isBackupDatabaseRestored = True
 
 		def _restore_db_03_() -> None:
 			
@@ -609,7 +1133,7 @@ class CheckForBackupDatabase:
 			'We\'re here for you! Reach out to us anytime through our support channels:\n\nGitHub : ViratiAkiraNandhanReddy\nFacebook : Virati Akira Nandhan Reddy\nInstagram : viratiaki53\nTwitter : @Viratiaki53\nEmail : viratiaki29@gmail.com\n\nThank you for trusting us and using our service!')
 			
 			Backup_Database_Window.after(0, Backup_Database_Window.destroy)
-			rm_backupbatabasememory()
+			rm_backupbatabasememory() ; self.isBackupDatabaseRestored = True
 				
 		match Database_Number:
 
@@ -627,6 +1151,61 @@ class CheckForBackupDatabase:
 		'Doing so may cause malfunction or data corruption within the software.\n\nThank you for your patience and cooperation')
 
 	def Restore_Backup_Database_Setup(self) -> None:
+
+		''' <!-- Doc Strings -->
+		### Purpose
+		Opens a graphical interface for users to view, preview, restore, or delete available backup databases. This method is invoked when backup databases are detected, allowing users to manage them before proceeding with a new setup or restoration.
+
+		### Functionality
+		- Scans for up to three backup databases and checks their integrity.
+		- Displays a CustomTkinter window listing all detected backups, showing details such as manager name, user count, backup size, and corruption status.
+		- Allows users to:
+			- Preview detailed information for each backup (manager credentials, security code, email, timestamps, etc.).
+			- Restore a selected backup, replacing the current database and saving a rollback copy.
+			- Delete any backup database, with confirmation and immediate UI update.
+			- Toggle password visibility for each backup using an eye icon.
+		- Provides a guide panel explaining icons and actions, and tips for troubleshooting.
+		- Offers a button to proceed by creating a new database, which will automatically delete the backup with the fewest users or a corrupted one if all slots are full.
+
+		### Parameters
+		- **self**: Instance of the `CheckForBackupDatabase` class.
+
+		### Returns
+		- **None**
+
+		### Example Usage
+		```python
+		backup_checker = CheckForBackupDatabase()
+		backup_checker.Restore_Backup_Database_Setup()
+		```
+
+		### Notes
+		- This method is typically called at application startup if backup folders are found.
+		- The UI is built using CustomTkinter and is modal, blocking further setup until a decision is made.
+		- Only valid (non-corrupted) backups can be restored; corrupted ones can only be deleted.
+		- The method updates internal state flags for backup availability and corruption status.
+		- Deleting or restoring a backup updates the UI in real time and may trigger folder renaming for sequential order.
+
+		### GUI Integration
+		- Provides a user-friendly interface for managing backup databases.
+		- Integrates with other methods for restoring and deleting backups, and for toggling password visibility.
+
+		### Security
+		- Restoring a backup will overwrite the current database and backup folders; this is irreversible.
+		- Deleting a backup is permanent and cannot be undone.
+		- Passwords are masked by default and can be revealed only on user action.
+
+		### Limitations
+		- Supports a maximum of three backup databases.
+		- Assumes all required icon/image resources are available and loaded.
+		- If a backup is corrupted, it cannot be restored but can be deleted.
+		- The method assumes the presence of certain global variables and resources (e.g., icon images, CustomTkinter widgets).
+
+		### Dependencies
+		- Requires `customtkinter` for the UI.
+		- Relies on other methods in the class for restoring and deleting backups.
+		- Uses `os`, `shutil`, `threading`, and `tkinter.messagebox` for file operations and dialogs.
+		'''
 
 		def Show_Hide_Manager_Password(DB_Number: int) -> None:
 
@@ -956,7 +1535,7 @@ class CheckForBackupDatabase:
 		Backup_Database_Window.title('Backup Detected')
 		Backup_Database_Window.geometry('800x400+100+40')
 		Backup_Database_Window.resizable(False, False)
-		Backup_Database_Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Restore Backup Database.ico')
+		Backup_Database_Window.iconbitmap(fr'{PATH}\Bank_Package\Visual Data\ICO Files\Restore Backup Database.ico')
 
 		CTk.CTkLabel(Backup_Database_Window, text = 'A Backup Has Been Detected On Your Device', font = ('Segoe UI', 17, 'bold'), height = 0).place(x = 9, y = 5)
 		CTk.CTkLabel(Backup_Database_Window, text = 'Pick a backup and get back to work in seconds.', font = ('Segoe UI', 12, 'italic'), height = 0).place(x = 9, y = 26)
@@ -1001,7 +1580,7 @@ class CheckForBackupDatabase:
 			Password_eye_1 = CTk.CTkButton(DB_01_Preview, text = '', image = CTk.CTkImage(light_image = Password_Hide_icon, dark_image = Password_Hide_icon, size = (22, 22)), height = 0, width = 0, hover = False, fg_color = 'transparent', command = lambda: Show_Hide_Manager_Password(1)) ; Password_eye_1.place(x = 247, y = 130)
 
 			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Security Code"]}', image = CTk.CTkImage(light_image = Security_icon, dark_image = Security_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 170)
-			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Email"][:38] + ('...' if len(self.Database_01_init_Data["Manager Email"]) > 32 else '')}', image = CTk.CTkImage(light_image = Mail_icon, dark_image = Mail_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 210)
+			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Manager Email"]}', image = CTk.CTkImage(light_image = Mail_icon, dark_image = Mail_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 210)
 			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Downloaded On"]}', image = CTk.CTkImage(light_image = Download_icon, dark_image = Download_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 250)
 			CTk.CTkLabel(DB_01_Preview, text = f'  {self.Database_01_init_Data["Deleted On"]}', image = CTk.CTkImage(light_image = Upload_icon, dark_image = Upload_icon, size = (30, 30)), font = ('Segoe UI', 11, 'bold'), compound = 'left', height = 0).place(x = 10, y = 290)
 			
@@ -1180,6 +1759,50 @@ class CheckForBackupDatabase:
     
 	def _exec_func_(self) -> None:
 
+		'''
+        ## Purpose
+        Handles post-backup-restore or post-setup actions for the Bank-With-High-Functionalities application. This method is responsible for creating application shortcuts, registering uninstall information, and performing any finalization steps after a backup database is restored or a new setup is completed.
+
+        ## Functionality
+        - **Registers Uninstall Entry**: Adds an uninstall entry for the application in the Windows registry under the current user scope, allowing standard uninstallation via Windows settings.
+        - **Creates Start Menu Shortcut**: Generates a shortcut to the application in the Windows Start Menu's Programs folder.
+        - **Creates Desktop Shortcut**: Generates a shortcut to the application on the user's Desktop.
+
+        ## Parameters
+        - **self**: Instance of the `CheckForBackupDatabase` class.
+
+        ## Returns
+        - **None**
+
+        ## Example Usage
+        ```python
+        backup_checker = CheckForBackupDatabase()
+        backup_checker._exec_func_()
+        ```
+
+        ## Notes
+        - This method is typically called after restoring a backup or completing a new setup to ensure the application is properly registered and accessible.
+        - The method uses Windows-specific APIs and will only work on Windows systems.
+        - Shortcuts point to the application's `main.exe` and use the official icon.
+
+        ## Error Handling
+        - If any error occurs during shortcut creation or registry operations, the error is logged to the setup log file (`SETUP_LOGS`).
+        - The method does not raise exceptions to the caller; all errors are handled internally.
+
+        ## Security
+        - Modifies the Windows registry and file system only for the current user.
+        - No sensitive data is exposed or handled by this method.
+
+        ## Limitations
+        - Only works on Windows operating systems.
+        - Assumes the application directory and required files exist and are accessible.
+
+        ## Dependencies
+        - Requires the `os` module for path operations.
+        - Requires `win32com.client.Dispatch` for shortcut creation.
+        - Requires the `register_uninstall_entry_user_scope` utility for registry operations.
+		'''
+
 		Shell = Dispatch('WScript.Shell')
 
 		def Shortcut_At_Start_Menu() -> None:
@@ -1253,7 +1876,7 @@ class CheckForBackupDatabase:
 # To Check For MySQL Database Connection
 class CheckMySQLDatabaseConnection:
 
-	"""
+	""" <!-- Doc Strings -->
 	#### A Utility Class To Verify The Connection To A MySQL Database Server. \
 	This Class Provides A Method To Check If A MySQL Server Exists And Is Accessible \
 	Using The Provided Credentials. It Is Designed To Handle Connection Attempts \
@@ -1308,46 +1931,78 @@ class CheckMySQLDatabaseConnection:
 	
 		DatabaseConnectionStatus.after(0, lambda: DatabaseConnectionStatus.configure(text = 'Connecting', text_color = 'Orange'))
 
-		CTk.CTkLabel(MySQLDebugFrame, text = f'Credentials: {SETUPDATA["MySQL Credentials"]}', wraplength = 300, justify = 'left').pack()
+		CTk.CTkLabel(MySQLDebugFrame, text = '\nInitializing connection to the database server.\nAttempting to establish a network handshake and\nverify server availability.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack()
+		MYSQLLOG.join('\nInitializing connection to the database server. Attempting to establish a network handshake and verify server availability.')
 
 		try:
 
-			# Connect to MySQL Server
-			Connection = mysql.connector.connect(
+			if SETUPDATA['MySQL Credentials']['Charset'].strip():
 
-				host = SETUPDATA['MySQL Credentials']['Host'],
-				port = SETUPDATA['MySQL Credentials']['Port'],
-				user = SETUPDATA['MySQL Credentials']['Username'],
-				password = SETUPDATA['MySQL Credentials']['Password']
+				# Connect to MySQL Server (With Charset)
+				Connection = mysql.connector.connect(
 
-			)
+					host = SETUPDATA['MySQL Credentials']['Host'],
+					port = SETUPDATA['MySQL Credentials']['Port'],
+					user = SETUPDATA['MySQL Credentials']['Username'],
+					password = SETUPDATA['MySQL Credentials']['Password'],
+					charset = SETUPDATA['MySQL Credentials']['Charset']
+
+				)
+
+			else:
+				
+				# Connect to MySQL Server (Without Charset)
+				Connection = mysql.connector.connect(
+
+					host = SETUPDATA['MySQL Credentials']['Host'],
+					port = SETUPDATA['MySQL Credentials']['Port'],
+					user = SETUPDATA['MySQL Credentials']['Username'],
+					password = SETUPDATA['MySQL Credentials']['Password']
+
+				)
 			
+			DatabaseConnectionStatus.after(4000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nSubmitting provided username and password to the\nserver for verification. Waiting for authentication\nresponse.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+			MYSQLLOG.join('\nSubmitting provided username and password to the server for verification. Waiting for authentication response.')
 			DatabaseConnectionStatus.after(5000, lambda: DatabaseConnectionStatus.configure(text = 'Authenticated', text_color = '#4CAF50'))
-			
-			DatabaseConnectionStatus.after(5000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = 'Authenticated', justify = 'left').pack())
 
 			# Check if the connection is successful
 			if Connection.is_connected():
 
 				DatabaseConnectionStatus.after(10000, lambda: DatabaseConnectionStatus.configure(text = 'Connected', text_color = '#4CAF50'))
-				DatabaseConnectionStatus.after(10000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = 'Connected').pack())
-				DatabaseConnectionStatus.after(10000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = 'Connection Successful').pack())
+				
+				DatabaseConnectionStatus.after(10000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nDatabase client is now connected and authenticated.\nReady to perform actions on the database server.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nDatabase client is now connected and authenticated. Ready to perform actions on the database server.')
+				
+				DatabaseConnectionStatus.after(11000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nSecure connection successfully established with the\ndatabase server. Preparing for further operations.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nSecure connection successfully established with the database server. Preparing for further operations.')
 
 				DatabaseConnectionStatus.after(15000, lambda: DatabaseConnectionStatus.configure(text = 'Testing', text_color = 'Orange'))
+				DatabaseConnectionStatus.after(15000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nRunning a simple test query to validate database\nresponsiveness and permissions. Ensuring proper\ndata communication.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nRunning a simple test query to validate database responsiveness and permissions. Ensuring proper data communication.')
+				
+				DatabaseConnectionStatus.after(16000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nInitiating database creation process. Sending SQL\ncommand to create the specified database.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nInitiating database creation process. Sending SQL command to create the specified database.')
 				
 				Cursor = Connection.cursor()
-				Cursor.execute('CREATE DATABASE IF NOT EXISTS `Bank-With-High-Functionalities`') # Create Database
+				Cursor.execute('CREATE DATABASE IF NOT EXISTS `bank-with-high-functionalities`') # Create Database
 
 				DatabaseConnectionStatus.after(20000, lambda: DatabaseConnectionStatus.configure(text = 'Successful', text_color = '#4CAF50'))
-				DatabaseConnectionStatus.after(20000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = 'Database Created').pack())
+				DatabaseConnectionStatus.after(20000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nQuery returned expected results. Connection is\nhealthy and permissions are correctly configured.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nQuery returned expected results. Connection is healthy and permissions are correctly configured.')
 
 				DatabaseConnectionStatus.after(25000, lambda: DatabaseConnectionStatus.configure(text = 'Disconnecting', text_color = '#4CAF50'))
+				DatabaseConnectionStatus.after(25000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nDatabase has been created without errors. Closing\nthe connection to release resources and\nmaintain security.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nDatabase has been created without errors. Closing the connection to release resources and maintain security.')
+
 				 
 				Cursor.close() # Close the cursor
 
 				Connection.close() # Close the connection
 				
 				DatabaseConnectionStatus.after(30000, lambda: DatabaseConnectionStatus.configure(text = 'Disconnected', text_color = '#4CAF50'))
+				DatabaseConnectionStatus.after(30000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = '\nConnection terminated cleanly. All operations completed\nsuccessfully.', font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+				MYSQLLOG.join('\nConnection terminated cleanly. All operations completed successfully.')
+				SETUPDATA['MySQL Credentials']['Database'] = 'bank-with-high-functionalities'
 
 				return True
 			
@@ -1356,9 +2011,10 @@ class CheckMySQLDatabaseConnection:
 			# Log the error
 			Error_Information = Error
 
-			ERROR_LOGS.write(f'\n[ERROR]:[Setup.py][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]')
+			ERROR_LOGS.write(f'\n[ERROR]:[setup.exe][{datetime.datetime.now().strftime('%d/%b/%Y @ %I:%M:%S %p')}] - Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]')
 			DatabaseConnectionStatus.after(5000, lambda: DatabaseConnectionStatus.configure(text = 'Failed', text_color = 'Red'))
-			DatabaseConnectionStatus.after(5000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = f'Failed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]', wraplength = 340, justify = 'left').pack())
+			DatabaseConnectionStatus.after(5000, lambda: CTk.CTkLabel(MySQLDebugFrame, text = f'\nFailed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]', wraplength = 285, font = ('Segoe UI', 12, 'italic'), justify = 'left').pack())
+			MYSQLLOG.join(f'\nFailed To Connect To MySQL Server ; ErrorType: [ {Error_Information} ]')
 			
 			return False
 			
@@ -1448,10 +2104,15 @@ class Manager_Email_Verification:
 	- If the email credentials are incorrect, the email will not be sent.
 	'''
 
-	def __init__(self, ReceiverMailAddress: str = SETUPDATA['Manager Email']) -> None:
-		self.ReceiverMailAddress = ReceiverMailAddress
+	def __init__(self) -> None:
+		...
 
-	def Send_Gmail(self) -> str:
+	def Send_Gmail(self) -> None:
+
+		def __force_stop_email_countdown__() -> None:
+
+			countdown.after_cancel(CountdownRefresher)
+			countdown.after(0, lambda: countdown.configure(text = 'Error!', text_color = 'Red'))
 
 		Email = EmailMessage()
 
@@ -1616,7 +2277,7 @@ class Manager_Email_Verification:
 
 		Email['Subject'] = f'{__Code__} Is Your Verification Code To Access Your Manager Account.'
 		Email['From'] = 'Bank-With-High-Functionalities Team'
-		Email['To'] = self.ReceiverMailAddress
+		Email['To'] = SETUPDATA['Manager Email']
 
 		Email.set_content(HTML_EMAIL, subtype = 'html')
 
@@ -1627,35 +2288,39 @@ class Manager_Email_Verification:
 				SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 				SMTP.send_message(Email)
 				
-				EMAIL_LOGS.write(f'\n[INFO]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] :  Status: Successful : MSG: Verification Email Was Sent To <{SETUPDATA["Manager Email"]}>')
-				return 'Error Free'
-			
+				EMAIL_LOGS.write(f'\n[INFO]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] :  Status: Successful : MSG: Verification Email Was Sent To <{SETUPDATA["Manager Email"]}>')
+				Success = CTk.CTkLabel(GmailVerificationFrame, text = 'A verification code has been sent\nto your email successfully.') ; GmailVerificationFrame.after(0, lambda: Success.place(x = 145, y = 230))
+				Success.after(5000, lambda: Success.destroy())
 			__Timestamp__ = datetime.datetime.now()
 
 		except smtplib.SMTPAuthenticationError:
 			
-			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Credentials Error At Backend (Manger App Password)]')
-			return 'Credentials Error'
+			EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Credentials Error At Backend (Manger App Password)]')
+			__force_stop_email_countdown__()
+			Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Invalid credentials. Please check your email,\napp password and try again.') ; GmailVerificationFrame.after(0, lambda: Error.place(x = 115, y = 230))
+			Error.after(8000, lambda: Error.destroy())
 		
 		except smtplib.SMTPServerDisconnected: # Slow Internet 
 
-			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Slow Internet Connection]')
-			return 'Slow Internet'
+			EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Slow Internet Connection]')
+			__force_stop_email_countdown__()
+			Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Connection lost : It seems your internet connection is slow\nor unstable. Please check your connection and try again.') ; GmailVerificationFrame.after(0, lambda: Error.place(x = 60, y = 230))
+			Error.after(8000, lambda: Error.destroy())
 		
 		except socket.gaierror:
 			
-			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [No Internet Connection]')
-			return 'No Internet'
+			EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [No Internet Connection]')
+			__force_stop_email_countdown__()
+			Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Network Error : Unable to connect to the server.\nPlease check your internet connection.') ; GmailVerificationFrame.after(0, lambda: Error.place(x = 110, y = 230))
+			Error.after(8000, lambda: Error.destroy())
 		
 		except Exception as Error:
 
-			EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [{Error}]')
-			return 'Unknown Error'
-
-
-		EMAIL_LOGS.write(f'\n[ERROR]:[Setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [Developers Please Check My Class (Improper Behaviour)]')
-		return 'Improper Behaviour'
-
+			EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To <{SETUPDATA["Manager Email"]}> ; ErrorType: [{Error}]')
+			__force_stop_email_countdown__()
+			Err = CTk.CTkLabel(GmailVerificationFrame, text = 'Network Error : Unable to connect to the server.\nPlease check your internet connection.') ; GmailVerificationFrame.after(0, lambda: Err.place(x = 110, y = 230))
+			Err.after(8000, lambda: Err.destroy())
+		
 # Main Setup Class
 class Setup:
 
@@ -1894,9 +2559,9 @@ class Setup:
 
 			for widget,_text_ in [ # Live Update 
 
-				(Final_Manager_Name__Update__, f'Manager Name: {SETUPDATA["Manager Name"]}'),
-				(Final_Manager_Username__Update__, f'Manager Username: {SETUPDATA["Manager Username"]}'),
-				(Final_Manager_Password__Update__, f'Manager Password: {SETUPDATA["Manager Password"]}'),
+				(Final_Manager_Name__Update__, f'Manager Name: {SETUPDATA["Manager Name"][:60] + ('...' if len(SETUPDATA["Manager Name"]) > 60 else '')}'),
+				(Final_Manager_Username__Update__, f'Manager Username: {SETUPDATA["Manager Username"][:60] + ('...' if len(SETUPDATA["Manager Username"]) > 60 else '')}'),
+				(Final_Manager_Password__Update__, f'Manager Password: {SETUPDATA["Manager Password"][:60] + ('...' if len(SETUPDATA["Manager Password"]) > 60 else '')}'),
 				(Final_Manager_Security_Code__Update__, f'Manager Security Code: {SETUPDATA["Manager Security Code"]}'),
 				(Final_Manager_Email__Update__, f'Manager Email: {SETUPDATA["Manager Email"]}'),
 				(Final_Manager_Email_App_Password__Update__, f'Manager Email App Password: {SETUPDATA["Manager Email App Password"]}'),
@@ -1920,19 +2585,19 @@ class Setup:
 			Window.geometry('800x600')
 			FinishSetupFrame.place(x = 5, y = 5)
 
-		global Window
+		global Window, countdown, GmailVerificationFrame, DatabaseConnectionStatus, MySQLDebugFrame
 		Window = CTk.CTk()
 		Window.title('Setup')
 		Window.resizable(False,False)
 		Window.geometry('800x400+100+40')
-		Window.iconbitmap(r'Bank_Package\Visual Data\ICO Files\Setup.ico')
+		Window.iconbitmap(fr'{PATH}\Bank_Package\Visual Data\ICO Files\Setup.ico')
 		Window.protocol('WM_DELETE_WINDOW', lambda: Window.destroy() if messagebox.askyesno(title = 'Exit Setup', message = 'Setup Is Not Complete. If You Exit Now, The Program Will Not Be Installed.\n\nYou May Run Setup Again At Another Time To Complete The Installation.\n\nExit Setup?') else None)
 
 		# Welcome Greeting
 
 		WelcomeFrame = CTk.CTkFrame(Window,800,400) ; WelcomeFrame.place(x=0,y=0)
 		CTk.CTkLabel(WelcomeFrame,text='',image=CTk.CTkImage(light_image = BannerLightImage, dark_image = BannerDarkImage, size=(800,400))).place(x=0,y=0)
-		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!', font = ('Segoe UI', 14, 'italic'), corner_radius=4, fg_color = '#4CAF50', hover_color = '#45A049', text_color = 'Black', width = 160, height = 30, command = GoTo_ChooseDatabaseFrame).place(x=630,y=360)
+		CTk.CTkButton(WelcomeFrame,text='Let\'s Get Started!', font = ('Segoe UI', 14, 'italic'), corner_radius=4, fg_color = '#4CAF50', hover_color = '#45A049', text_color = 'Black', width = 160, height = 30, command = GoTo_TermsAndConditionsFrame).place(x=630,y=360)
 		
 		# Terms & Conditions
 
@@ -2283,8 +2948,6 @@ class Setup:
 		UpdateManagerData = CTk.CTkButton(ManagerModeSetupFrame, text = 'Update Data', command= _UpdateManagerData_, width = 100, fg_color = '#B0B0B0', state = 'disabled', text_color = 'Black', text_color_disabled = 'Black', hover_color = '#45A049') ; UpdateManagerData.place(x = 55, y = 320)
 		SubmitManagerData = CTk.CTkButton(ManagerModeSetupFrame, text = 'Submit Data', command = _GetManagerData_, width = 100, fg_color = '#4CAF50', text_color = 'Black', text_color_disabled = 'Black', hover_color = '#45A049') ; SubmitManagerData.place(x=270,y=320)
 
-
-		
 		ManagerModeinfoFrame = CTk.CTkFrame(ManagerModeSetupFrame, 285, 342) ; ManagerModeinfoFrame.place(x = 500, y = 5)
 		CTk.CTkLabel(ManagerModeinfoFrame, text = f'NOTE: Greetings and official emails will be sent and\nreceived using the Manager Name provided. Please\nensure it is accurate and authentic, as it will represent\nyour identity in all communications. The Username you\nchoose will be used to log in ' \
 		'to your Manager Profile\nwithin the application. Make sure it is unique.\n\n\nThe credentials provided here are used to log in to the\nManager Profile within the application. It is essential\nthat you enter accurate and legitimate information to\nensure a secure and seamless ' \
@@ -2292,21 +2955,18 @@ class Setup:
 		'code serves as\na fallback method to help you regain access.\n\nTo maintain the integrity of your profile and security of\nthe system, please use authentic details and a legitimate\nidentity at all times. This ensures that you receive proper\nsupport and a better, more secure experience while ' \
 		'using\nthe application.', font = ('Segoe UI', 11, 'italic'), justify = 'left').place(x = 10, y = 10)
 
-
 		CTk.CTkButton(ManagerModeSetupFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100, command = GoBackTo_SoftwareActivationFrame).place(x = 580, y = 357)
 		ContinueToGmailVerification = CTk.CTkButton(ManagerModeSetupFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color='#45A049',
 					  state = 'disabled', width = 100, command = GoTo_GmailVerificationFrame) ; ContinueToGmailVerification.place(x = 685, y = 357)
 		
 		# Gmail Verification
 
-		self.isCountdownStarted = False
-		Email_Verification_cls: Manager_Email_Verification = Manager_Email_Verification()
-		
+		self.isCountdownStarted = False		
 
 		def _Send_Code_() -> None:
 
 			if not all([Email.get(), AppPassword.get()]):
-				Incomplete_Credentials_Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Incomplete Credentials') ; Incomplete_Credentials_Error.place(x = 167, y = 230)
+				Incomplete_Credentials_Error = CTk.CTkLabel(GmailVerificationFrame, text = 'Email credentials are incomplete. Please provide all\nrequired information to proceed.') ; Incomplete_Credentials_Error.place(x = 95, y = 230)
 				Incomplete_Credentials_Error.after(5000, Incomplete_Credentials_Error.destroy)
 				return
 			
@@ -2320,6 +2980,8 @@ class Setup:
 			SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'] = Email.get(), AppPassword.get()
 
 			Submit_And_Test_Email.configure(fg_color = '#B0B0B0', state = 'disabled')
+
+			Email_Verification_cls: Manager_Email_Verification = Manager_Email_Verification()
 
 
 			__timer__(Submit_And_Test_Email, 10, 'Submit & Get Code')
@@ -2351,7 +3013,7 @@ class Setup:
 				else:
 
 					CodeResent_info = CTk.CTkLabel(GmailVerificationFrame, text = 'Time Limit Exceeded, A New Verification Mail Was Sent!') ; CodeResent_info.place(x = 70 , y = 230)
-					CodeResent_info.after(5000, CodeResent_info.destroy)
+					CodeResent_info.after(3000, CodeResent_info.destroy)
 
 					_Send_Code_()
 
@@ -2362,12 +3024,12 @@ class Setup:
 			Time_Elapsed = (datetime.datetime.now() - __Timestamp__).total_seconds()
 			
 			if not Verification_Code.get():
-				IncompleteCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Verification Code Field Is Incomplete') ; IncompleteCodeError.place(x = 100, y = 200)
+				IncompleteCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'The Verification Code field is incomplete.\nPlease enter the code to continue.') ; IncompleteCodeError.place(x = 120, y = 230)
 				IncompleteCodeError.after(5000, IncompleteCodeError.destroy)
 				return
 			
 			elif __Code__ != Verification_Code.get() or Time_Elapsed > 600:
-				WrongCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Invalid Verification Code') ; WrongCodeError.place(x = 160, y = 230)
+				WrongCodeError = CTk.CTkLabel(GmailVerificationFrame, text = 'Invalid verification code. Please check the code\nand try again.') ; WrongCodeError.place(x = 100, y = 230)
 				WrongCodeError.after(5000, WrongCodeError.destroy)
 				return
 			
@@ -2378,6 +3040,8 @@ class Setup:
 			Submit_And_Test_Email.configure(state = 'disabled', fg_color = '#B0B0B0')
 			Update_Email_Data.configure(state = 'normal', fg_color = '#4CAF50')
 
+			SETUPDATA['isEmailVerified'] = True
+
 		def _update_details_() -> None:
 
 			Email.configure(state = 'normal') ; AppPassword.configure(state = 'normal')
@@ -2387,10 +3051,7 @@ class Setup:
 			Submit_And_Test_Email.configure(state = 'normal', fg_color = '#4CAF50')
 			Update_Email_Data.configure(state = 'disabled', fg_color = '#B0B0B0')
 
-		def __force_stop_email_countdown__() -> None:
-
-			countdown.after_cancel(CountdownRefresher)
-			countdown.configure(text = 'Error!', text_color = 'Red')
+			SETUPDATA['isEmailVerified'] = False
 
 		GmailVerificationFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(GmailVerificationFrame, text = 'Bank Email Setup', font = ('Arial', 28, 'bold'), height = 0).place(x = 10, y = 10)
@@ -2412,11 +3073,6 @@ class Setup:
 
 		Submit_And_Test_Email = CTk.CTkButton(GmailVerificationFrame, text = 'Submit & Get Code', width = 140, command = _Send_Code_, text_color = 'Black', text_color_disabled = 'Black', fg_color = '#4CAF50', hover_color = '#45A049') ; Submit_And_Test_Email.place(x = 310, y = 280)
 
-
-
-
-
-
 		CTk.CTkButton(GmailVerificationFrame, text = f'{APPPASSWORDWEBSITE}', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = LINK_Icon, dark_image = LINK_Icon, size = (12, 12)), fg_color = 'transparent', hover = False, text_color = '#21968B',
 				compound = 'left', height = 0, width = 0, command = lambda: OpenBrowserForSpecifiedUrl(APPPASSWORDWEBSITE)).place(x = -1, y = 319)
 		CTk.CTkLabel(GmailVerificationFrame, text = ' The provided email must have Two Factor Authentication enabled to generate app passwords.', font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = EXCLAMATION_Icon, dark_image = EXCLAMATION_Icon, size = (12, 12)),
@@ -2426,10 +3082,13 @@ class Setup:
 		CTk.CTkLabel(GmailVerificationFrame, text = " The 'Submit & Get Code' button can also be used to resend the verification code if the user did not receive it initially.", font = ('Segoe UI', 10), image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (12, 12)),
 			   text_color = '#6BBF59', compound = 'left', height = 0).place(x = 3, y = 375)
 
-
 		EmailSetupGuide = CTk.CTkScrollableFrame(GmailVerificationFrame, 300, 293) ; EmailSetupGuide.place(x = 465, y = 45)
 		CTk.CTkLabel(EmailSetupGuide, text = '', image = CTk.CTkImage(light_image = AppPasswordLightImage, dark_image = AppPasswordDarkImage, size = (300,1070))).pack()
 		
+		CTk.CTkButton(EmailSetupGuide, text = ' Useful Links ', font = ('Roboto', 14, 'bold'), fg_color = 'transparent', hover = False).pack(pady = 20)
+		CTk.CTkButton(EmailSetupGuide, text = '> How To Setup App Password For My Account <', fg_color='transparent', hover = False, text_color = '#21968B',command = lambda: OpenBrowserForSpecifiedUrl(HOW_TO_SETUP_APPPASSWORD)).pack()
+		CTk.CTkButton(EmailSetupGuide, text = '> Why i can\'t see app passwords in my account <', fg_color='transparent', hover = False, text_color = '#21968B',command = lambda: OpenBrowserForSpecifiedUrl(APPPASSWORD_ERROR)).pack()
+
 		CTk.CTkButton(GmailVerificationFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=100 ,command = GoBackTo_ManagerModeSetupFrame).place(x = 580, y = 357)
 		ContinueToChooseDatabase = CTk.CTkButton(GmailVerificationFrame, text = 'Continue', corner_radius=4, fg_color = '#B0B0B0', text_color = 'Black', text_color_disabled = 'Black', hover_color = '#45A049',
 					  state = 'disabled', width = 100, command = GoTo_ChooseDatabaseFrame) ; ContinueToChooseDatabase.place(x = 685, y = 357)
@@ -2543,7 +3202,6 @@ class Setup:
 					
 					Widget.configure(state = 'normal')
 
-		global DatabaseConnectionStatus, MySQLDebugFrame
 		GetMySQLDataFrame = CTk.CTkFrame(Window, 790, 590)
 		CTk.CTkLabel(GetMySQLDataFrame, text = 'MySQL Database Setup', font = ('Arial', 24, 'bold'), height = 0).place(x = 10, y = 10)
 		CTk.CTkLabel(GetMySQLDataFrame, text = 'Please Enter The MySQL Server Information Below.', font = ('Arial', 12), justify = 'left', height = 0).place(x = 10, y = 40)
@@ -2564,17 +3222,19 @@ class Setup:
 		
 		CTk.CTkLabel(GetMySQLDataFrame, text = 'Character Set :', font = ('Roboto', 16, 'bold'), justify = 'left').place(x = 10, y = 260)
 		CharacterSet = CTk.CTkEntry(GetMySQLDataFrame, placeholder_text = 'E.g., utf8mb4 *(Optional)*', font=('Consolas', 14), width = 240) ; CharacterSet.place(x = 133, y = 260)
-		
-		
 
 		DatabaseConnectionStatus = CTk.CTkLabel(GetMySQLDataFrame, text = 'Not Connected', compound = 'top', height = 0, width = 425, image = CTk.CTkImage(light_image = Database_Config_icon, dark_image = Database_Config_icon, size = (75, 75)),
 					 text_color = 'Orange') ; DatabaseConnectionStatus.place(x =  0, y = 320)
 		
 		MySQLGuideFrame = CTk.CTkScrollableFrame(GetMySQLDataFrame, 340, 265) ; MySQLGuideFrame.place(x = 425, y = 60)
-		CTk.CTkLabel(MySQLGuideFrame, text = 'MySQL Setup Guide', font = ('Arial', 24, 'bold'), height = 0).pack()
+		CTk.CTkLabel(MySQLGuideFrame, text = '', image = CTk.CTkImage(light_image = MySQLSetupLightImage, dark_image = MySQLSetupDarkImage, size = (340, 3157))).pack()
+		CTk.CTkButton(MySQLGuideFrame, text = ' Useful Links ', font = ('Roboto', 14, 'bold'), fg_color = 'transparent', hover = False).pack(pady = 20)
+		CTk.CTkButton(MySQLGuideFrame, text = '> How To Setup MySQL Server <', fg_color='transparent', hover = False, text_color = '#21968B',command = lambda: OpenBrowserForSpecifiedUrl(MYSQL_ON_DOWNLOAD_SETUP)).pack()
+		CTk.CTkButton(MySQLGuideFrame, text = '> Where to know this credentials  <', fg_color='transparent', hover = False, text_color = '#21968B',command = lambda: OpenBrowserForSpecifiedUrl(MYSQL_SERVER_DETAILS)).pack()
 
 
 		MySQLDebugFrame = CTk.CTkScrollableFrame(GetMySQLDataFrame, 340, 0) ; MySQLDebugFrame.place(x = 425, y = 340)
+		CTk.CTkLabel(MySQLDebugFrame, text = 'MySQL Connection Debugging', font = ('Arial', 22, 'bold'), height = 0).pack()
 
 		Update_MySQL_Data = CTk.CTkButton(GetMySQLDataFrame, text = 'Update MySQL Server Data', width = 190, command = _UpdateMySQLData_, state = 'disabled', fg_color = '#B0B0B0', text_color = 'Black',
 										  text_color_disabled = 'Black', hover_color = '#45A049') ; Update_MySQL_Data.place(x = 15, y = 520)
@@ -2657,6 +3317,8 @@ Current App Version: {SETUPDATA["Current Version"]}
 		FinalReviewFrame = CTk.CTkFrame(Window, 790, 390)
 		CTk.CTkLabel(FinalReviewFrame, text = 'Final Review', font = ('Arial', 36, 'bold'), height = 0).place(x = 10, y = 10)
 		CTk.CTkLabel(FinalReviewFrame, text = 'Review The Information Before Proceeding.', font = ('Arial', 10), height = 0).place(x = 11, y = 45)
+		CTk.CTkLabel(FinalReviewFrame, text = '   You can update the credentials and other details\n    anytime from your Manager Profile.', font = ('Segoe UI', 12),
+					 image = CTk.CTkImage(light_image = INFO_Icon, dark_image = INFO_Icon, size = (17, 17)), compound = 'left', height = 0, justify = 'left').place(x = 500, y = 10)
  		
 		Final_Manager_Name__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Manager Name: {SETUPDATA["Manager Name"]}',
 													font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Manager_Name__Update__.place(x = 10, y = 100)
@@ -2677,12 +3339,12 @@ Current App Version: {SETUPDATA["Current Version"]}
 		Final_Current_App_Version__Update__ = CTk.CTkLabel(FinalReviewFrame, text = f'Current App Version: {SETUPDATA["Current Version"]}',
 														   font = ('Segoe UI', 14, 'bold'), justify = 'left') ; Final_Current_App_Version__Update__.place(x = 10, y = 324)
 
-		CTk.CTkCheckBox(FinalReviewFrame, text = '' , font = ('Segoe UI', 12), variable = REVIEWED, offvalue = False, onvalue = True,
+		CTk.CTkCheckBox(FinalReviewFrame, text = 'I have reviewed the above data and finalized my decision to proceed with them.' , font = ('Segoe UI', 12), variable = REVIEWED, offvalue = False, onvalue = True,
 						command = lambda: Finish_Setup.configure(state = 'normal', fg_color = '#4CAF50') if REVIEWED.get() else Finish_Setup.configure(state = 'disabled', fg_color = '#B0B0B0'), border_width = 1,
 						checkbox_height = 18, checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 7, y = 362)
 		
-		SetupLog = CTk.CTkButton(FinalReviewFrame, text = 'Copy To Clipboard', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width=120,
-					  command = lambda: [Window.clipboard_clear(), Window.clipboard_append(Return_Setup_Log()), SetupLog.configure(text = ' Copied! '), SetupLog.after(3000, lambda: SetupLog.configure(text = 'Copy To Clipboard'))]) ; SetupLog.place(x = 455, y = 357)
+		SetupLog = CTk.CTkButton(FinalReviewFrame, text = 'Copy To Clipboard', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width = 205,
+					  command = lambda: [Window.clipboard_clear(), Window.clipboard_append(Return_Setup_Log()), SetupLog.configure(text = ' Copied! '), SetupLog.after(3000, lambda: SetupLog.configure(text = 'Copy To Clipboard'))]) ; SetupLog.place(x = 580, y = 324)
 		
 		CTk.CTkButton(FinalReviewFrame, text = 'Back', corner_radius = 4, fg_color = '#7BC47F', text_color = 'Black', hover_color='#6BBF59', width = 100,
 					  command = lambda: GoBackTo_GetMySQLDataFrame() if SETUPDATA['DATABASE TYPE'] == 'MySQL' else GoBackTo_ChooseDatabaseFrame()).place(x = 580, y = 357)
@@ -2704,7 +3366,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 			- Always creates a shortcut in the Windows Start Menu's Programs folder.
 
 			### Notes
-			- The function uses three Boolean variables (`CREATE_SHORTCUT`, `OPEN_MAIN_EXE`, `GREET_DEVELOPER`) to determine which actions to perform.
+			- The function uses three Boolean variables (`CREATE_SHORTCUT`, `OPEN_MAIN_EXE`, `OPEN_DOCUMENTATION_WEB`) to determine which actions to perform.
 			- The function is intended to be called after setup data is saved and the setup window is closed.
 
 			### Dependencies
@@ -2957,14 +3619,51 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 						SMTP.send_message(Email)
-						raise NotImplementedError
 
-				except Exception as e:
-					# log it Hello See Here
-					pass
-
+				except Exception as Error:
+					EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Verification Email To Developer ; ErrorType: [{Error}]')
+					
 			def Greet_Manager() -> None:
-				
+
+				''' <!-- Doc Strings -->
+				### Purpose
+				Sends a personalized "Thank You" email to the manager after the setup process is successfully completed.
+
+				### Functionality
+				- Generates an HTML-formatted email that welcomes the manager and confirms the successful completion of the setup.
+				- The email includes a greeting, a thank you message, and links to the developer's social media and website.
+				- Uses the manager's name from the `SETUPDATA` dictionary for personalization.
+				- Sends the email using SMTP with SSL authentication.
+
+				### Parameters
+				- **None**: This function does not take any parameters.
+
+				### Returns
+				- **None**
+
+				### Example Usage
+				```python
+				Greet_Manager()
+				```
+
+				### Notes
+				- The manager's email address and app password must be set in `SETUPDATA`.
+				- The email is sent in HTML format for better appearance and branding.
+				- This function is typically called at the end of the setup process.
+
+				### Dependencies
+				- Requires `smtplib` for sending emails.
+				- Requires `email.message.EmailMessage` for constructing the email.
+				- Uses the `SETUPDATA` dictionary for manager details.
+
+				### Security
+				- Uses the manager's email and app password for SMTP authentication.
+				- No sensitive data is included in the email content.
+
+				### Limitations
+				- If the email credentials are incorrect or there is no internet connection, the email will not be sent.
+				- Exceptions are logged but not shown to the user.
+				'''
 				
 				HTML = ''' <!-- html Data -->
 <!DOCTYPE html>
@@ -3116,32 +3815,30 @@ Current App Version: {SETUPDATA["Current Version"]}
 
 						SMTP.login(SETUPDATA['Manager Email'], SETUPDATA['Manager Email App Password'])
 						SMTP.send_message(Email)
-						raise NotImplementedError
 
-				except Exception as e:
-					# log it Hello See Here
-					pass
-			
+				except Exception as Error:
+					EMAIL_LOGS.write(f'\n[ERROR]:[setup.exe - Manager_Email_Verification][{datetime.datetime.now().strftime('%d/%b/%Y - %A @ %I:%M:%S %p')}] ; Status: Unsuccessful ; MSG: Error Occurred While Sending Greeting Email To Manager ; ErrorType: [{Error}]')
+
 			register_uninstall_entry_user_scope()
 
 			if CREATE_SHORTCUT:
-				
-				# Create a shortcut at `Desktop`
+
 				Shortcut_At_Desktop()
+
+			elif OPEN_DOCUMENTATION_WEB:
+
+				OpenBrowserForSpecifiedUrl(webpage)
 
 			elif OPEN_MAIN_EXE:
 
-				# Opens the main.exe (Access Application)
 				Open_main_exe()
 
-			# Mail To Developer
-			Greet_Developer()
-
-			Greet_Manager()
 			Shortcut_At_Start_Menu()
+			Greet_Developer()
+			Greet_Manager()
 		
-		CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar()
-		CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True)
+		CREATE_SHORTCUT = CTk.BooleanVar() ; OPEN_MAIN_EXE = CTk.BooleanVar() ; OPEN_DOCUMENTATION_WEB = CTk.BooleanVar()
+		CREATE_SHORTCUT.set(True) ; OPEN_MAIN_EXE.set(True) ; OPEN_DOCUMENTATION_WEB.set(True)
 		FinishSetupFrame = CTk.CTkFrame(Window, 790, 590)
 		CTk.CTkLabel(FinishSetupFrame, text = 'One Last Step to Finalize the Setup!', font = ('Arial', 26, 'bold'), height = 0).place(x = 10 , y = 10)
 		CTk.CTkLabel(FinishSetupFrame, text = '', image = CTk.CTkImage(light_image = ThankYouLightImage, dark_image = ThankYouDarkImage, size = (790, 333))).place(x = 0, y = 50)
@@ -3179,7 +3876,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 		CTk.CTkCheckBox(FinishSetupFrame, text = 'Launch The Application After Setup', onvalue = True, offvalue = True, variable = OPEN_MAIN_EXE, height = 0, border_width = 1, checkbox_height = 18,
 						checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 10, y = 450)
 		
-		CTk.CTkCheckBox(FinishSetupFrame, text = 'Launch Documentation When Setup Finishes.', onvalue = True, offvalue = True, variable = OPEN_MAIN_EXE, height = 0, border_width = 1, checkbox_height = 18,
+		CTk.CTkCheckBox(FinishSetupFrame, text = 'Launch Documentation When Setup Finishes.', onvalue = True, offvalue = True, variable = OPEN_DOCUMENTATION_WEB, height = 0, border_width = 1, checkbox_height = 18,
 						checkbox_width = 18, hover_color = '#45A049', fg_color = '#4CAF50').place(x = 10, y = 478)
 
 		CTk.CTkLabel(FinishSetupFrame, text = ' Ensure that your device is connected to the internet.', font = ('Segoe UI', 12),
@@ -3271,7 +3968,6 @@ Current App Version: {SETUPDATA["Current Version"]}
 		## File Paths
 		- **Main File**: `Bank_Package/DATABASE/JSON/ADMINISTRATIVE FILES/Initialization.json`
 		- **Backup File**: `BACKUP - DATABASE/JSON/ADMINISTRATIVE FILES/Initialization.json`
-		
 		'''
 
 		SETUPDATA['Downloaded On'] = datetime.datetime.now().strftime('%d-%b-%Y -- %A @ %I:%M:%S %p')
@@ -3289,7 +3985,7 @@ Current App Version: {SETUPDATA["Current Version"]}
 Backup_Database_cls = CheckForBackupDatabase()
 isDatabasesAvailable = Backup_Database_cls.Check_Presence_Of_Database()
 
-if not isDatabasesAvailable:
+if isDatabasesAvailable:
 
 	Backup_Database_cls.Restore_Backup_Database_Setup()
 
@@ -3298,10 +3994,8 @@ if not isDatabasesAvailable:
 		rm_backupbatabasememory()
 		Setup().SetupWindows()
 
-	else:
-
-		# Backup_Database_cls._exec_func_()
-		...
+	if Backup_Database_cls.isBackupDatabaseRestored:
+		Backup_Database_cls._exec_func_()
 
 	Backup_Database_cls.Rename_Folders()
 
@@ -3310,15 +4004,50 @@ else:
 	rm_backupbatabasememory()
 	Setup().SetupWindows()
 
-
 def __atexit__() -> None:
+
+	''' <!-- Doc Strings -->
+    ## Purpose
+    The `__atexit__` function is a cleanup handler that is automatically called when the program is about to exit. It ensures that all open log files are properly closed and provides a simple confirmation message for debugging or logging purposes.
+
+    ## Functionality
+    - Closes the following log files if they are open:
+        - `ERROR_LOGS`: Error log file for recording errors and exceptions.
+        - `EMAIL_LOGS`: Log file for email-related events and errors.
+        - `SETUP_LOGS`: Log file for setup and installation events.
+    - Prints a message ("things going well") to indicate that the cleanup was successful.
+
+    ## Usage
+    This function is registered with Python's `atexit` module and is called automatically when the interpreter terminates, regardless of how the program exits (normal completion, error, or interruption).
+
+    ## Example
+    ```python
+    import atexit
+
+    def __atexit__():
+        # ...cleanup code...
+        pass
+
+    atexit.register(__atexit__)
+    ```
+
+    ## Notes
+    - This function should not be called directly; it is intended to be used as an exit handler.
+    - Ensures that log files are not left open, which helps prevent data loss or file corruption.
+    - The print statement is mainly for debugging and can be removed or replaced with a logging call if desired.
+
+    ## Limitations
+    - If any of the log file objects are already closed or not defined, an exception may occur unless handled elsewhere.
+    - Only handles the closing of specific log files; other resources should be managed separately.
+
+    ## Security
+    - No sensitive data is handled or exposed by this function.
+	'''
 
 	ERROR_LOGS.close()
 	EMAIL_LOGS.close()
 	SETUP_LOGS.close()
 
-	print('things going well')
-
 atexit.register(__atexit__)
 
-print('program came here')
+# END OF PROGRAM AT MY FAVOURITE NUMBER - 53 
