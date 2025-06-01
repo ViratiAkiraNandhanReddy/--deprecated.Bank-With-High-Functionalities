@@ -398,11 +398,11 @@ from email.message import EmailMessage
 from random import choice, randint, random
 
 '''
-pyinstaller --noconfirm --onefile --windowed --icon="Bank_Package\\Visual Data\\ICO Files\\setup_icon.ico" --version-file="Bank_Package\\Build Metadata\\setup.exe - v0.0.1.txt" "Bank_Package\\setup.py"
+pyinstaller --noconfirm --onefile --windowed --icon="Bank_Package\\Visual Data\\ICO Files\\setup_icon.ico" --version-file="Bank_Package\\Build Metadata\\setup.exe.txt" \
+--add-data "D:\\.venv\\Lib\\site-packages\\google;google" --add-data "D:\\.venv\\Lib\\site-packages\\mysql;mysql" --add-data "D:\\.venv\\Lib\\site-packages\\mysqlx;mysqlx" "Bank_Package\\Source Files\\setup.py"
 '''
 
 # < TESTING > PATH = r'D:\GitHub\Bank-With-High-Functionalities'
-
 PATH = str(os.environ.get('LOCALAPPDATA')) + r'\Bank-With-High-Functionalities'
 
 SETUPDATA = { # Initialization Data 

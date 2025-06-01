@@ -1,0 +1,32 @@
+# UTF-8
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),            # File version: Major, Minor, Patch, Build
+    prodvers=(0, 0, 1, 0),            # Product version: same format
+    mask=0x3F,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,                     # 0x1 = Application
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable(
+        '040904B0', [
+          StringStruct('CompanyName', 'Virati Akira Nandhan Reddy'),
+          StringStruct('FileDescription', 'Bank-With-High-Functionalities'),
+          StringStruct('FileVersion', '0.0.1.0'),
+          StringStruct('InternalName', 'setup'),
+          StringStruct('LegalCopyright', '(c) 2024 - 2026 Virati Akira Nandhan Reddy'),
+          StringStruct('OriginalFilename', 'setup.exe'),
+          StringStruct('ProductName', 'Bank-With-High-Functionalities'),
+          StringStruct('ProductVersion', '0.0.1.0')
+        ]
+      )
+    ]),
+    VarFileInfo([
+      VarStruct('Translation', [1033, 1200])
+    ])
+  ]
+)
