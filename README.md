@@ -1,8 +1,28 @@
+# ⚠️ **Notice: This Repository is Deprecated**
+
+> 🚫 **This repository is no longer actively maintained.**  
+> The project has been **moved and is now actively developed** at 👉 [**New Repository »**](https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities)
+
+## ✨ **What’s New in the Updated Repository**
+- 🧩 **Well-Structured:** Cleaner, modular, and more organized project layout  
+- ⚙️ **Well-Maintained:** Regular updates, better issue handling, and improvements  
+- 🚀 **Feature-Rich:** Includes all existing functionalities + brand-new additions  
+- 📚 **Improved Documentation:** Easier to read, clearer setup and usage instructions  
+
+> 💡 **Why the Move?**  
+> To make the project more scalable, maintainable, and contributor-friendly.
+
+---
+
+---
+
+---
+
 # 💵 Bank-With-High-Functionalities 🏦🔥
 
 Welcome to **Bank-With-High-Functionalities**, a Python-based GUI banking system that provides an intuitive and feature-rich platform for managing financial operations. With functionalities like account management, secure transactions, loan processing, and transaction history, this project offers a seamless, interactive, and efficient banking experience.
 
-![Banner](https://github.com/ViratiAkiraNandhanReddy/Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Banner%20Image.jpg)
+![Banner](https://github.com/ViratiAkiraNandhanReddy/--deprecated.Bank-With-High-Functionalities/blob/main/Bank_Package/Visual%20Data/Banner%20Image.jpg)
 
 ---
 
